@@ -1,0 +1,15 @@
+{
+  "folders": [
+	{
+		"path": "frontend"
+	},
+	{
+		"path": "api"
+	}
+],
+  "settings": {
+    "files.exclude": {
+      "**/*.js.map": true
+    }
+  }
+}
