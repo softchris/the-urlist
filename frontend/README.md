@@ -1,4 +1,4 @@
-# linkylink
+# frontend
 
 ## Project setup
 ```
