@@ -1,15 +1,22 @@
+using Newtonsoft.Json;
+
 namespace LinkyLink
 {
     public class LinkBundle
     {
-        public LinkBundle(string vanityName, string[] links)
+        public LinkBundle(string user, string vanityUrl, string[] links)
         {
-            this.VanityName = vanityName;
+            this.User = user;
+            this.VanityUrl = vanityUrl;
             this.Links = links;
         }
 
+        public string User { get; } //TODO: handle users later
 
-        public string VanityName { get; private set; }
-        public string[] Links { get; private set; }
+        [JsonProperty("vanityUrl")]
+        public string VanityUrl { get; }
+
+        [JsonProperty("links")]
+        public string[] Links { get; }
     }
 }

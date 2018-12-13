@@ -7,6 +7,8 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.Azure.Documents;
+using System.Net;
 
 namespace LinkyLink
 {
@@ -28,36 +30,49 @@ namespace LinkyLink
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var linkDocument = JsonConvert.DeserializeObject<LinkBundle>(requestBody);
 
-                if (!ValidatePayLoad(linkDocument, req, out ValidationProblemDetails problems))
+                if (!ValidatePayLoad(linkDocument, req, out ProblemDetails problems))
                 {
                     return new BadRequestObjectResult(problems);
                 }
 
                 await documents.AddAsync(linkDocument);
 
-                return new OkResult();
+                return new CreatedResult($"/{linkDocument.VanityUrl}", linkDocument);
+            }
+            catch (DocumentClientException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
+            {
+                log.LogError(ex, ex.Message);
+
+                ProblemDetails exceptionDetail = new ProblemDetails
+                {
+                    Title = "Could not create link bundle",
+                    Detail = "Vanity link already in use",
+                    Status = StatusCodes.Status400BadRequest,
+                    Type = "/linkylink/clientissue",
+                    Instance = req.Path
+                };
+                return new BadRequestObjectResult(exceptionDetail);
             }
             catch (Exception ex)
             {
-                //log this exception
-                return new BadRequestResult();
+                log.LogError(ex, ex.Message);
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
-
         }
 
-        private static bool ValidatePayLoad(LinkBundle linkDocument, HttpRequest req, out ValidationProblemDetails problems)
+        private static bool ValidatePayLoad(LinkBundle linkDocument, HttpRequest req, out ProblemDetails problems)
         {
             bool isValid = linkDocument.Links?.Length > 0;
             problems = null;
 
             if (!isValid)
             {
-                problems = new ValidationProblemDetails()
+                problems = new ProblemDetails()
                 {
                     Title = "Payload is invalid",
-                    Type = "/linkylink/schema",
                     Detail = "No links provided",
                     Status = StatusCodes.Status400BadRequest,
+                    Type = "/linkylink/clientissue",
                     Instance = req.Path
                 };
             }
