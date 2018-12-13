@@ -14,7 +14,7 @@ namespace LinkyLink
         public string User { get; } //TODO: handle users later
 
         [JsonProperty("vanityUrl")]
-        public string VanityUrl { get; }
+        public string VanityUrl { get; set; }
 
         [JsonProperty("links")]
         public string[] Links { get; }

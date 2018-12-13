@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.Azure.Documents;
 using System.Net;
+using System.Security.Cryptography;
 
 namespace LinkyLink
 {
@@ -35,6 +36,8 @@ namespace LinkyLink
                     return new BadRequestObjectResult(problems);
                 }
 
+                EnsureVanityUrl(linkDocument);
+
                 await documents.AddAsync(linkDocument);
 
                 return new CreatedResult($"/{linkDocument.VanityUrl}", linkDocument);
@@ -57,6 +60,25 @@ namespace LinkyLink
             {
                 log.LogError(ex, ex.Message);
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        private static void EnsureVanityUrl(LinkBundle linkDocument)
+        {
+            if (string.IsNullOrWhiteSpace(linkDocument.VanityUrl))
+            {
+                const string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                var code = new char[7];
+                var rng = new RNGCryptoServiceProvider();
+
+                var bytes = new byte[8];
+                for (int i = 0; i < code.Length; i++)
+                {
+                    rng.GetBytes(bytes);
+                    code[i] =  characters[$"{BitConverter.ToUInt64(bytes) % (uint)characters.Length}"[0]];
+                }
+
+                linkDocument.VanityUrl = new String(code);
             }
         }
 

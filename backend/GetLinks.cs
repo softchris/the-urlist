@@ -26,7 +26,11 @@ namespace LinkyLink
             string vanityUrl,
             ILogger log)
         {
-            if (!documents.Any()) return new NotFoundResult();
+            if (!documents.Any())
+            {
+                log.LogInformation($"Bundle for {vanityUrl} not found.");
+                return new NotFoundResult();
+            }
 
             LinkBundle doc = documents.Single();
             return new OkObjectResult(doc);
