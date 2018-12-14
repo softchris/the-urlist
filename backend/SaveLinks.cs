@@ -12,15 +12,15 @@ using System.Net;
 using System.Security.Cryptography;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace LinkyLink
 {
     public static partial class LinkOperations
     {
-        public static TelemetryClient telemetryClient = new TelemetryClient();
         public const string CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-        [FunctionName("SaveLinks")]
+        [FunctionName(nameof(SaveLinks))]
         public static async Task<IActionResult> SaveLinks(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "links")] HttpRequest req,
             [CosmosDB(
@@ -30,6 +30,7 @@ namespace LinkyLink
             )] IAsyncCollector<LinkBundle> documents,
             ILogger log)
         {
+            TrackRequestHeaders(req, $"{nameof(GetLinks)}-HeaderData");
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();

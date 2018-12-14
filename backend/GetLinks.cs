@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 
 namespace LinkyLink
 {
     public static partial class LinkOperations
     {
-        [FunctionName("GetLinks")]
+        [FunctionName(nameof(GetLinks))]
         public static IActionResult GetLinks(
             [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "links/{vanityUrl}")] HttpRequest req,
             [CosmosDB(
@@ -22,9 +24,11 @@ namespace LinkyLink
             string vanityUrl,
             ILogger log)
         {
+            TrackRequestHeaders(req, $"{nameof(GetLinks)}-HeaderData");
             if (!documents.Any())
             {
                 log.LogInformation($"Bundle for {vanityUrl} not found.");
+
                 return new NotFoundResult();
             }
 
