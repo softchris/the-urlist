@@ -10,11 +10,16 @@ using Newtonsoft.Json;
 using Microsoft.Azure.Documents;
 using System.Net;
 using System.Security.Cryptography;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights;
 
 namespace LinkyLink
 {
     public static partial class LinkOperations
     {
+        public static TelemetryClient telemetryClient = new TelemetryClient();
+        public const string CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
         [FunctionName("SaveLinks")]
         public static async Task<IActionResult> SaveLinks(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "links")] HttpRequest req,
@@ -25,7 +30,6 @@ namespace LinkyLink
             )] IAsyncCollector<LinkBundle> documents,
             ILogger log)
         {
-
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -33,6 +37,7 @@ namespace LinkyLink
 
                 if (!ValidatePayLoad(linkDocument, req, out ProblemDetails problems))
                 {
+                    log.LogError(problems.Detail);
                     return new BadRequestObjectResult(problems);
                 }
 
@@ -67,18 +72,20 @@ namespace LinkyLink
         {
             if (string.IsNullOrWhiteSpace(linkDocument.VanityUrl))
             {
-                const string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
                 var code = new char[7];
                 var rng = new RNGCryptoServiceProvider();
 
-                var bytes = new byte[8];
+                var bytes = new byte[1];
                 for (int i = 0; i < code.Length; i++)
                 {
                     rng.GetBytes(bytes);
-                    code[i] =  characters[$"{BitConverter.ToUInt64(bytes) % (uint)characters.Length}"[0]];
+                    uint num = BitConverter.ToUInt32(bytes, 0) % (uint)CHARACTERS.Length;
+                    code[i] = CHARACTERS[(int)num];
                 }
 
                 linkDocument.VanityUrl = new String(code);
+
+                telemetryClient.TrackEvent(new EventTelemetry { Name = "Custom Vanity Generated" });
             }
         }
 
