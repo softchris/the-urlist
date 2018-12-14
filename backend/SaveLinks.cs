@@ -42,10 +42,11 @@ namespace LinkyLink
                     return new BadRequestObjectResult(problems);
                 }
 
+                string handle = GetTwitterHandle(req);
+                linkDocument.UserId = handle;
                 EnsureVanityUrl(linkDocument);
 
                 await documents.AddAsync(linkDocument);
-
                 return new CreatedResult($"/{linkDocument.VanityUrl}", linkDocument);
             }
             catch (DocumentClientException ex) when (ex.StatusCode == HttpStatusCode.Conflict)

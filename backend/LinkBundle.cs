@@ -12,7 +12,7 @@ namespace LinkyLink
         }
 
         [JsonProperty("userId")]
-        public string UserId { get; } //TODO: handle users later
+        public string UserId { get; set; }
 
         [JsonProperty("vanityUrl")]
         public string VanityUrl { get; set; }
