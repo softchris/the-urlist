@@ -77,7 +77,7 @@ namespace LinkyLink
                 var code = new char[7];
                 var rng = new RNGCryptoServiceProvider();
 
-                var bytes = new byte[1];
+                var bytes = new byte[sizeof(uint)];
                 for (int i = 0; i < code.Length; i++)
                 {
                     rng.GetBytes(bytes);
