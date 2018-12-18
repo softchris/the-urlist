@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.Azure.Documents;
 using System.Net;
+using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights;
@@ -93,7 +94,7 @@ namespace LinkyLink
 
         private static bool ValidatePayLoad(LinkBundle linkDocument, HttpRequest req, out ProblemDetails problems)
         {
-            bool isValid = linkDocument.Links?.Length > 0;
+            bool isValid = linkDocument.Links.Count() > 0;
             problems = null;
 
             if (!isValid)
