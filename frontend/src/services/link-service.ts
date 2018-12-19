@@ -4,17 +4,13 @@ import IList from '@/models/IList';
 import ILink from '@/models/ILink';
 
 const linkService = {
-  saveLinks(
-    vanityUrl: string = '',
-    description: string = '',
-    links: Array<ILink>
-  ): Promise<IList> {
+  saveLinks(list: IList): Promise<IList> {
     return new Promise((resolve, reject) => {
       axios
         .post(`${config.api}/links`, {
-          links: links,
-          vanityUrl: vanityUrl,
-          description: description
+          links: list.links,
+          vanityUrl: list.vanityUrl,
+          description: list.description
         })
         .then(result => {
           resolve(<IList>result.data);

@@ -1,9 +1,7 @@
 <template>
   <div class="page is-loading">
-    <div class="column is-half" v-for="(link, index) in list.links" :index="index" :key="index">
-      <div class="card">
-        <div class="card-content">{{ link }}</div>
-      </div>
+    <div class="column" v-for="(link, index) in list.links" :index="index" :key="index">
+      <link-list :link="link"></link-list>
     </div>
   </div>
 </template>
@@ -12,21 +10,28 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import linkService from "@/services/link-service";
 import IList from "@/models/IList";
+import LinkList from "@/components/LinkList.vue";
 
-@Component
+@Component({
+  components: {
+    LinkList
+  }
+})
 export default class List extends Vue {
   get list() {
-    return this.$store.state.activeList;
+    return this.$store.getters.list;
   }
 
   created() {
     // get the list from the db based on the url id
     let vanityUrl = this.$route.params.id;
+    let list = this.$store.getters.list;
 
     // check the store for an existing list. If it isn't there, ask the server for it.
-    if (this.$store.getters.activeList.vanityUrl !== vanityUrl) {
+    if (list.vanityUrl !== vanityUrl) {
       linkService.getLinks(vanityUrl).then((list: IList) => {
-        this.$store.commit("setActiveList", { list });
+        this.$store.commit("setList", list);
+        console.log("done");
       });
     }
   }

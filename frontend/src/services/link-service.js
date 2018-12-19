@@ -1,13 +1,13 @@
 import axios from 'axios';
 import config from '@/config';
 const linkService = {
-    saveLinks(vanityUrl = '', description = '', links) {
+    saveLinks(list) {
         return new Promise((resolve, reject) => {
             axios
                 .post(`${config.api}/links`, {
-                links: links,
-                vanityUrl: vanityUrl,
-                description: description
+                links: list.links,
+                vanityUrl: list.vanityUrl,
+                description: list.description
             })
                 .then(result => {
                 resolve(result.data);

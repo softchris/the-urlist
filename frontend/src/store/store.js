@@ -1,19 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import List from "@/store/List";
 Vue.use(Vuex);
 export const store = new Vuex.Store({
-    state: {
-        activeList: {}
-    },
-    mutations: {
-        setActiveList(state, { list }) {
-            state.activeList = list;
-        }
-    },
-    getters: {
-        activeList: state => {
-            return state.activeList;
-        }
+    state: {},
+    modules: {
+        List
     }
 });
 //# sourceMappingURL=store.js.map

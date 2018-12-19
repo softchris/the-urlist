@@ -14,15 +14,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import EventBus from "@/EventBus";
 
 @Component
 export default class AddBar extends Vue {
   newLink: string = "";
 
   addLink() {
-    EventBus.$emit("addLink", this.newLink);
-    this.newLink = "";
+    this.$store.dispatch("addLink", { url: this.newLink });
   }
 }
 </script>
