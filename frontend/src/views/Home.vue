@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <section class="section">
+  <div>
+    <section>
       <AddBar></AddBar>
     </section>
     <section class="section">
@@ -22,3 +22,7 @@ import Links from "@/components/Links.vue";
 })
 export default class Home extends Vue {}
 </script>
+
+<style>
+</style>
+
