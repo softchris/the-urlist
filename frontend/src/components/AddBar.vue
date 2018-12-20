@@ -19,8 +19,13 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class AddBar extends Vue {
   newLink: string = "";
 
+  created() {
+    this.$store.dispatch("clearList");
+  }
+
   addLink() {
     this.$store.dispatch("addLink", { url: this.newLink });
+    this.newLink = "";
   }
 }
 </script>

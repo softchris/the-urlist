@@ -29,10 +29,7 @@ export default class List extends Vue {
 
     // check the store for an existing list. If it isn't there, ask the server for it.
     if (list.vanityUrl !== vanityUrl) {
-      linkService.getLinks(vanityUrl).then((list: IList) => {
-        this.$store.commit("setList", list);
-        console.log("done");
-      });
+      this.$store.dispatch("getList", vanityUrl);
     }
   }
 }

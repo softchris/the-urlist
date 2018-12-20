@@ -1,42 +1,71 @@
 import * as tslib_1 from "tslib";
-import { Module, Mutation, Action, VuexModule } from "vuex-module-decorators";
-import cuid from "cuid";
-import ogService from "@/services/og-service";
+import { Module, Mutation, Action, VuexModule } from 'vuex-module-decorators';
+import cuid from 'cuid';
+import axios from 'axios';
+import config from '@/config';
 let List = class List extends VuexModule {
     constructor() {
         super(...arguments);
-        this.activeList = { vanityUrl: "", description: "", links: new Array() };
+        this._list = { vanityUrl: '', description: '', links: new Array() };
+    }
+    get list() {
+        return this._list;
     }
     setListMutation(list) {
-        this.activeList = list;
+        this._list = list;
     }
     addLinkMutation(link) {
-        let item = this.activeList.links.find(x => x.id === link.id);
+        let item = this._list.links.find(x => x.id === link.id);
         if (item) {
             item = link;
         }
         else {
-            this.activeList.links.push(link);
+            this._list.links.push(link);
         }
     }
-    addLink(link) {
-        link.id = cuid();
-        link.title = link.url;
-        this.context.commit("addLinkMutation", link);
-        let result = ogService
-            .Scrape(link.url)
-            .then((result) => {
-            link.title = result.title;
-            link.description = result.description;
-            link.image = result.image.length > 0 ? result.image[0].url : "";
-            this.context.commit("addLinkMutation", link);
+    saveList(list) {
+        axios
+            .post(`${config.api}/links`, {
+            links: list.links,
+            vanityUrl: list.vanityUrl,
+            description: list.description
+        })
+            .then(result => {
+            this.context.commit('setListMutation', result.data);
         })
             .catch(err => {
             console.log(err);
         });
     }
-    get list() {
-        return this.activeList;
+    getListMutation(vanityUrl) {
+        axios
+            .get(`${config.api}/links/${vanityUrl}`)
+            .then(result => {
+            this.context.commit('setListMutation', result.data);
+        })
+            .catch(err => {
+            console.log(err);
+        });
+    }
+    addLink(link) {
+        link.id = cuid();
+        link.title = link.url;
+        this.context.commit('addLinkMutation', link);
+        //let result = ogService;
+        axios
+            .post(`${config.scraper}/Scrape`, {
+            url: link.url
+        })
+            .then(result => {
+            let ogData = result.data;
+            link.title = ogData.title;
+            link.description = ogData.description;
+            link.image = ogData.image.length > 0 ? ogData.image[0].url : '';
+            this.context.commit('addLinkMutation', link);
+        })
+            .catch(err => {
+            console.log(err);
+        });
     }
 };
 tslib_1.__decorate([
@@ -45,6 +74,12 @@ tslib_1.__decorate([
 tslib_1.__decorate([
     Mutation
 ], List.prototype, "addLinkMutation", null);
+tslib_1.__decorate([
+    Action({})
+], List.prototype, "saveList", null);
+tslib_1.__decorate([
+    Mutation
+], List.prototype, "getListMutation", null);
 tslib_1.__decorate([
     Action({})
 ], List.prototype, "addLink", null);

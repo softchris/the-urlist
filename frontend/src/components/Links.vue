@@ -66,14 +66,12 @@ export default class extends Vue {
     return this.$store.getters.list;
   }
 
-  async saveList() {
+  saveList() {
     this.active = true;
-
-    linkService
-      .saveLinks(this.list)
-      .then((list: IList) => {
-        this.$store.commit("setList", list);
-        this.$router.push(`/${list.vanityUrl}`);
+    this.$store
+      .dispatch("saveList")
+      .then(() => {
+        this.$router.push(`/${this.list.vanityUrl}`);
       })
       .catch(err => {
         console.log(err);
@@ -81,6 +79,19 @@ export default class extends Vue {
       .finally(() => {
         this.active = false;
       });
+
+    // linkService
+    //   .saveLinks(this.list)
+    //   .then((list: IList) => {
+    //     this.$store.commit("setList", list);
+    //     this.$router.push(`/${list.vanityUrl}`);
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   })
+    //   .finally(() => {
+    //     this.active = false;
+    //   });
   }
 }
 </script>
