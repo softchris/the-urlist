@@ -5,7 +5,7 @@ interface IOGImage {
 interface IOGData {
   title: string;
   description: string;
-  image: Array<IOGImage>;
+  image: IOGImage;
 }
 
 export { IOGImage, IOGData };

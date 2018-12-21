@@ -1,13 +1,22 @@
 <template>
-  <div class="card link">
-    <div class="card-content">
-      <div class="content">
-        <p>
-          <b>{{ link.title }}</b>
-        </p>
-        <p>{{ link.description }}</p>
+  <div class="box link">
+    <article class="media">
+      <div class="media-left">
+        <figure class="image is-64x64">
+          <img :src="link.image" :alt="link.title">
+        </figure>
       </div>
-    </div>
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <strong>{{ link.title }}</strong>
+            <br>
+            {{ link.description }}
+          </p>
+        </div>
+      </div>
+      <button class="delete" @click="deleteLink(link.id)" v-show="editable"></button>
+    </article>
   </div>
 </template>
 
@@ -15,10 +24,11 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
-  props: ["link"]
+  props: ["link", "editable"]
 })
 export default class extends Vue {
-  created() {
+  deleteLink(id: string) {
+    this.$store.dispatch("deleteLink", id);
   }
 }
 </script>

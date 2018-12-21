@@ -1,7 +1,7 @@
 <template>
   <div class="page is-loading">
     <div class="column" v-for="(link, index) in list.links" :index="index" :key="index">
-      <link-list :link="link"></link-list>
+      <link-list :link="link" :editable="false"></link-list>
     </div>
   </div>
 </template>

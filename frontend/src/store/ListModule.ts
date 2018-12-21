@@ -5,10 +5,11 @@ import ILink from '@/models/ILink';
 import { IOGData } from '@/models/IOGData';
 import axios from 'axios';
 import config from '@/config';
+import Array from '@/shared/Array';
 
 @Module
 export default class ListModule extends VuexModule {
-  _list: IList = { vanityUrl: '', description: '', links: new Array() };
+  _list: IList = { vanityUrl: '', description: '', links: new Array<ILink>() };
 
   get list() {
     return this._list;
@@ -27,7 +28,7 @@ export default class ListModule extends VuexModule {
 
   @Mutation
   addLinkMutation(link: ILink) {
-    let item = this._list.links.find(x => x.id === link.id);
+    let { item } = this._list.links.get(link.id);
     if (item) {
       item = link;
     } else {
@@ -37,7 +38,7 @@ export default class ListModule extends VuexModule {
 
   @Mutation
   updateLinkMutation(link: ILink) {
-    let index = this._list.links.findIndex(x => x.id === link.id);
+    let { index } = this._list.links.get(link.id);
     this._list.links[index].description = link.description;
   }
 
@@ -117,8 +118,9 @@ export default class ListModule extends VuexModule {
         let ogData = <IOGData>result.data;
         link.title = ogData.title;
         link.description = ogData.description;
-        link.image = ogData.image.length > 0 ? ogData.image[0].url : '';
-
+        link.image = ogData.image.url
+          ? ogData.image.url
+          : '../images/no-image.png';
         this.context.commit('updateLinkMutation', link);
       })
       .catch(err => {
@@ -130,8 +132,20 @@ export default class ListModule extends VuexModule {
   addLink(link: ILink) {
     link.id = cuid();
     link.title = link.url;
+    link.image = '../images/no-image.png';
 
     this.context.commit('addLinkMutation', link);
     this.context.dispatch('updateLink', link);
+  }
+
+  @Mutation
+  deleteLinkMutation(id: string) {
+    let { index } = this._list.links.get(id);
+    this._list.links.splice(index, 1);
+  }
+
+  @Action({})
+  deleteLink(id: string) {
+    this.context.commit('deleteLinkMutation', id);
   }
 }
