@@ -1,5 +1,6 @@
 <template>
-  <div class="page is-loading">
+  <div class="page">
+    <h2 class="title is-2 has-text-white">{{ list.description }}</h2>
     <div class="column" v-for="(link, index) in list.links" :index="index" :key="index">
       <link-list :link="link" :editable="false"></link-list>
     </div>
@@ -8,7 +9,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import linkService from "@/services/link-service";
 import IList from "@/models/IList";
 import LinkList from "@/components/LinkList.vue";
 

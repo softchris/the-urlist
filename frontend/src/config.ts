@@ -1,4 +1,5 @@
 export default {
-  api: "http://localhost:7071/api",
-  scraper: "https://og-scraper.azurewebsites.net/api"
+  api: process.env.VUE_APP_API,
+  scraper: process.env.VUE_APP_SCRAPER,
+  functionKey: process.env.VUE_APP_FUNCTION_KEY
 };

@@ -1,8 +1,10 @@
 import * as tslib_1 from "tslib";
 import { Module, Mutation, Action, VuexModule } from 'vuex-module-decorators';
-import cuid from 'cuid';
 import axios from 'axios';
 import config from '@/config';
+import Array from '@/shared/Array';
+import Link from '@/models/Link';
+axios.defaults.headers.common['x-functions-key'] = config.functionKey;
 let ListModule = class ListModule extends VuexModule {
     constructor() {
         super(...arguments);
@@ -11,31 +13,51 @@ let ListModule = class ListModule extends VuexModule {
     get list() {
         return this._list;
     }
-    setListMutation(list) {
-        this._list.vanityUrl = list.vanityUrl;
-        this._list.description = list.description;
-    }
     setVanityURLMutation(vanityUrl) {
         this._list.vanityUrl = vanityUrl;
     }
+    /* ADD LINK */
     addLinkMutation(link) {
-        let item = this._list.links.find(x => x.id === link.id);
-        if (item) {
-            item = link;
-        }
-        else {
-            this._list.links.push(link);
-        }
+        this._list.links.push(link);
     }
+    addLink(url) {
+        let link = new Link(url);
+        link.title = url;
+        this.context.commit('addLinkMutation', link);
+        this.context.dispatch('updateLink', link);
+    }
+    /* UPDATE LINK */
     updateLinkMutation(link) {
-        let index = this._list.links.findIndex(x => x.id === link.id);
-        this._list.links[index].description = link.description;
+        let { index } = this._list.links.get(link.id);
+        this._list.links[index] = link;
     }
+    updateLink(link) {
+        axios
+            .post(`${config.scraper}/Scrape`, {
+            url: link.url
+        })
+            .then(result => {
+            let ogData = result.data;
+            link.title = ogData.title;
+            link.description = ogData.description;
+            link.image = ogData.image.url;
+            this.context.commit('updateLinkMutation', link);
+        })
+            .catch(err => {
+            console.log(err);
+        });
+    }
+    /* CLEAR LIST */
     clearListMutation() {
         this._list = { vanityUrl: '', description: '', links: new Array() };
     }
     clearList() {
         this.context.commit('clearListMutation');
+    }
+    /* SET LIST */
+    setListMutation(list) {
+        this._list.vanityUrl = list.vanityUrl;
+        this._list.description = list.description;
     }
     setList(list) {
         this.context.commit('setListMutation', list);
@@ -52,7 +74,7 @@ let ListModule = class ListModule extends VuexModule {
             let list = result.data;
             this.context.commit('setListMutation', list);
             list.links.forEach(link => {
-                this.context.dispatch('addLink', link);
+                this.context.dispatch('addLink', link.url);
             });
         })
             .catch(err => {
@@ -62,7 +84,7 @@ let ListModule = class ListModule extends VuexModule {
     saveList() {
         return new Promise((resolve, reject) => {
             return axios
-                .post(`${config.api}/links`, {
+                .post(`${config.api}/links?`, {
                 links: this._list.links,
                 vanityUrl: this._list.vanityUrl,
                 description: this._list.description
@@ -74,42 +96,14 @@ let ListModule = class ListModule extends VuexModule {
                 .catch(err => reject(err));
         });
     }
-    getListMutation(vanityUrl) {
-        axios
-            .get(`${config.api}/links/${vanityUrl}`)
-            .then(result => {
-            this.context.commit('setListMutation', result.data);
-        })
-            .catch(err => {
-            console.log(err);
-        });
+    deleteLinkMutation(id) {
+        let { index } = this._list.links.get(id);
+        this._list.links.splice(index, 1);
     }
-    updateLink(link) {
-        axios
-            .post(`${config.scraper}/Scrape`, {
-            url: link.url
-        })
-            .then(result => {
-            let ogData = result.data;
-            link.title = ogData.title;
-            link.description = ogData.description;
-            link.image = ogData.image.length > 0 ? ogData.image[0].url : '';
-            this.context.commit('updateLinkMutation', link);
-        })
-            .catch(err => {
-            console.log(err);
-        });
-    }
-    addLink(link) {
-        link.id = cuid();
-        link.title = link.url;
-        this.context.commit('addLinkMutation', link);
-        this.context.dispatch('updateLink', link);
+    deleteLink(id) {
+        this.context.commit('deleteLinkMutation', id);
     }
 };
-tslib_1.__decorate([
-    Mutation
-], ListModule.prototype, "setListMutation", null);
 tslib_1.__decorate([
     Mutation
 ], ListModule.prototype, "setVanityURLMutation", null);
@@ -117,32 +111,38 @@ tslib_1.__decorate([
     Mutation
 ], ListModule.prototype, "addLinkMutation", null);
 tslib_1.__decorate([
+    Action
+], ListModule.prototype, "addLink", null);
+tslib_1.__decorate([
     Mutation
 ], ListModule.prototype, "updateLinkMutation", null);
+tslib_1.__decorate([
+    Action
+], ListModule.prototype, "updateLink", null);
 tslib_1.__decorate([
     Mutation
 ], ListModule.prototype, "clearListMutation", null);
 tslib_1.__decorate([
-    Action({})
+    Action
 ], ListModule.prototype, "clearList", null);
 tslib_1.__decorate([
-    Action({})
+    Mutation
+], ListModule.prototype, "setListMutation", null);
+tslib_1.__decorate([
+    Action
 ], ListModule.prototype, "setList", null);
 tslib_1.__decorate([
-    Action({})
+    Action
 ], ListModule.prototype, "getList", null);
 tslib_1.__decorate([
-    Action({})
+    Action
 ], ListModule.prototype, "saveList", null);
 tslib_1.__decorate([
     Mutation
-], ListModule.prototype, "getListMutation", null);
+], ListModule.prototype, "deleteLinkMutation", null);
 tslib_1.__decorate([
-    Action({})
-], ListModule.prototype, "updateLink", null);
-tslib_1.__decorate([
-    Action({})
-], ListModule.prototype, "addLink", null);
+    Action
+], ListModule.prototype, "deleteLink", null);
 ListModule = tslib_1.__decorate([
     Module
 ], ListModule);

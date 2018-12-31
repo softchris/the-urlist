@@ -1,5 +1,5 @@
 <template>
-  <div class="box link">
+  <div class="box link" @click="go(link.url)">
     <article class="media">
       <div class="media-left">
         <figure class="image is-64x64">
@@ -29,6 +29,10 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class extends Vue {
   deleteLink(id: string) {
     this.$store.dispatch("deleteLink", id);
+  }
+
+  go(url: string) {
+    window.location.assign(url);
   }
 }
 </script>

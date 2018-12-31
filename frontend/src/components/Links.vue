@@ -30,7 +30,7 @@
       <div class="column">
         <sortable-list v-model="list.links">
           <sortable-item v-for="(link, index) in list.links" :index="index" :key="index">
-            <link-list :link="link"></link-list>
+            <link-list :link="link" :editable="true"></link-list>
           </sortable-item>
         </sortable-list>
       </div>
@@ -41,12 +41,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { SlickList, SlickItem } from "vue-slicksort";
-import EventBus from "@/EventBus";
-import IList from "@/models/IList";
-import ILink from "@/models/ILink";
-import { IOGData } from "@/models/IOGData";
-import linkService from "@/services/link-service";
-import ogService from "@/services/og-service";
 import LinkList from "@/components/LinkList.vue";
 
 const SortableList: object = SlickList;
