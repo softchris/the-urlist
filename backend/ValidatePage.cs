@@ -13,6 +13,9 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using HtmlAgilityPack;
+using OpenGraphNet.Metadata;
+using OpenGraphNet.Namespaces;
 
 namespace LinkyLink
 {
@@ -82,9 +85,15 @@ namespace LinkyLink
                         log.LogWarning("Invalid URL: {url}", url);
                         return new OpenGraphResult { Id = id };
                     }
+                    HttpDownloader downloader = new HttpDownloader(uriLink, null, "AzureFunctions");
+                    string html = await downloader.GetPageAsync();
 
-                    OpenGraph graph = await OpenGraph.ParseUrlAsync(uriLink);
-                    return new OpenGraphResult(id, graph);
+                    OpenGraph graph = OpenGraph.ParseHtml(html);
+                    HtmlDocument doc = new HtmlDocument();
+                    doc.LoadHtml(html);
+                    var descriptionMetaTag = doc.DocumentNode.SelectSingleNode("//meta[@name='description']");
+                    var titleTag = doc.DocumentNode.SelectSingleNode("//head/title");
+                    return new OpenGraphResult(id, graph, descriptionMetaTag, titleTag);
                 }
                 catch (Exception ex)
                 {
