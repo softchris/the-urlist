@@ -1,11 +1,7 @@
-interface IOGImage {
-  url: string;
-}
-
 interface IOGData {
   title: string;
   description: string;
-  image: IOGImage;
+  image: string;
 }
 
-export { IOGImage, IOGData };
+export { IOGData };

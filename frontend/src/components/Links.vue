@@ -10,8 +10,13 @@
         <span class="is-aligned-right">Drag each link to re-arrange</span>
       </div>
       <sortable-list v-model="list.links" :distance="10">
-        <sortable-item v-for="(link, index) in list.links" :index="index" :key="index">
-          <link-list :link="link" :editable="true"></link-list>
+        <sortable-item
+          v-for="(link, index) in list.links"
+          :index="index"
+          :key="index"
+          disabled="true"
+        >
+          <link-preview :link="link"></link-preview>
         </sortable-item>
       </sortable-list>
     </div>
@@ -23,7 +28,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { SlickList, SlickItem } from "vue-slicksort";
 import { validationMixin } from "vuelidate";
 import { required, url, helpers } from "vuelidate/lib/validators";
-import LinkList from "@/components/LinkList.vue";
+import LinkPreview from "@/components/LinkPreview.vue";
 import NewLink from "@/components/NewLink.vue";
 import EventBus from "../EventBus";
 
@@ -46,7 +51,7 @@ const customURL = helpers.regex(
   components: {
     SortableList,
     SortableItem,
-    LinkList,
+    LinkPreview,
     NewLink
   }
 })

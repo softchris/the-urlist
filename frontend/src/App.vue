@@ -3,7 +3,6 @@
     <progress-bar></progress-bar>
     <nav-bar></nav-bar>
     <router-view/>
-    <notification></notification>
   </div>
 
   <!-- <div id="app">
@@ -38,21 +37,25 @@ export default class List extends Vue {
 @import url("https://fonts.googleapis.com/css?family=Roboto");
 
 // @import "../node_modules/bulma/bulma.sass";
-$primary-color: #2bad96;
+$primary-color: #20ae96;
 $primary-color-hover: #31a490;
 $primary-color-active: #2a8d7c;
 
 body {
-  background-color: #f9fafc;
+  background-color: #fff;
   padding: 0;
   margin: 0;
   font-family: "Roboto", sans-serif;
-  color: #71777e;
+  color: #222c38;
   font-size: 18px;
 }
 
+.full-height {
+  min-height: 100vh;
+}
+
 .section {
-  margin-top: 75px;
+  margin-top: 150px;
   margin-bottom: 25px;
 }
 
@@ -119,6 +122,10 @@ input {
   color: #fff;
 }
 
+.has-background-white {
+  background-color: white;
+}
+
 .has-text-primary {
   color: $primary-color;
 }
@@ -127,8 +134,15 @@ input {
   font-weight: bold;
 }
 
+h1 {
+  font-size: 30px;
+  font-weight: 300;
+  line-height: 1.33;
+}
+
 h2 {
-  font-size: 2rem;
+  font-size: 30px;
+  font-weight: 500;
 }
 
 .is-aligned-right {
