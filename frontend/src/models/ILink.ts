@@ -1,4 +1,4 @@
-export default interface Link {
+export default interface ILink {
   id: string;
   url: string;
   description: string;
