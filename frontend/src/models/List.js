@@ -7,4 +7,4 @@ export default class IList {
         this.editable = editable;
     }
 }
-//# sourceMappingURL=IList.js.map
+//# sourceMappingURL=List.js.map

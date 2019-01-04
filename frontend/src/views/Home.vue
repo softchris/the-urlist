@@ -1,11 +1,8 @@
 <template>
-  <div>
-    <section>
-      <AddBar></AddBar>
-    </section>
-    <section class="section">
+  <div class="container">
+    <div class="section">
       <Links></Links>
-    </section>
+    </div>
   </div>
 </template>
 
@@ -20,7 +17,11 @@ import Links from "@/components/Links.vue";
     Links
   }
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  created() {
+    this.$store.dispatch("initList", true);
+  }
+}
 </script>
 
 <style>
