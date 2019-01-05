@@ -29,7 +29,7 @@ export default class extends Vue {
 
   addLink() {
     if (!this.$v.$invalid) {
-      this.$store.dispatch("addLink", this.newLink);
+      this.$emit("onAddNewLink", this.newLink);
       this.newLink = "";
     }
   }

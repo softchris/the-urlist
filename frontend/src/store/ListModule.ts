@@ -4,7 +4,6 @@ import ILink from '@/models/ILink';
 import { IOGData } from '@/models/IOGData';
 import axios from 'axios';
 import config from '@/config';
-import Array from '@/shared/Array';
 import Link from '@/models/Link';
 
 axios.defaults.headers.common['x-functions-key'] = config.functionKey;

@@ -24,7 +24,7 @@
             <div class="flex is-horizontally-centered">
               <h2 class="has-text-primary">Get Started</h2>
             </div>
-            <new-link></new-link>
+            <new-link @onAddNewLink="addLink"></new-link>
           </div>
         </div>
       </div>
@@ -44,6 +44,12 @@ import NewLink from "@/components/NewLink.vue";
 export default class Home extends Vue {
   created() {
     this.$store.dispatch("initList", false);
+  }
+
+  // event emitted by the
+  addLink(url: string) {
+    this.$store.dispatch("addLink", url);
+    this.$router.push(`/new`);
   }
 }
 </script>

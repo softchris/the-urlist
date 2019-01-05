@@ -1,8 +1,7 @@
 <template>
-  <div>
+  <div class="container add-links">
     <div class="section">
-      <p>Enter a link and press enter</p>
-      <input ref="newLink" type="text" id="newLink" v-model="newLink" @keyup.enter="addLink()">
+      <new-link @onAddNewLink="addLink"></new-link>
     </div>
     <div class="links">
       <div class="flex is-vertically-centered">
@@ -19,6 +18,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { validationMixin } from "vuelidate";
 import { required, url, helpers } from "vuelidate/lib/validators";
 import LinkList from "@/components/LinkList.vue";
+import NewLink from "@/components/NewLink.vue"
 
 const customURL = helpers.regex(
   "customURL",
@@ -34,7 +34,8 @@ const customURL = helpers.regex(
     }
   },
   components: {
-    LinkList
+    LinkList,
+    NewLink
   }
 })
 export default class extends Vue {
@@ -44,15 +45,20 @@ export default class extends Vue {
     return this.$store.getters.list;
   }
 
-  addLink() {
-    if (!this.$v.$invalid) {
-      this.$store.dispatch("addLink", this.newLink);
-      this.newLink = "";
-    }
+  created() {
+    this.$store.dispatch("setListEditable", true);
+  }
+
+  addLink(url: string) {
+    this.$store.dispatch("addLink", url);
+    this.newLink = "";
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.add-links {
+  margin-top: 100px;
+}
 </style>
