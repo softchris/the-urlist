@@ -50,6 +50,9 @@ export default class extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
   background: white;
   box-shadow: 0px 5px 40px 1px #e8e8e8;
 }

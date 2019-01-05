@@ -2,31 +2,17 @@
   <div class="container">
     <div class="section">
       <h2 class="has-text-primary">{{ list.description }}</h2>
-      <div class="columns">
-        <div class="column">
-          <sortable-list v-model="list.links">
-            <sortable-item v-for="(link, index) in list.links" :index="index" :key="index">
-              <link-list :link="link" :editable="false"></link-list>
-            </sortable-item>
-          </sortable-list>
-        </div>
-      </div>
+      <link-list :links="list.links"></link-list>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { SlickList, SlickItem } from "vue-slicksort";
 import LinkList from "@/components/LinkList.vue";
-
-const SortableList: object = SlickList;
-const SortableItem: object = SlickItem;
 
 @Component({
   components: {
-    SortableList,
-    SortableItem,
     LinkList
   }
 })

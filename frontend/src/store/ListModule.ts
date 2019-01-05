@@ -57,16 +57,17 @@ export default class ListModule extends VuexModule {
   @Action
   updateLink(link: ILink) {
     axios
-      .post(`${config.scraper}/Scrape`, {
-        url: link.url
+      .post(`${config.API_URL}/validatePage`, {
+        url: link.url,
+        id: link.id
       })
       .then(result => {
         let ogData = <IOGData>result.data;
 
         link.title = ogData.title;
         link.description = ogData.description;
-        if (ogData.image.url) {
-          link.image = ogData.image.url;
+        if (ogData.image) {
+          link.image = ogData.image;
         }
         this.context.commit('_updateLink', link);
       })
@@ -78,12 +79,7 @@ export default class ListModule extends VuexModule {
   /* INIT LIST */
   @Mutation
   _initList(editable: boolean) {
-    this._list = {
-      vanityUrl: '',
-      description: '',
-      links: new Array(),
-      editable: true
-    };
+    this._list = new List(editable);
   }
 
   @Action({ commit: '_initList' })
