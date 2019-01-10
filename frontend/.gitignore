@@ -22,3 +22,4 @@ yarn-error.log*
 
 *.js
 *.js.map
+!vue.config.js
