@@ -1,5 +1,5 @@
 <template>
-  <div class="link flex is-vertically-centered">
+  <div class="card link flex is-vertically-centered">
     <figure class="link-image">
       <img width="64" :src="link.image" :alt="link.title">
     </figure>
@@ -13,7 +13,9 @@
       </div>
     </div>
     <div class="is-aligned-right delete">
-      <a class="has-text-bold" @click.prevent="deleteLink(link.id)" v-show="editable">x</a>
+      <a class="has-text-bold" @click.prevent="deleteLink(link.id)" v-show="list.editable">
+        <img src="../assets/close.png" alt>
+      </a>
     </div>
   </div>
 </template>
@@ -22,9 +24,13 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
-  props: ["link", "editable"]
+  props: ["link"]
 })
 export default class extends Vue {
+  get list() {
+    return this.$store.getters.list;
+  }
+
   deleteLink(id: string) {
     this.$store.dispatch("deleteLink", id);
   }
@@ -40,10 +46,6 @@ export default class extends Vue {
 .link {
   width: 100%;
   height: 126px;
-  background-color: white;
-  border-radius: 4px;
-  box-shadow: 0px 5px 40px 1px #e8e8e8;
-  margin-bottom: 1em;
 }
 
 .link-details {

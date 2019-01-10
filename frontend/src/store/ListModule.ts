@@ -2,18 +2,27 @@ import { Module, Mutation, Action, VuexModule } from 'vuex-module-decorators';
 import List from '@/models/List';
 import ILink from '@/models/ILink';
 import { IOGData } from '@/models/IOGData';
-import axios from 'axios';
+import axios from '../shared/axios';
 import config from '@/config';
 import Link from '@/models/Link';
-
-axios.defaults.headers.common['x-functions-key'] = config.functionKey;
+import Array from '../shared/Array';
 
 @Module
 export default class ListModule extends VuexModule {
-  _list: List = new List(false);
+  _list: List = new List();
+  _myLists: Array<List> = new Array();
 
   get list() {
     return this._list;
+  }
+
+  get myLists() {
+    return this._myLists;
+  }
+
+  @Mutation
+  _setMyLists(lists: Array<List>) {
+    this._myLists = lists;
   }
 
   @Mutation
@@ -38,12 +47,15 @@ export default class ListModule extends VuexModule {
   }
 
   @Action
-  addLink(url: string) {
-    let link = new Link(url);
-    link.title = url;
-
+  addLink(link: ILink = new Link()) {
     this.context.commit('_addLink', link);
     this.context.dispatch('updateLink', link);
+  }
+
+  @Action
+  newLink(url: string) {
+    const link = new Link(url, url, '', '');
+    this.context.dispatch('addLink', link);
   }
 
   /* UPDATE LINK */
@@ -77,13 +89,16 @@ export default class ListModule extends VuexModule {
 
   /* INIT LIST */
   @Mutation
-  _initList(editable: boolean) {
-    this._list = new List(editable);
+  _initList(list: List = new List()) {
+    this._list.description = list.description;
+    this._list.vanityUrl = list.vanityUrl;
+    this._list.editable = list.editable;
+    this._list.links = new Array();
   }
 
   @Action({ commit: '_initList' })
-  initList(editable: boolean) {
-    return editable;
+  initList(list?: List) {
+    return list;
   }
 
   /* SET LIST */
@@ -96,49 +111,46 @@ export default class ListModule extends VuexModule {
 
   /* GET LIST */
   @Action
-  getList(vanityUrl: string) {
-    this.context.dispatch('setAppBusy', true);
-    axios
-      .get(`${config.API_URL}/links/${vanityUrl}`)
-      .then(result => {
-        let list = <List>result.data;
+  async getList(args: { vanityUrl: string; editable: boolean }) {
+    // clear out the existing list
+    this.context.commit('_initList');
 
-        // lists are not editable by default
-        list.editable = false;
+    try {
+      const result = await axios.get(
+        `${config.API_URL}/links/${args.vanityUrl}`
+      );
 
-        this.context.commit('_setList', list);
+      const list = <List>result.data;
+      list.editable = args.editable;
 
-        list.links.forEach(link => {
-          this.context.dispatch('addLink', link.url);
-        });
+      this.context.commit('_initList', list);
 
-        this.context.dispatch('setAppBusy', false);
-      })
-      .catch(err => {
-        console.log(err);
-        this.context.dispatch('setAppBusy', false);
-      });
+      for (let link of list.links) {
+        this.context.dispatch('addLink', link);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   /* SAVE LIST */
   @Action
-  saveList() {
-    this.context.dispatch('setAppBusy', true);
-    return new Promise((resolve, reject) => {
-      return axios
-        .post(`${config.API_URL}/links?`, {
-          links: this._list.links,
-          vanityUrl: this._list.vanityUrl,
-          description: this._list.description
-        })
-        .then(result => {
-          this.context.commit('_setVanityUrl', result.data.vanityUrl);
-          this.context.commit('_setListEditable', false);
-          this.context.dispatch('setAppBusy', false);
-          resolve();
-        })
-        .catch(err => reject(err));
-    });
+  async saveList() {
+    const options = {
+      links: this._list.links,
+      vanityUrl: this._list.vanityUrl,
+      description: this._list.description,
+      userId: this.context.getters.currentUser.userName
+    };
+
+    try {
+      let result = await axios.post(`${config.API_URL}/links?`, options);
+
+      this.context.commit('_setVanityUrl', result.data.vanityUrl);
+      this.context.commit('_setListEditable', false);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   /* DELETE LINK */
@@ -151,5 +163,17 @@ export default class ListModule extends VuexModule {
   @Action
   deleteLink(id: string) {
     this.context.commit('_deleteLink', id);
+  }
+
+  /* GET MY LISTS */
+  @Action
+  async getMyLinks(userName: string) {
+    try {
+      let results = await axios.get(`${config.API_URL}/links/user/${userName}`);
+
+      this.context.commit('_setMyLists', results.data);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 }

@@ -6,22 +6,20 @@ export default class Link implements ILink {
   url = "";
   title = "";
   description = "";
-  _image = "../images/no-image.png";
+  image = "../images/no-image.png";
 
-  get image() {
-    return this._image;
-  }
-
-  set image(value: string) {
-    if (value) {
-      this._image = value;
-    } else {
-      this._image = "../images/no-image.png";
-    }
-  }
-
-  constructor(url: string) {
+  constructor(
+    url: string = "",
+    title: string = "",
+    description: string = "",
+    image: string = ""
+  ) {
     this.id = cuid();
     this.url = url;
+    this.title = title || url;
+    this.description = description;
+    if (image.length > 0) {
+      this.image = image;
+    }
   }
 }
