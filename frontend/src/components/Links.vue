@@ -1,8 +1,7 @@
 <template>
   <div>
     <div class="section">
-      <p>Enter a link and press enter to add it below</p>
-      <input ref="newLink" type="text" id="newLink" v-model="newLink" @keyup.enter="addLink()">
+      <new-link @onAddNewLink="addLink"></new-link>
     </div>
     <div class="links">
       <div class="flex is-vertically-centered">
@@ -62,9 +61,10 @@ export default class extends Vue {
     return this.$store.getters.list;
   }
 
-  addLink() {
+  addLink(url: string) {
     if (!this.$v.$invalid) {
-      this.$store.dispatch("addLink", this.newLink);
+      debugger;
+      this.$store.dispatch("addLink", url);
       this.newLink = "";
     }
     // else {
