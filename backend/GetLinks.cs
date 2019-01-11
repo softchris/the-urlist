@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.Azure.Documents;
 
 namespace LinkyLink
 {
@@ -43,17 +44,17 @@ namespace LinkyLink
                 databaseName: "linkylinkdb",
                 collectionName: "linkbundles",
                 ConnectionStringSetting = "LinkLinkConnection",
-                SqlQuery = "SELECT c.userId, c.vanityUrl, c.description FROM c where c.userId = {userId}"
-            )] IEnumerable<LinkBundle> documents,
+                SqlQuery = "SELECT c.userId, c.vanityUrl, c.description, ARRAY_LENGTH(c.links) as linkCount FROM c where c.userId = {userId}"
+            )] IEnumerable<Document> documents,
            string userId,
            ILogger log)
         {
-            string twitterHandle = GetTwitterHandle(req);
-            if (string.IsNullOrEmpty(twitterHandle) || twitterHandle != userId)
-            {
-                log.LogInformation("Client is not authenticated");
-                return new UnauthorizedResult();
-            }
+            // string twitterHandle = GetTwitterHandle(req);
+            // if (string.IsNullOrEmpty(twitterHandle) || twitterHandle != userId)
+            // {
+            //     log.LogInformation("Client is not authenticated");
+            //     return new UnauthorizedResult();
+            // }
 
             TrackRequestHeaders(req, $"{nameof(GetBundlesForUser)}-HeaderData");
             if (!documents.Any())
@@ -62,7 +63,14 @@ namespace LinkyLink
 
                 return new NotFoundResult();
             }
-            return new OkObjectResult(documents);
+            var results = documents.Select(d => new
+            {
+                userId = d.GetPropertyValue<string>("userId"),
+                vanityUrl = d.GetPropertyValue<string>("vanityUrl"),
+                description = d.GetPropertyValue<string>("description"),
+                linkCount = d.GetPropertyValue<string>("linkCount")
+            });
+            return new OkObjectResult(results);
         }
     }
 }
