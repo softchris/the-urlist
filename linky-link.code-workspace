@@ -1,12 +1,12 @@
 {
   "folders": [
-	{
-		"path": "frontend"
-	},
-	{
-		"path": "api"
-	}
-],
+    {
+      "path": "frontend"
+    },
+    {
+      "path": "backend"
+    }
+  ],
   "settings": {
     "files.exclude": {
       "**/*.js.map": true

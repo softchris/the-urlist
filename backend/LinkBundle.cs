@@ -13,16 +13,16 @@ namespace LinkyLink
             this.Links = links;
         }
 
-        [JsonProperty("userId")]
+        [JsonProperty("userId", NullValueHandling = NullValueHandling.Ignore)]
         public string UserId { get; set; }
 
-        [JsonProperty("vanityUrl")]
+        [JsonProperty("vanityUrl", NullValueHandling = NullValueHandling.Ignore)]
         public string VanityUrl { get; set; }
 
-        [JsonProperty("description")]
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
 
-        [JsonProperty("links")]
+        [JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
         public IDictionary<string, string>[] Links { get; set; }
     }
 }

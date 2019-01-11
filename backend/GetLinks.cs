@@ -35,5 +35,34 @@ namespace LinkyLink
             LinkBundle doc = documents.Single();
             return new OkObjectResult(doc);
         }
+
+        [FunctionName(nameof(GetBundlesForUser))]
+        public static IActionResult GetBundlesForUser(
+           [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "links/user/{userId}")] HttpRequest req,
+           [CosmosDB(
+                databaseName: "linkylinkdb",
+                collectionName: "linkbundles",
+                ConnectionStringSetting = "LinkLinkConnection",
+                SqlQuery = "SELECT c.userId, c.vanityUrl, c.description FROM c where c.userId = {userId}"
+            )] IEnumerable<LinkBundle> documents,
+           string userId,
+           ILogger log)
+        {
+            string twitterHandle = GetTwitterHandle(req);
+            if (string.IsNullOrEmpty(twitterHandle) || twitterHandle != userId)
+            {
+                log.LogInformation("Client is not authenticated");
+                return new UnauthorizedResult();
+            }
+
+            TrackRequestHeaders(req, $"{nameof(GetBundlesForUser)}-HeaderData");
+            if (!documents.Any())
+            {
+                log.LogInformation($"No links for user: '{userId}'  found.");
+
+                return new NotFoundResult();
+            }
+            return new OkObjectResult(documents);
+        }
     }
 }
