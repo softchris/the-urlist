@@ -7,6 +7,7 @@
           id="vanity-url"
           v-model="list.vanityUrl"
           type="text"
+          @keyup="checkVanityAvailable()"
           :disabled="list.editable && list.vanityUrl.length > 0"
         >
       </div>
@@ -37,6 +38,19 @@ export default class AddBar extends Vue {
       this.$router.push(`/${this.list.vanityUrl}`);
     } catch (err) {
       console.log("could not do something to something");
+    }
+  }
+
+  async checkVanityAvailable() {
+    try {
+      const available = this.$store.dispatch("checkVanityAvailable");
+      if (!available) {
+        console.log("Not available");
+      } else {
+        console.log("Available");
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 }

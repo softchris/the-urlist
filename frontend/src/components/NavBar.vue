@@ -14,16 +14,8 @@
         </a>
       </li>
     </ul>
-    <add-bar v-show="editable"></add-bar>
+    <add-bar v-show="showAddBar" style="display: none"></add-bar>
   </header>
-  <!-- <nav class="level">
-    <div class="level-left"></div>
-    <div class="level-right">
-      <div class="level-item">
-        <a class="has-text-white" :href="authUrl">Login with Twitter</a>
-      </div>
-    </div>
-  </nav>-->
 </template>
 
 <script lang="ts">
@@ -45,8 +37,8 @@ export default class extends Vue {
     return this.$store.getters.currentUser;
   }
 
-  get editable() {
-    return this.$store.getters.list.editable;
+  get showAddBar() {
+    return this.$store.getters.showAddBar;
   }
 
   profileLoginClick() {
@@ -60,8 +52,7 @@ export default class extends Vue {
   async created() {
     // check to see if the user is logged in
     try {
-      console.log("no user");
-      let user = this.$store.dispatch("getUser");
+      const user = this.$store.dispatch("getUser");
     } catch (err) {
       console.log("User is not logged in");
     }
