@@ -8,7 +8,7 @@
         <h2 class="has-text-primary">Links</h2>
         <span class="is-aligned-right">Drag each link to re-arrange</span>
       </div>
-      <link-list :links="list.links" :editable="list.editable"></link-list>
+      <link-list :links="list.links"></link-list>
     </div>
   </div>
 </template>
@@ -18,7 +18,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { validationMixin } from "vuelidate";
 import { required, url, helpers } from "vuelidate/lib/validators";
 import LinkList from "@/components/LinkList.vue";
-import NewLink from "@/components/NewLink.vue"
+import NewLink from "@/components/NewLink.vue";
 
 const customURL = helpers.regex(
   "customURL",
@@ -39,18 +39,13 @@ const customURL = helpers.regex(
   }
 })
 export default class extends Vue {
-  active: boolean = false;
   newLink: string = "";
   get list() {
     return this.$store.getters.list;
   }
 
-  created() {
-    this.$store.dispatch("setListEditable", true);
-  }
-
   addLink(url: string) {
-    this.$store.dispatch("addLink", url);
+    this.$store.dispatch("newLink", url);
     this.newLink = "";
   }
 }

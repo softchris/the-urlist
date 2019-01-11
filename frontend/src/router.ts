@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Home from "@/views/Home.vue";
 import List from "@/views/List.vue";
 import New from "@/views/New.vue";
+import Me from "@/views/Me.vue";
 
 Vue.use(Router);
 
@@ -19,6 +20,11 @@ export default new Router({
       path: "/new",
       name: "new",
       component: New
+    },
+    {
+      path: "/me",
+      name: "me",
+      component: Me
     },
     {
       path: "/:id",

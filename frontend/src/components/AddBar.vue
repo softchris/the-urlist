@@ -3,11 +3,16 @@
     <div class="addbar container flex is-horizontally-centered">
       <div class="control">
         <label for="vanity-url">Vanity URL</label>
-        <input id="vanity-url" v-model="list.vanityUrl" type="text">
+        <input
+          id="vanity-url"
+          v-model="list.vanityUrl"
+          type="text"
+          :disabled="list.editable && list.vanityUrl.length > 0"
+        >
       </div>
       <div class="control">
         <label for="description">Description</label>
-        <input id="description" v-model="list.description" type="text">
+        <textarea class="description" id="description" v-model="list.description"></textarea>
       </div>
       <div class="save-button">
         <button class="is-color-primary has-text-white has-text-bold" @click="saveList()">Save List</button>
@@ -26,15 +31,13 @@ export default class AddBar extends Vue {
     return this.$store.getters.list;
   }
 
-  saveList() {
-    this.$store
-      .dispatch("saveList")
-      .then(() => {
-        this.$router.push(`/${this.list.vanityUrl}`);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  async saveList() {
+    try {
+      await this.$store.dispatch("saveList");
+      this.$router.push(`/${this.list.vanityUrl}`);
+    } catch (err) {
+      console.log("could not do something to something");
+    }
   }
 }
 </script>
@@ -51,7 +54,7 @@ export default class AddBar extends Vue {
 }
 
 .save-button {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   align-self: flex-end;
 }
 

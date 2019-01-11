@@ -13,7 +13,7 @@
           v-for="(link, index) in list.links"
           :index="index"
           :key="index"
-          disabled="true"
+          :disabled="false"
         >
           <link-preview :link="link"></link-preview>
         </sortable-item>
@@ -63,7 +63,6 @@ export default class extends Vue {
 
   addLink(url: string) {
     if (!this.$v.$invalid) {
-      debugger;
       this.$store.dispatch("addLink", url);
       this.newLink = "";
     }

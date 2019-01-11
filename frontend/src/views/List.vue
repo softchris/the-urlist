@@ -2,7 +2,7 @@
   <div class="container">
     <div class="section">
       <h2 class="has-text-primary">{{ list.description }}</h2>
-      <link-list :links="list.links"></link-list>
+      <link-list :links="list.links" editable="false"></link-list>
     </div>
   </div>
 </template>
@@ -22,15 +22,11 @@ export default class List extends Vue {
   }
 
   created() {
-    //XQHtCQS
-
     // get the list from the db based on the url id
     let vanityUrl = this.$route.params.id;
-    let list = this.$store.getters.list;
 
-    // check the store for an existing list. If it isn't there, ask the server for it.
-    if (list.vanityUrl !== vanityUrl) {
-      this.$store.dispatch("getList", vanityUrl);
+    if (this.list.vanityUrl != vanityUrl) {
+      this.$store.dispatch("getList", { vanityUrl: vanityUrl, editable: true });
     }
   }
 }

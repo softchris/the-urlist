@@ -1,10 +1,9 @@
 <template>
   <div>
-    <progress-bar></progress-bar>
     <nav-bar></nav-bar>
     <router-view/>
+    <login></login>
   </div>
-
   <!-- <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link>|
@@ -17,14 +16,14 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import NavBar from "@/components/NavBar.vue";
-import ProgressBar from "@/components/ProgressBar.vue";
-import Notification from "@/components/Notification.vue";
+import Login from "@/components/Login.vue";
+import "@fortawesome/fontawesome-free/js/all";
+// import Notification from "@/components/Notification.vue";
 
 @Component({
   components: {
-    Notification,
     NavBar,
-    ProgressBar
+    Login
   }
 })
 export default class List extends Vue {
@@ -35,6 +34,7 @@ export default class List extends Vue {
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css?family=Roboto");
+@import "../node_modules/@fortawesome/fontawesome-free/css/all.css";
 
 // @import "../node_modules/bulma/bulma.sass";
 $primary-color: #20ae96;
@@ -42,7 +42,7 @@ $primary-color-hover: #31a490;
 $primary-color-active: #2a8d7c;
 
 body {
-  background-color: #fff;
+  background-color: #f9fafc;
   padding: 0;
   margin: 0;
   font-family: "Roboto", sans-serif;
@@ -55,14 +55,20 @@ body {
 }
 
 .section {
-  margin-top: 150px;
   margin-bottom: 25px;
 }
 
+.big-container {
+  height: 100%;
+  max-width: 1344px;
+  margin: auto;
+  padding: 1rem 2rem 1rem 2rem;
+}
+
 .container {
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 960px;
+  margin: 0 auto;
+  position: relative;
   padding: 10px;
 }
 
@@ -101,8 +107,15 @@ button {
   }
 }
 
-input {
-  font-size: 2.25rem;
+.card {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0px 5px 40px 1px #e8e8e8;
+  margin-bottom: 1em;
+}
+
+input,
+textarea {
   height: 3.5rem;
   border-radius: 4px;
   border: 1px solid transparent;
@@ -112,6 +125,14 @@ input {
   padding-left: 10px;
   padding-right: 10px;
   box-sizing: border-box;
+}
+
+input {
+  font-size: 2.25rem;
+}
+
+textarea {
+  font-size: 1rem;
 }
 
 .is-color-primary {
@@ -145,7 +166,39 @@ h2 {
   font-weight: 500;
 }
 
+h3 {
+  font-size: 20px;
+}
+
+.badge {
+  background-color: $primary-color;
+  border-radius: 20px;
+  color: white;
+  padding: 2px 10px;
+}
+
 .is-aligned-right {
   margin-left: auto;
+}
+
+.x {
+  text-decoration: none;
+  color: inherit;
+}
+
+.columns {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.column {
+  display: block;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  &.is-one-quarter {
+    width: 25%;
+    flex: none;
+  }
 }
 </style>

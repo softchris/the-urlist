@@ -6,7 +6,7 @@ import AppModule from "@/store/AppModule";
 
 Vue.use(Vuex);
 
-export const store = new Vuex.Store({
+const store = new Vuex.Store({
   state: {},
   modules: {
     ListModule,
@@ -14,3 +14,5 @@ export const store = new Vuex.Store({
     AppModule
   }
 });
+
+export default store;

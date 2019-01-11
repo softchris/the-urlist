@@ -12,7 +12,7 @@
             <p>Add links to a list, give the list a description and get a URL you can send to anyone.</p>
             <p>Login to track, manage and edit your lists</p>
           </div>
-          <img src="../assets/banner-logo-small.png">
+          <img src="../assets/banner-logo-small.png" class="banner-image">
         </div>
       </div>
     </div>
@@ -46,15 +46,23 @@ export default class Home extends Vue {
     this.$store.dispatch("initList", false);
   }
 
-  // event emitted by the
+  // event emitted by the AddBar component
   addLink(url: string) {
-    this.$store.dispatch("addLink", url);
+    this.$store.dispatch("newLink", url);
     this.$router.push(`/new`);
   }
 }
 </script>
 
 <style scoped lang="scss">
+.main {
+  background-color: #fff;
+}
+
+.banner-image {
+  min-width: 482px;
+}
+
 img {
   max-width: 100%;
   height: auto;

@@ -9,11 +9,11 @@ export default class AppModule extends VuexModule {
   }
 
   @Mutation
-  setAppBusyMutation(busy: boolean) {
+  _setAppBusy(busy: boolean) {
     this._appIsBusy = busy;
   }
 
-  @Action({ commit: "setAppBusyMutation" })
+  @Action({ commit: "_setAppBusy" })
   setAppBusy(busy: boolean) {
     return busy;
   }
