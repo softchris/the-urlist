@@ -3,7 +3,7 @@ import config from "../config";
 import store from "../store/store";
 
 axios.defaults.headers.common["x-functions-key"] = config.FUNCTION_KEY;
-// axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use((config: AxiosRequestConfig) => {
   store.dispatch("setAppBusy", true);

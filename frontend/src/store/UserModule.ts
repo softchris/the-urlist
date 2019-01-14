@@ -3,9 +3,6 @@ import config from "../config";
 import User from "../models/User";
 import axios from "axios";
 
-// axios.defaults.headers.common["x-functions-key"] = config.FUNCTION_KEY;
-// axios.defaults.withCredentials = true;
-
 @Module
 export default class ListModule extends VuexModule {
   _currentUser: User = new User();
@@ -25,18 +22,9 @@ export default class ListModule extends VuexModule {
       let response = await axios.get(config.ME_URL);
       let user = new User(response.data[0]);
       this.context.commit("_setUser", user);
-      this.context.dispatch("getMyLinks", user.userName);
+      this.context.dispatch("getMyLists", user.userName);
     } catch (err) {
       console.log("User is not logged in");
-
-      // for debugging only
-      const user = new User({
-        user_id: "burkeholland",
-        provider_name: "",
-        user_claims: new Array()
-      });
-      this.context.commit("_setUser", user);
-      this.context.dispatch("getMyLinks", user.userName);
     }
   }
 

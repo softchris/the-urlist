@@ -6,9 +6,9 @@
           <img src="../assets/close.png">
         </a>
         <div class="flex is-horizontally-centered">
-          <h1>Sign in to Links A Lot</h1>
+          <h1>Sign in to Urlist</h1>
         </div>
-        <div class="flex is-horizontally-centered">
+        <div class="flex is-horizontally-centered login-content">
           <a :href="loginUrl" class="twitter-button has-text-white">
             <span>
               <i class="fab fa-twitter twitter-icon"></i>
@@ -16,7 +16,7 @@
             </span>
           </a>
         </div>
-        <p>We never ever store any of your personal information.</p>
+        <p>Signing in is cool because you can view, edit and manage any lists that you create. It's nifty.</p>
       </div>
     </div>
   </modal>
@@ -42,6 +42,11 @@ export default class Login extends Vue {
 <style scoped lang="scss">
 .login {
   margin: 20px;
+  text-align: center;
+}
+
+.login-content {
+  margin: 20px;
 }
 
 .twitter-icon {
@@ -54,7 +59,6 @@ export default class Login extends Vue {
   padding-bottom: 1rem;
   width: 100%;
   text-align: center;
-  margin: 20px;
   text-decoration: none;
 }
 </style>

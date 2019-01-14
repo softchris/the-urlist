@@ -6,6 +6,6 @@ export default class List {
     public vanityUrl: string = "",
     public description: string = "",
     public links: Array<ILink> = new Array(),
-    public editable: boolean = true
+    public editable: boolean = false
   ) {}
 }

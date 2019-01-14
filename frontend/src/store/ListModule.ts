@@ -1,6 +1,7 @@
 import { Module, Mutation, Action, VuexModule } from 'vuex-module-decorators';
 import List from '@/models/List';
 import ILink from '@/models/ILink';
+import IMyList from '@/models/IMyList';
 import { IOGData } from '@/models/IOGData';
 import axios from '../shared/axios';
 import config from '@/config';
@@ -10,7 +11,7 @@ import Array from '../shared/Array';
 @Module
 export default class ListModule extends VuexModule {
   _list: List = new List();
-  _myLists: Array<List> = new Array();
+  _myLists: Array<IMyList> = new Array();
 
   get list() {
     return this._list;
@@ -20,9 +21,14 @@ export default class ListModule extends VuexModule {
     return this._myLists;
   }
 
+  @Action
+  async getUserOwnsList() {
+    return this._myLists.get('vanityUrl', this._list.vanityUrl).index > -1;
+  }
+
   @Mutation
-  _setMyLists(lists: Array<List>) {
-    this._myLists = lists;
+  _setMyLists(myLists: Array<IMyList>) {
+    this._myLists = myLists;
   }
 
   @Mutation
@@ -61,7 +67,7 @@ export default class ListModule extends VuexModule {
   /* UPDATE LINK */
   @Mutation
   _updateLink(link: ILink) {
-    let { index } = this._list.links.get(link.id);
+    let { index } = this._list.links.get('id', link.id);
     this._list.links[index] = link;
   }
 
@@ -92,13 +98,13 @@ export default class ListModule extends VuexModule {
   _initList(list: List = new List()) {
     this._list.description = list.description;
     this._list.vanityUrl = list.vanityUrl;
-    this._list.editable = list.editable;
     this._list.links = new Array();
+    this._list.editable = list.editable;
   }
 
-  @Action({ commit: '_initList' })
-  initList(list?: List) {
-    return list;
+  @Action({ commit: '_setList' })
+  initNewList() {
+    return new List('', '', new Array(), true);
   }
 
   /* SET LIST */
@@ -107,23 +113,26 @@ export default class ListModule extends VuexModule {
     this._list.description = list.description;
     this._list.vanityUrl = list.vanityUrl;
     this._list.editable = list.editable;
+    this._list.links = new Array();
   }
 
   /* GET LIST */
   @Action
-  async getList(args: { vanityUrl: string; editable: boolean }) {
+  async getList(vanityUrl: string) {
     // clear out the existing list
-    this.context.commit('_initList');
+    this.context.dispatch('initNewList');
 
     try {
-      const result = await axios.get(
-        `${config.API_URL}/links/${args.vanityUrl}`
-      );
+      const result = await axios.get(`${config.API_URL}/links/${vanityUrl}`);
 
       const list = <List>result.data;
-      list.editable = args.editable;
 
-      this.context.commit('_initList', list);
+      // determine if the user has the ability to edit this list
+      if (this._myLists.get('vanityUrl', list.vanityUrl).index > -1) {
+        list.editable = true;
+      }
+
+      this.context.commit('_setList', list);
 
       for (let link of list.links) {
         this.context.dispatch('addLink', link);
@@ -156,7 +165,7 @@ export default class ListModule extends VuexModule {
   /* DELETE LINK */
   @Mutation
   _deleteLink(id: string) {
-    let { index } = this._list.links.get(id);
+    let { index } = this._list.links.get('id', id);
     this._list.links.splice(index, 1);
   }
 
@@ -167,13 +176,19 @@ export default class ListModule extends VuexModule {
 
   /* GET MY LISTS */
   @Action
-  async getMyLinks(userName: string) {
-    try {
-      let results = await axios.get(`${config.API_URL}/links/user/${userName}`);
+  async getMyLists(userName: string) {
+    if (userName) {
+      try {
+        let results = await axios.get(
+          `${config.API_URL}/links/user/${userName}`
+        );
 
-      this.context.commit('_setMyLists', results.data);
-    } catch (err) {
-      throw new Error(err);
+        let myLists = <IMyList>results.data;
+
+        this.context.commit('_setMyLists', myLists);
+      } catch (err) {
+        throw new Error(err);
+      }
     }
   }
 }

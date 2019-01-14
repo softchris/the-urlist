@@ -20,6 +20,5 @@ yarn-error.log*
 *.sln
 *.sw*
 
-*.js
-*.js.map
-!vue.config.js
+src/**/*.js
+src/**/*.js.map

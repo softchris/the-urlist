@@ -22,7 +22,7 @@
           </div>
           <div class="card list-item-content">
             <div class="card-content list-item-content-details">
-              <div class="badge link-count">{{ list.links.length }} Links</div>
+              <div class="badge link-count">{{ list.linkCount }} Links</div>
               <h3>{{ list.vanityUrl }}</h3>
               <p>{{ list.description }}</p>
             </div>
@@ -43,22 +43,22 @@ export default class Me extends Vue {
   }
 
   created() {
-    this.$store.dispatch("setListEditable", false);
-
-    // this.$store.dispatch("getMyLists");
+    this.$store.dispatch("getMyLists");
+    this.$store.dispatch("setShowAddBar", false);
   }
 
   addNewList() {
+    this.$store.dispatch("initNewList");
     this.$router.push("/new");
   }
 
   editList(vanityUrl: string) {
-    this.$router.push(`/${vanityUrl}`);
+    this.$store.dispatch("getList", vanityUrl);
+    this.$router.push("edit");
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .background {
   z-index: -9999;

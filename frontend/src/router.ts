@@ -4,6 +4,7 @@ import Home from "@/views/Home.vue";
 import List from "@/views/List.vue";
 import New from "@/views/New.vue";
 import Me from "@/views/Me.vue";
+import Edit from "@/views/Edit.vue";
 
 Vue.use(Router);
 
@@ -25,6 +26,11 @@ export default new Router({
       path: "/me",
       name: "me",
       component: Me
+    },
+    {
+      path: "/edit",
+      name: "edit",
+      component: Edit
     },
     {
       path: "/:id",

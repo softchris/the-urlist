@@ -1,5 +1,5 @@
 <template>
-  <div class="container add-links">
+  <div class="container content">
     <div class="section">
       <new-link @onAddNewLink="addLink"></new-link>
     </div>
@@ -42,6 +42,10 @@ export default class extends Vue {
   newLink: string = "";
   get list() {
     return this.$store.getters.list;
+  }
+
+  created() {
+    this.$store.dispatch("setShowAddBar", true);
   }
 
   addLink(url: string) {

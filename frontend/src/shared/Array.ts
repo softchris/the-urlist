@@ -1,6 +1,6 @@
 declare global {
   interface Array<T> {
-    get(id: string): IGetResult;
+    get(field: string, value: string): IGetResult;
   }
 }
 
@@ -9,8 +9,8 @@ interface IGetResult {
   index: number;
 }
 
-Array.prototype.get = function(id: string) {
-  let index = this.findIndex(x => x.id === id);
+Array.prototype.get = function(field: string, value: string) {
+  let index = this.findIndex(x => x[field] === value);
   return { item: this[index], index: index };
 };
 
