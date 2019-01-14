@@ -29,7 +29,6 @@ namespace LinkyLink
             if (!documents.Any())
             {
                 log.LogInformation($"Bundle for {vanityUrl} not found.");
-
                 return new NotFoundResult();
             }
 
@@ -49,12 +48,12 @@ namespace LinkyLink
            string userId,
            ILogger log)
         {
-            // string twitterHandle = GetTwitterHandle(req);
-            // if (string.IsNullOrEmpty(twitterHandle) || twitterHandle != userId)
-            // {
-            //     log.LogInformation("Client is not authenticated");
-            //     return new UnauthorizedResult();
-            // }
+            string twitterHandle = GetTwitterHandle(req);
+            if (string.IsNullOrEmpty(twitterHandle) || twitterHandle != userId)
+            {
+                log.LogInformation("Client is not authenticated");
+                return new UnauthorizedResult();
+            }
 
             TrackRequestHeaders(req, $"{nameof(GetBundlesForUser)}-HeaderData");
             if (!documents.Any())
