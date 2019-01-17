@@ -5,8 +5,8 @@
         <a class="is-aligned-right" href="#" @click.prevent="close()">
           <img src="../assets/close.png">
         </a>
-        <div class="flex is-horizontally-centered">
-          <h1>Sign in to Urlist</h1>
+        <div class="flex is-horizontally-centered is-vertically-centered sign-in-banner">
+          <h1>Sign in to</h1><img src="../assets/logo.svg">
         </div>
         <div class="flex is-horizontally-centered login-content">
           <a :href="loginUrl" class="twitter-button has-text-white">
@@ -60,5 +60,14 @@ export default class Login extends Vue {
   width: 100%;
   text-align: center;
   text-decoration: none;
+}
+
+.sign-in-banner {
+  h1 {
+    margin: 0px 10px 0px 0px;
+  }
+  img {
+    width: 100px;
+  }
 }
 </style>

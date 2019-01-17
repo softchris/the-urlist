@@ -10,6 +10,7 @@
               <span class="has-text-primary">Share</span> it with the world!
             </h1>
             <p>Add links to a list, give the list a description and get a URL you can send to anyone.</p>
+            <br>
             <p>Login to track, manage and edit your lists</p>
           </div>
           <img src="../assets/banner-logo-small.png" class="banner-image">

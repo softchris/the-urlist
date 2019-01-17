@@ -5,7 +5,7 @@
     </div>
     <ul class="big-container navbar-content flex is-vertically-centered">
       <li>
-        <img src="../assets/logo.png">
+        <img width="100" src="../assets/logo.svg">
       </li>
       <li class="is-aligned-right">
         <a class="login flex is-vertically-centered" href="#" @click.prevent="profileLoginClick()">
