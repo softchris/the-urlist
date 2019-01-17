@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.Azure.Documents;
 
 namespace LinkyLink
 {
@@ -28,7 +29,6 @@ namespace LinkyLink
             if (!documents.Any())
             {
                 log.LogInformation($"Bundle for {vanityUrl} not found.");
-
                 return new NotFoundResult();
             }
 
@@ -43,8 +43,8 @@ namespace LinkyLink
                 databaseName: "linkylinkdb",
                 collectionName: "linkbundles",
                 ConnectionStringSetting = "LinkLinkConnection",
-                SqlQuery = "SELECT c.userId, c.vanityUrl, c.description FROM c where c.userId = {userId}"
-            )] IEnumerable<LinkBundle> documents,
+                SqlQuery = "SELECT c.userId, c.vanityUrl, c.description, ARRAY_LENGTH(c.links) as linkCount FROM c where c.userId = {userId}"
+            )] IEnumerable<Document> documents,
            string userId,
            ILogger log)
         {
@@ -62,7 +62,14 @@ namespace LinkyLink
 
                 return new NotFoundResult();
             }
-            return new OkObjectResult(documents);
+            var results = documents.Select(d => new
+            {
+                userId = d.GetPropertyValue<string>("userId"),
+                vanityUrl = d.GetPropertyValue<string>("vanityUrl"),
+                description = d.GetPropertyValue<string>("description"),
+                linkCount = d.GetPropertyValue<string>("linkCount")
+            });
+            return new OkObjectResult(results);
         }
     }
 }
