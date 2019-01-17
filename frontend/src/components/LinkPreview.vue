@@ -1,5 +1,5 @@
 <template>
-  <div class="card link flex is-vertically-centered">
+  <div class="card link flex is-vertically-centered" @click="go(link.url)">
     <figure class="link-image">
       <img width="64" :src="link.image" :alt="link.title">
     </figure>
@@ -36,7 +36,7 @@ export default class extends Vue {
   }
 
   go(url: string) {
-    window.location.assign(url);
+    window.open(url, "_blank");
   }
 }
 </script>
@@ -46,6 +46,7 @@ export default class extends Vue {
 .link {
   width: 100%;
   height: 126px;
+  cursor: pointer;
 }
 
 .link-details {
