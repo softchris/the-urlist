@@ -33,7 +33,7 @@ body {
   max-width: 960px;
   margin: 0 auto;
   position: relative;
-  padding: 10px;
+  padding: 1em;
 }
 
 .content {
@@ -170,7 +170,27 @@ h3 {
   }
 }
 
+
+@media only screen and (max-width: 1000px) {
+  .is-hidden-mobile {
+    display: none;
+  }
+  .is-visible-mobile {
+    display: inherit;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .is-visible-mobile {
+    display: none;
+  }
+}
+
 p {
   margin: 0px;
   padding: 0px;
+}
+
+img {
+  width: 100;
 }

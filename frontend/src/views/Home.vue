@@ -3,29 +3,33 @@
     <div class="container">
       <div class="section">
         <div class="flex">
-          <div>
+          <div class="app-header">
             <h1>
               <span class="has-text-primary">Group</span> Links,
               <span class="has-text-primary">Save</span> &
-              <span class="has-text-primary">Share</span> it with the world!
+              <span class="has-text-primary">Share</span> them with the world!
             </h1>
             <p>Add links to a list, give the list a description and get a URL you can send to anyone.</p>
             <br>
             <p>Login to track, manage and edit your lists</p>
           </div>
-          <img src="../assets/banner-logo-small.png" class="banner-image">
+          <div class="is-hidden-mobile">
+            <img src="../assets/banner-logo-small.png" class="banner-image">
+          </div>
         </div>
       </div>
     </div>
     <div class="section"></div>
     <div class="flex landing-footer is-horizontally-centered">
-      <div class="landing-bottom is-full-height">
-        <div class="container">
-          <div class="section">
-            <div class="flex is-horizontally-centered">
-              <h2 class="has-text-primary">Get Started</h2>
-            </div>
-            <new-link @onAddNewLink="addLink"></new-link>
+      <div class="home-bottom-background is-hidden-mobile"></div>
+      <div class="container home-bottom">
+        <div class="section">
+          <div class="flex is-horizontally-centered">
+            <h2 class="has-text-primary">Get Started</h2>
+          </div>
+          <new-link @onAddNewLink="addLink"></new-link>
+          <div class="flex is-horizontally-centered">
+            <img src="../assets/banner-logo-small.png" class="banner-image is-visible-mobile">
           </div>
         </div>
       </div>
@@ -64,20 +68,32 @@ export default class Home extends Vue {
   min-width: 482px;
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-}
-
 .landing-footer {
   overflow: hidden;
   flex: 1;
 }
 
-.landing-bottom {
-  min-width: 150%;
+.home-bottom {
+  overflow: hidden;
+  width: 100%;
+}
+
+.home-bottom-background {
+  position: absolute;
+  left: 0;
+  right: -25%;
+  margin-left: -25%;
+  height: 100%;
+  max-width: 150%;
+  width: 150%;
   border-top-left-radius: 50%;
   border-top-right-radius: 50%;
   background-color: #f9fafc;
+}
+
+@media only screen and (min-width: 1000px) {
+  .app-header {
+    text-align: center;
+  }
 }
 </style>
