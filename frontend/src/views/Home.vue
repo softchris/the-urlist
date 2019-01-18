@@ -28,11 +28,11 @@
             <h2 class="has-text-primary">Get Started</h2>
           </div>
           <new-link @onAddNewLink="addLink"></new-link>
-          <div class="flex is-horizontally-centered">
-            <img src="../assets/banner-logo-small.png" class="banner-image is-visible-mobile">
-          </div>
         </div>
       </div>
+    </div>
+    <div class="footer is-visible-mobile">
+      <img src="../assets/banner-logo-large.png" alt>
     </div>
   </div>
 </template>
@@ -74,7 +74,6 @@ export default class Home extends Vue {
 }
 
 .home-bottom {
-  overflow: hidden;
   width: 100%;
 }
 
@@ -91,7 +90,15 @@ export default class Home extends Vue {
   background-color: #f9fafc;
 }
 
-@media only screen and (min-width: 1000px) {
+.footer {
+  bottom: -25%;
+  > img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
   .app-header {
     text-align: center;
   }
