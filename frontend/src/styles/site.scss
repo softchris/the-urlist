@@ -154,33 +154,33 @@ h3 {
   color: inherit;
 }
 
-.columns {
-  display: flex;
-  flex-flow: row wrap;
+.has-text-centered {
+  text-align: center;
 }
 
 .column {
-  display: block;
   flex-basis: 0;
   flex-grow: 1;
   flex-shrink: 1;
+}
+
+@media screen and (min-width: 769px), print {
+  .columns {
+    display: flex;
+  }
+  .column.is-half,
+  .column.is-half-tablet {
+    flex: none;
+    width: 50%;
+  }
   &.is-one-quarter {
     width: 25%;
     flex: none;
   }
 }
 
-@media only screen and (max-width: 1000px) {
+@media screen and (max-width: 769px), print {
   .is-hidden-mobile {
-    display: none;
-  }
-  .is-visible-mobile {
-    display: inherit;
-  }
-}
-
-@media only screen and (min-width: 1000px) {
-  .is-visible-mobile {
     display: none;
   }
 }
@@ -188,4 +188,8 @@ h3 {
 p {
   margin: 0px;
   padding: 0px;
+}
+
+.img-responsive {
+  height: auto;
 }

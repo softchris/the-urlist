@@ -1,27 +1,28 @@
 <template>
-  <div class="flex flex-column full-height main">
+  <div class="flex flex-column main">
     <div class="container">
       <div class="section">
-        <div class="flex">
-          <div class="app-header">
-            <h1>
-              <span class="has-text-primary">Group</span> Links,
-              <span class="has-text-primary">Save</span> &
-              <span class="has-text-primary">Share</span> them with the world!
-            </h1>
-            <p>Add links to a list, give the list a description and get a URL you can send to anyone.</p>
-            <br>
-            <p>Login to track, manage and edit your lists</p>
+        <div class="columns is-mobile">
+          <div class="column is-half">
+            <div class="app-header">
+              <h1>
+                <span class="has-text-primary">Group</span> Links,
+                <span class="has-text-primary">Save</span> &
+                <span class="has-text-primary">Share</span> them with the world!
+              </h1>
+              <p>Add links to a list, give the list a description and get a URL you can send to anyone.</p>
+              <br>
+              <p>Login to track, manage and edit your lists</p>
+            </div>
           </div>
-          <div class="is-hidden-mobile">
-            <img src="../assets/banner-logo-small.png" class="banner-image">
+          <div class="column is-half is-hidden-mobile">
+            <img src="../assets/banner-logo-large.png" class="banner-image">
           </div>
         </div>
       </div>
     </div>
-    <div class="section"></div>
     <div class="flex landing-footer is-horizontally-centered">
-      <div class="home-bottom-background is-hidden-mobile"></div>
+      <div class="home-bottom-background"></div>
       <div class="container home-bottom">
         <div class="section">
           <div class="flex is-horizontally-centered">
@@ -30,9 +31,6 @@
           <new-link @onAddNewLink="addLink"></new-link>
         </div>
       </div>
-    </div>
-    <div class="footer is-visible-mobile">
-      <img src="../assets/banner-logo-large.png" alt>
     </div>
   </div>
 </template>
@@ -65,11 +63,14 @@ export default class Home extends Vue {
 }
 
 .banner-image {
-  min-width: 482px;
+  max-width: 500px;
+  height: 100%;
+  width: 100%;
 }
 
 .landing-footer {
   overflow: hidden;
+  position: relative;
   flex: 1;
 }
 
@@ -91,7 +92,6 @@ export default class Home extends Vue {
 }
 
 .footer {
-  bottom: -25%;
   > img {
     width: 100%;
     height: 100%;
