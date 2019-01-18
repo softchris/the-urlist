@@ -1,8 +1,10 @@
 <template>
   <div class="content big-container">
     <h2 class="has-text-primary">My Collections</h2>
-    <div class="columns">
-      <div class="column is-one-quarter">
+    <div class="columns is-mobile">
+      <div
+        class="column is-one-quarter-widescreen is-one-third-desktop is-half-tablet is-full-mobile first"
+      >
         <div class="list-item">
           <div class="list-item-content">
             <div
@@ -15,7 +17,11 @@
           </div>
         </div>
       </div>
-      <div class="column is-one-quarter" v-for="list in myLists" :key="list.vanityUrl">
+      <div
+        class="column is-one-quarter-widescreen is-one-third-desktop is-half-mobile is-half-tablet is-full-mobile"
+        v-for="list in myLists"
+        :key="list.vanityUrl"
+      >
         <div class="list-item" @click="editList(list.vanityUrl)">
           <div class="background flex">
             <img class="is-aligned-right" src="../assets/bg.png" alt>
@@ -91,5 +97,11 @@ export default class Me extends Vue {
 .link-count {
   position: absolute;
   margin-top: -55px;
+}
+
+@media screen and (max-width: 600px), print {
+  .first {
+    margin-bottom: 60px;
+  }
 }
 </style>
