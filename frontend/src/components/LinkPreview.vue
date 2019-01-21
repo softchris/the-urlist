@@ -5,10 +5,10 @@
     </figure>
     <div class="link-details flex is-vertically-centered">
       <div class="flex flex-column">
-        <strong class="link-title">{{ link.title }}</strong>
+        <strong v-line-clamp:20="2" class="link-title">{{ link.title }}</strong>
         <div class="link-description">{{ link.description }}</div>
-        <div class="link-url">
-          <p>{{ link.url }}</p>
+        <div v-line-clamp:20="2" class="link-url">
+          <p v-line-clamp:10="1">{{ link.url }}</p>
         </div>
       </div>
     </div>
@@ -45,8 +45,13 @@ export default class extends Vue {
 <style scoped lang="scss">
 .link {
   width: 100%;
-  height: 126px;
+  height: 110px;
   cursor: pointer;
+  padding-left: 10px;
+}
+
+.link-image {
+  margin: 0 10px 0 0;
 }
 
 .link-details {
@@ -57,6 +62,7 @@ export default class extends Vue {
   display: block;
   color: #222c38;
   margin-bottom: 5px;
+  max-lines: 2;
 }
 
 .link-description {
@@ -76,22 +82,27 @@ export default class extends Vue {
 .delete {
   cursor: pointer;
   margin-right: 20px;
-  margin-left: 20px;
+  margin-top: -60px;
+  margin-left: -20px;
   transition: margin 400ms linear;
 }
 
 @media only screen and (min-width: 1040px) {
   .delete {
     margin-right: -40px;
+    margin-top: 0px;
   }
   .link-details {
     padding-right: 40px;
   }
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 680px) {
   .link-description {
     display: none;
+  }
+  .link-title {
+    margin-right: 30px;
   }
 }
 </style>

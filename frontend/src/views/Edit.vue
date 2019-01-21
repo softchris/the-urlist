@@ -1,5 +1,5 @@
 <template>
-  <div class="container content">
+  <div class="container">
     <div class="section">
       <h2 class="has-text-primary">{{ list.description }}</h2>
       <link-list :links="list.links" editable="false"></link-list>
