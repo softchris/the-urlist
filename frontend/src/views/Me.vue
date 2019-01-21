@@ -1,5 +1,5 @@
 <template>
-  <div class="content big-container">
+  <div class="big-container">
     <h2 class="has-text-primary">My Collections</h2>
     <div class="columns is-mobile">
       <div
@@ -82,6 +82,7 @@ export default class Me extends Vue {
   }
   .list-item-content-details {
     padding-left: 20px;
+    padding-right: 20px;
   }
 }
 
