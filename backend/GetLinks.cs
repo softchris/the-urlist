@@ -51,7 +51,7 @@ namespace LinkyLink
             string twitterHandle = GetTwitterHandle(req);
             if (string.IsNullOrEmpty(twitterHandle) || twitterHandle != userId)
             {
-                log.LogInformation("Client is not authenticated");
+                log.LogInformation("Client is not authorized");
                 return new UnauthorizedResult();
             }
 
