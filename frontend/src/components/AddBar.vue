@@ -4,12 +4,14 @@
       <div class="control">
         <label for="vanity-url">Vanity URL</label>
         <input
+          :class="{ invalid: !vanityIsAvailable }"
           id="vanity-url"
           v-model="list.vanityUrl"
           type="text"
           @keyup="checkVanityAvailable()"
           :disabled="list.editable && list.vanityUrl.length > 0"
         >
+        <p class="error" v-show="!vanityIsAvailable">That vanity URL is already taken</p>
       </div>
       <div class="control">
         <label for="description">Description</label>
@@ -24,10 +26,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { debounce } from "typescript-debounce-decorator";
 
 @Component
 export default class AddBar extends Vue {
   active: boolean = false;
+  vanityIsAvailable: boolean = true;
   get list() {
     return this.$store.getters.list;
   }
@@ -41,14 +45,15 @@ export default class AddBar extends Vue {
     }
   }
 
+  @debounce(300, { leading: false })
   async checkVanityAvailable() {
     try {
-      const available = this.$store.dispatch("checkVanityAvailable");
-      if (!available) {
-        console.log("Not available");
-      } else {
-        console.log("Available");
-      }
+      const available = await this.$store.dispatch(
+        "checkVanityAvailable",
+        this.list.vanityUrl
+      );
+      this.vanityIsAvailable = available;
+      console.log(this.vanityIsAvailable);
     } catch (err) {
       console.log(err);
     }

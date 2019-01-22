@@ -191,4 +191,19 @@ export default class ListModule extends VuexModule {
       }
     }
   }
+
+  /**
+   * This method checks for the availability of the vanityUrl in the database. It does this by
+   * just requesting a list by vanityUrl. If a list is returned, the vanity is not available.
+   * @param vanityUrl The vanityUrl to check for availablility
+   */
+  @Action
+  async checkVanityAvailable(vanityUrl: string) {
+    try {
+      let list = await axios.get(`${config.API_URL}/links/${vanityUrl}`);
+      return list.status === 400;
+    } catch (err) {
+      return true;
+    }
+  }
 }
