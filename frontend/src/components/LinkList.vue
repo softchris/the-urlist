@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="links">
     <sortable-list v-model="links" :distance="10">
       <sortable-item v-for="(link, index) in links" :index="index" :key="index">
         <link-preview :link="link"></link-preview>
@@ -29,4 +29,7 @@ export default class extends Vue {}
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.links {
+  margin-right: 10px;
+}
 </style>

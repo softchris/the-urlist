@@ -3,13 +3,11 @@
     <div class="section">
       <new-link @onAddNewLink="addLink"></new-link>
     </div>
-    <div class="links">
-      <div class="flex is-vertically-centered">
-        <h2 class="has-text-primary">Links</h2>
-        <span class="is-aligned-right">Drag each link to re-arrange</span>
-      </div>
-      <link-list :links="list.links"></link-list>
+    <div class="flex is-vertically-centered">
+      <h2 class="has-text-primary">Links</h2>
+      <span class="is-aligned-right">Drag each link to re-arrange</span>
     </div>
+    <link-list :links="list.links"></link-list>
   </div>
 </template>
 
@@ -46,6 +44,7 @@ export default class extends Vue {
 
   created() {
     this.$store.dispatch("setShowAddBar", true);
+    this.$store.dispatch("setListEditable", true);
   }
 
   addLink(url: string) {

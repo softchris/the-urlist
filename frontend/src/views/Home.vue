@@ -52,7 +52,7 @@ export default class Home extends Vue {
   // event emitted by the AddBar component
   addLink(url: string) {
     this.$store.dispatch("newLink", url);
-    this.$router.push(`/new`);
+    this.$router.push("new");
   }
 }
 </script>

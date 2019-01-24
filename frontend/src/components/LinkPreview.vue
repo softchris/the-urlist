@@ -1,14 +1,16 @@
 <template>
-  <div class="card link flex is-vertically-centered" @click="go(link.url)">
-    <figure class="link-image">
-      <img width="64" :src="link.image" :alt="link.title">
-    </figure>
-    <div class="link-details flex is-vertically-centered">
-      <div class="flex flex-column">
-        <strong v-line-clamp:20="2" class="link-title">{{ link.title }}</strong>
-        <div class="link-description">{{ link.description }}</div>
-        <div v-line-clamp:20="2" class="link-url">
-          <p v-line-clamp:10="1">{{ link.url }}</p>
+  <div class="flex is-vertically-centered">
+    <div class="card link flex is-vertically-centered" @click="go(link.url)">
+      <figure class="link-image">
+        <img width="64" :src="link.image" :alt="link.title">
+      </figure>
+      <div class="link-details flex is-vertically-centered">
+        <div class="flex flex-column">
+          <strong v-line-clamp:20="2" class="link-title">{{ link.title }}</strong>
+          <div class="link-description">{{ link.description }}</div>
+          <div v-line-clamp:20="2" class="link-url">
+            <p v-line-clamp:10="1">{{ link.url }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -81,20 +83,22 @@ export default class extends Vue {
 
 .delete {
   cursor: pointer;
-  margin-right: 20px;
-  margin-top: -60px;
-  margin-left: -20px;
+  margin-top: -20px;
+  margin-left: 20px;
+  // margin-right: -40px;
+  // margin-right: 20px;
+  // margin-top: -60px;
+  // left: -20px;
   transition: margin 400ms linear;
 }
 
 @media only screen and (min-width: 1040px) {
   .delete {
-    margin-right: -40px;
-    margin-top: 0px;
+    margin-right: -50px;
   }
-  .link-details {
-    padding-right: 40px;
-  }
+  // .link-details {
+  //   padding-right: 40px;
+  // }
 }
 
 @media only screen and (max-width: 680px) {
