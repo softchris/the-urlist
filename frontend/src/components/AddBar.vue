@@ -18,7 +18,11 @@
         <textarea class="description" id="description" v-model="list.description"></textarea>
       </div>
       <div class="save-button">
-        <button class="is-color-primary has-text-white has-text-bold" @click="saveList()">Save List</button>
+        <button
+          :disabled="canSave || !vanityIsAvailable"
+          class="is-color-primary has-text-white has-text-bold"
+          @click="saveList()"
+        >Save List</button>
       </div>
     </div>
   </div>
@@ -30,7 +34,7 @@ import { debounce } from "typescript-debounce-decorator";
 
 @Component
 export default class AddBar extends Vue {
-  active: boolean = false;
+  canSave: boolean = false;
   vanityIsAvailable: boolean = true;
   get list() {
     return this.$store.getters.list;
@@ -48,6 +52,7 @@ export default class AddBar extends Vue {
   @debounce(300, { leading: false })
   async checkVanityAvailable() {
     try {
+      this.canSave = true;
       const available = await this.$store.dispatch(
         "checkVanityAvailable",
         this.list.vanityUrl
@@ -57,6 +62,8 @@ export default class AddBar extends Vue {
     } catch (err) {
       console.log(err);
     }
+
+    this.canSave = false;
   }
 }
 </script>

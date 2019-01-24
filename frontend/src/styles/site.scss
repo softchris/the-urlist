@@ -74,6 +74,12 @@ button {
   &.is-color-primary:active {
     background-color: $primary-color-active;
   }
+  &[disabled] {
+    border-color: transparent;
+    box-shadow: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .card {
