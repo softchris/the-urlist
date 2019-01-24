@@ -1,12 +1,13 @@
 <template>
-  <modal name="log-in" :width="500">
+  <modal name="log-in" width="60%" :adaptive="true" :max-width="500" :min-width="300">
     <div class="login">
       <div class="log flex flex-column">
         <a class="is-aligned-right" href="#" @click.prevent="close()">
           <img src="../assets/close.png">
         </a>
         <div class="flex is-horizontally-centered is-vertically-centered sign-in-banner">
-          <h1>Sign in to</h1><img src="../assets/logo.svg">
+          <h1>Sign in to</h1>
+          <img src="../assets/logo.svg">
         </div>
         <div class="flex is-horizontally-centered login-content">
           <a :href="loginUrl" class="twitter-button has-text-white">
