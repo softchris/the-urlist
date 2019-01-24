@@ -7,7 +7,7 @@
       <h2 class="has-text-primary">Links</h2>
       <span class="is-aligned-right">Drag each link to re-arrange</span>
     </div>
-    <link-list :links="list.links"></link-list>
+    <link-list :links="list.links" :editable="true"></link-list>
   </div>
 </template>
 

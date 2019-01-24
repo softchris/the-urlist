@@ -58,6 +58,7 @@ export default class extends Vue {
 
 .link-details {
   flex: 1;
+  padding-right: 10px;
 }
 
 .link-title {

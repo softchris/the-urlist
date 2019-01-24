@@ -9,7 +9,7 @@
           v-model="list.vanityUrl"
           type="text"
           @keyup="checkVanityAvailable()"
-          :disabled="list.editable && list.vanityUrl.length > 0"
+          :disabled="!list.editable && list.vanityUrl.length > 0"
         >
         <p class="error" v-show="!vanityIsAvailable">That vanity URL is already taken</p>
       </div>
@@ -19,7 +19,7 @@
       </div>
       <div class="save-button">
         <button
-          :disabled="canSave || !vanityIsAvailable"
+          :disabled="!canSave"
           class="is-color-primary has-text-white has-text-bold"
           @click="saveList()"
         >Save List</button>
@@ -34,7 +34,10 @@ import { debounce } from "typescript-debounce-decorator";
 
 @Component
 export default class AddBar extends Vue {
-  canSave: boolean = false;
+  get canSave() {
+    return this.vanityIsAvailable && this.list.links.length > 0 && !this.isBusy;
+  }
+  isBusy: boolean = false;
   vanityIsAvailable: boolean = true;
   get list() {
     return this.$store.getters.list;
@@ -52,7 +55,7 @@ export default class AddBar extends Vue {
   @debounce(300, { leading: false })
   async checkVanityAvailable() {
     try {
-      this.canSave = true;
+      this.isBusy = true;
       const available = await this.$store.dispatch(
         "checkVanityAvailable",
         this.list.vanityUrl
@@ -63,7 +66,7 @@ export default class AddBar extends Vue {
       console.log(err);
     }
 
-    this.canSave = false;
+    this.isBusy = false;
   }
 }
 </script>

@@ -1,7 +1,12 @@
 <template>
   <div class="links">
-    <sortable-list v-model="links" :distance="10">
-      <sortable-item v-for="(link, index) in links" :index="index" :key="index">
+    <sortable-list v-model="links" :distance="10" :disabled="editable">
+      <sortable-item
+        v-for="(link, index) in links"
+        :index="index"
+        :key="index"
+        :disabled="!editable"
+      >
         <link-preview :link="link"></link-preview>
       </sortable-item>
     </sortable-list>
@@ -17,14 +22,18 @@ const SortableList: object = SlickList;
 const SortableItem: object = SlickItem;
 
 @Component({
-  props: ["links"],
+  props: ["links", "editable"],
   components: {
     SortableList,
     SortableItem,
     LinkPreview
   }
 })
-export default class extends Vue {}
+export default class extends Vue {
+  created() {
+    console.log(this.$props.editable);
+  }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
