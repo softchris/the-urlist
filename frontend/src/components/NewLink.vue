@@ -1,7 +1,15 @@
 <template>
   <div>
     <p>Enter a link and press enter</p>
-    <input ref="newLink" type="text" id="newLink" v-model="newLink" @keyup.enter="addLink()">
+    <input
+      :class="{ invalid: isUrlInvalid }"
+      ref="newLink"
+      type="text"
+      id="newLink"
+      v-model="newLink"
+      @keyup.enter="addLink()"
+    >
+    <p v-show="isUrlInvalid" class="error">That doesn't look like a valid URL</p>
   </div>
 </template>
 
@@ -25,12 +33,16 @@ const customURL = helpers.regex(
   }
 })
 export default class extends Vue {
+  isUrlInvalid: boolean = false;
   newLink: string = "";
 
   addLink() {
     if (!this.$v.$invalid) {
+      this.isUrlInvalid = false;
       this.$emit("onAddNewLink", this.newLink);
       this.newLink = "";
+    } else {
+      this.isUrlInvalid = true;
     }
   }
 }
