@@ -4,12 +4,18 @@
       "path": "frontend"
     },
     {
-      "path": "backend"
+      "name": "Serverless",
+      "path": "backend/src/LinkyLink"
+    },
+    {
+      "name": "Serverless Tests",
+      "path": "backend/tests/LinkyLink.Tests"
     }
   ],
   "settings": {
     "files.exclude": {
       "**/*.js.map": true
-    }
+    },
+    "dotnet-test-explorer.testProjectPath": "**/*Tests.csproj"
   }
 }
