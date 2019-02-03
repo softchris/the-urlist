@@ -4,11 +4,22 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Primitives;
+using AutoFixture;
+using AutoFixture.AutoFakeItEasy;
+using System.Security.Claims;
 
 namespace LinkyLink.Tests.Helpers
 {
     public abstract class TestBase
     {
+        protected IFixture Fixture { get; set; }
+
+        public TestBase()
+        {
+            this.Fixture = new Fixture()
+                .Customize(new AutoFakeItEasyCustomization());
+        }
+
         private HttpRequest _defaultRequest;
         public HttpRequest DefaultRequest
         {
@@ -16,27 +27,22 @@ namespace LinkyLink.Tests.Helpers
             {
                 if (_defaultRequest == null)
                 {
-                    _defaultRequest = new DefaultHttpRequest(new DefaultHttpContext());
+                    ClaimsIdentity identity = new ClaimsIdentity("WebJobsAuthLevel");
+                    identity.AddClaim(new Claim(Constants.FunctionsAuthLevelClaimType, "Function"));
+                    identity.AddClaim(new Claim(Constants.FunctionsAuthLevelKeyNameClaimType, "default"));
+
+                    ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+
+                    var context = new DefaultHttpContext
+                    {
+                        User = principal
+                    };
+
+                    _defaultRequest = new DefaultHttpRequest(context);
                 }
                 return _defaultRequest;
             }
 
         }
-
-        private ILogger _defaultLogger;
-        public ILogger DefaultLogger
-        {
-            get
-            {
-                if (_defaultLogger == null)
-                {
-                    _defaultLogger = NullLoggerFactory.Instance.CreateLogger(this.GetType());
-                }
-                return _defaultLogger;
-            }
-        }
-
-
-
     }
 }

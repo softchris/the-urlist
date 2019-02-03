@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
 using LinkyLink.Infrastructure;
@@ -29,6 +30,8 @@ namespace LinkyLink
             }
             return string.Empty;
         }
+
+        [ExcludeFromCodeCoverage]
         public static void TrackRequestHeaders(HttpRequest req, string requestName)
         {
             var reqTelemetry = new RequestTelemetry() { Name = requestName };
