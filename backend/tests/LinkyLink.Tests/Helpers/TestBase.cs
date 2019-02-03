@@ -10,6 +10,9 @@ using System.Security.Claims;
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
 using Microsoft.Azure.Documents;
+using System.IO;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace LinkyLink.Tests.Helpers
 {
@@ -22,7 +25,8 @@ namespace LinkyLink.Tests.Helpers
             this.Fixture = new Fixture()
                 .Customize(new AutoFakeItEasyCustomization());
 
-            Fixture.Register<Document>(() => {
+            Fixture.Register<Document>(() =>
+            {
                 Document doc = new Document();
                 doc.SetPropertyValue("userId", Fixture.Create<string>());
                 doc.SetPropertyValue("vanityUrl", Fixture.Create<string>());
@@ -71,7 +75,7 @@ namespace LinkyLink.Tests.Helpers
 
                     ClaimsIdentity twitterIdentity = new ClaimsIdentity("twitter");
                     twitterIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "1111"));
-                    twitterIdentity.AddClaim(new Claim(ClaimTypes.Name , "First Last"));
+                    twitterIdentity.AddClaim(new Claim(ClaimTypes.Name, "First Last"));
                     twitterIdentity.AddClaim(new Claim(ClaimTypes.Upn, "userid"));
                     principal.AddIdentity(twitterIdentity);
 
@@ -80,10 +84,29 @@ namespace LinkyLink.Tests.Helpers
                         User = principal
                     };
 
-                    _authenticatedRequest = new DefaultHttpRequest(context);
+                    _authenticatedRequest = new DefaultHttpRequest(context);                    
                 }
                 return _authenticatedRequest;
             }
+        }
+
+        public Stream GetHttpRequestBodyStream(object bodyContent)
+        {
+            byte[] bytes = null;
+            if (bodyContent is string bodyString)
+            {
+                bytes = Encoding.UTF8.GetBytes(bodyString);
+            }
+            else if (bodyContent is byte[] bodyBytes)
+            {
+                bytes = bodyBytes;
+            }
+            else
+            {
+                string bodyJson = JsonConvert.SerializeObject(bodyContent);
+                bytes = Encoding.UTF8.GetBytes(bodyJson);
+            }
+            return new MemoryStream(bytes);
         }
 
         private TelemetryConfiguration _defaultTestConfiguration;
@@ -97,7 +120,7 @@ namespace LinkyLink.Tests.Helpers
                     {
                         TelemetryChannel = new StubTelemetryChannel(),
                         InstrumentationKey = Guid.NewGuid().ToString()
-                    };            
+                    };
                 }
                 return _defaultTestConfiguration;
             }
