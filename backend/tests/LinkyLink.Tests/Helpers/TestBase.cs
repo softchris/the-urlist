@@ -7,6 +7,9 @@ using Microsoft.Extensions.Primitives;
 using AutoFixture;
 using AutoFixture.AutoFakeItEasy;
 using System.Security.Claims;
+using Microsoft.ApplicationInsights.Extensibility;
+using System;
+using Microsoft.Azure.Documents;
 
 namespace LinkyLink.Tests.Helpers
 {
@@ -18,6 +21,15 @@ namespace LinkyLink.Tests.Helpers
         {
             this.Fixture = new Fixture()
                 .Customize(new AutoFakeItEasyCustomization());
+
+            Fixture.Register<Document>(() => {
+                Document doc = new Document();
+                doc.SetPropertyValue("userId", Fixture.Create<string>());
+                doc.SetPropertyValue("vanityUrl", Fixture.Create<string>());
+                doc.SetPropertyValue("description", Fixture.Create<string>());
+                doc.SetPropertyValue("linkCount", Fixture.Create<int>());
+                return doc;
+            });
         }
 
         private HttpRequest _defaultRequest;
@@ -42,7 +54,53 @@ namespace LinkyLink.Tests.Helpers
                 }
                 return _defaultRequest;
             }
+        }
 
+        private HttpRequest _authenticatedRequest;
+        public HttpRequest AuthenticatedRequest
+        {
+            get
+            {
+                if (_authenticatedRequest == null)
+                {
+                    ClaimsIdentity defaultIdentity = new ClaimsIdentity("WebJobsAuthLevel");
+                    defaultIdentity.AddClaim(new Claim(Constants.FunctionsAuthLevelClaimType, "Function"));
+                    defaultIdentity.AddClaim(new Claim(Constants.FunctionsAuthLevelKeyNameClaimType, "default"));
+
+                    ClaimsPrincipal principal = new ClaimsPrincipal(defaultIdentity);
+
+                    ClaimsIdentity twitterIdentity = new ClaimsIdentity("twitter");
+                    twitterIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "1111"));
+                    twitterIdentity.AddClaim(new Claim(ClaimTypes.Name , "First Last"));
+                    twitterIdentity.AddClaim(new Claim(ClaimTypes.Upn, "userid"));
+                    principal.AddIdentity(twitterIdentity);
+
+                    var context = new DefaultHttpContext
+                    {
+                        User = principal
+                    };
+
+                    _authenticatedRequest = new DefaultHttpRequest(context);
+                }
+                return _authenticatedRequest;
+            }
+        }
+
+        private TelemetryConfiguration _defaultTestConfiguration;
+        public TelemetryConfiguration DefaultTestConfiguration
+        {
+            get
+            {
+                if (_defaultTestConfiguration == null)
+                {
+                    var configuration = new TelemetryConfiguration
+                    {
+                        TelemetryChannel = new StubTelemetryChannel(),
+                        InstrumentationKey = Guid.NewGuid().ToString()
+                    };            
+                }
+                return _defaultTestConfiguration;
+            }
         }
     }
 }

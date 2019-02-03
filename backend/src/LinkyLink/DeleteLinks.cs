@@ -43,8 +43,7 @@ namespace LinkyLink
                 return new NotFoundResult();
             }
 
-            Document doc = documents.Single();
-            RequestOptions reqOptions = new RequestOptions { PartitionKey = new PartitionKey(vanityUrl) };
+            Document doc = documents.Single();            
 
             try
             {
@@ -56,6 +55,7 @@ namespace LinkyLink
                     return new StatusCodeResult(StatusCodes.Status403Forbidden);
                 }
 
+                RequestOptions reqOptions = new RequestOptions { PartitionKey = new PartitionKey(vanityUrl) };
                 await docClient.DeleteDocumentAsync(doc.SelfLink, reqOptions);
             }
             catch (Exception ex)

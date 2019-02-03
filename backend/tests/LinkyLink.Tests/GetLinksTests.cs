@@ -48,14 +48,31 @@ namespace LinkyLink.Tests
         }
 
         [Fact]
-        public void GetBundlesForUser_Emtpy_Collection_Should_Return_NotFound()
+        public void GetBundlesForUser_Request_Missing_Auth_Credentials_Should_Return_UnAuthorized()
+        {
+            // Arrange
+            ILogger fakeLogger = A.Fake<ILogger>();
+
+            // Act
+            IActionResult result = LinkOperations.GetBundlesForUser(this.AuthenticatedRequest, A.Dummy<IEnumerable<Document>>(), "userid", fakeLogger);
+
+            // Assert
+            Assert.IsType<UnauthorizedResult>(result);
+
+            A.CallTo(fakeLogger)
+               .Where(call => call.Method.Name == "Log" && call.GetArgument<LogLevel>("logLevel") == LogLevel.Information)
+               .MustHaveHappened();
+        }
+
+        [Fact]
+        public void GetBundlesForUser_Authenticated_Request_With_Emtpy_Collection_Should_Return_NotFound()
         {
             // Arrange
             IEnumerable<Document> docs = Enumerable.Empty<Document>();
             ILogger fakeLogger = A.Fake<ILogger>();
 
             // Act
-            IActionResult result = LinkOperations.GetBundlesForUser(this.DefaultRequest, docs, "userId", fakeLogger);
+            IActionResult result = LinkOperations.GetBundlesForUser(this.AuthenticatedRequest, docs, "userid", fakeLogger);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
@@ -64,5 +81,31 @@ namespace LinkyLink.Tests
                 .Where(call => call.Method.Name == "Log" && call.GetArgument<LogLevel>("logLevel") == LogLevel.Information)
                 .MustHaveHappened();
         }
+
+        [Fact]
+        public void GetBundlesForUser_Authenticated_Request_With_Collection_Should_Return_Formatted_Results()
+        {
+            // Arrange
+            var docs = Fixture.CreateMany<Document>();
+
+            // Act
+            IActionResult result = LinkOperations.GetBundlesForUser(this.AuthenticatedRequest, docs, "userid", A.Dummy<ILogger>());
+
+            //Assert
+            Assert.IsType<OkObjectResult>(result);
+
+            OkObjectResult okResult = result as OkObjectResult;
+            IEnumerable<dynamic> resultData = okResult.Value as IEnumerable<dynamic>;
+
+            Assert.Equal(docs.Count(), resultData.Count());
+
+            foreach (dynamic item in resultData)
+            {
+                Assert.True(item.GetType().GetProperty("userId") != null);
+                Assert.True(item.GetType().GetProperty("vanityUrl") != null);
+                Assert.True(item.GetType().GetProperty("description") != null);
+                Assert.True(item.GetType().GetProperty("linkCount") != null);
+            }
+        }
     }
-};
+}
