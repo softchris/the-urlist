@@ -14,11 +14,12 @@ yarn-error.log*
 # Editor directories and files
 .idea
 .vscode
-!backend/.vscode
+.vs/
+*.sln.ide/
+!backend/**/.vscode
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
 *.sw*
 
 # Microsoft Azure Emulator

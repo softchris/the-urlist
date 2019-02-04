@@ -32,17 +32,30 @@ namespace LinkyLink
             string vanityUrl,
             ILogger log)
         {
+            string handle = GetTwitterHandle(req);
+
+            //not logged in? Bye...
+            if (string.IsNullOrEmpty(handle)) return new UnauthorizedResult();
+
             if (!documents.Any())
             {
                 log.LogInformation($"Bundle for {vanityUrl} not found.");
                 return new NotFoundResult();
             }
 
-            Document doc = documents.Single();
-            RequestOptions reqOptions = new RequestOptions { PartitionKey = new PartitionKey(vanityUrl) };
+            Document doc = documents.Single();            
 
             try
             {
+                string userId = doc.GetPropertyValue<string>("userId");
+
+                if (!handle.Equals(userId, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    log.LogWarning($"{userId} is trying to delete {vanityUrl} but is not the owner.");
+                    return new StatusCodeResult(StatusCodes.Status403Forbidden);
+                }
+
+                RequestOptions reqOptions = new RequestOptions { PartitionKey = new PartitionKey(vanityUrl) };
                 await docClient.DeleteDocumentAsync(doc.SelfLink, reqOptions);
             }
             catch (Exception ex)
@@ -59,11 +72,20 @@ namespace LinkyLink
            [CosmosDB(ConnectionStringSetting = "LinkLinkConnection")] DocumentClient docClient,
            ILogger log)
         {
+            string handle = GetTwitterHandle(req);
+
+            //not logged in? Bye...
+            if (string.IsNullOrEmpty(handle)) return new UnauthorizedResult();
+
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             IEnumerable<string> vanityUrls = JsonConvert.DeserializeObject<IEnumerable<string>>(requestBody);
-
             string queryValues = string.Join(",", vanityUrls.Select(url => $"\"{url}\""));
-            string sql = $"SELECT c._self, c.vanityUrl from c WHERE c.vanityUrl IN ({queryValues}) ";
+
+            log.LogInformation($"Request to remove the following collections: {queryValues}");
+            string sql = $"SELECT c._self, c.userId c.vanityUrl from c WHERE c.vanityUrl IN ({queryValues}) ";
+
+            int deleteCount = 0;
+            string resultMessage = string.Empty;
 
             try
             {
@@ -76,17 +98,28 @@ namespace LinkyLink
                     var docs = await docQuery.ExecuteNextAsync();
                     foreach (var doc in docs)
                     {
+                        string userId = doc.GetPropertyValue<string>("userId");
+                        string vanityUrl = doc.GetPropertyValue<string>("vanityUrl");
+
+                        if (!handle.Equals(userId, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            log.LogWarning($"{userId} is trying to delete {vanityUrl} but is not the owner.");
+                            log.LogWarning($"Skipping deletion of colloection: {vanityUrl}.");
+                            continue;
+                        }
                         RequestOptions reqOptions = new RequestOptions { PartitionKey = new PartitionKey(doc.vanityUrl) };
                         await docClient.DeleteDocumentAsync(doc._self, reqOptions);
+                        deleteCount++;
                     }
                 }
+                resultMessage = (deleteCount == vanityUrls.Count()) ? "All collections removed" : "Some colletions were not removed";
             }
             catch (Exception ex)
             {
                 log.LogError(ex, ex.Message);
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
-            return new NoContentResult();
+            return new OkObjectResult(new { deleted = deleteCount, message = resultMessage });
         }
     }
 }

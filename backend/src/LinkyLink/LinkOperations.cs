@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
 using LinkyLink.Infrastructure;
@@ -29,6 +30,8 @@ namespace LinkyLink
             }
             return string.Empty;
         }
+
+        [ExcludeFromCodeCoverage]
         public static void TrackRequestHeaders(HttpRequest req, string requestName)
         {
             var reqTelemetry = new RequestTelemetry() { Name = requestName };
@@ -39,13 +42,16 @@ namespace LinkyLink
             reqTelemetry.Properties.Add("IsAuthenticated", $"{req.HttpContext.User?.Identity.IsAuthenticated}");
             reqTelemetry.Properties.Add("IdentityCount", $"{req.HttpContext.User?.Identities.Count()}");
 
-            if (req.HttpContext.User.Identities.Any(id => id.AuthenticationType.Equals("twitter", StringComparison.InvariantCultureIgnoreCase)))
+            if (req.HttpContext.User.Identities.Any())
             {
-                ClaimsIdentity twitterIdentity = req.HttpContext.User.Identities.SingleOrDefault(id => id.AuthenticationType.Equals("twitter", StringComparison.InvariantCultureIgnoreCase));
-                foreach (var claim in twitterIdentity.Claims)
+                foreach (ClaimsIdentity identity in req.HttpContext.User.Identities)
                 {
-                    reqTelemetry.Properties.Add(claim.Type, claim.Value);
+                    foreach (var claim in identity.Claims)
+                    {
+                        reqTelemetry.Properties.Add($"{identity.AuthenticationType}-{claim.Type}", claim.Value);
+                    }
                 }
+
             }
             telemetryClient.TrackRequest(reqTelemetry);
         }
