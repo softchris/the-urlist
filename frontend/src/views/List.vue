@@ -22,17 +22,16 @@ export default class List extends Vue {
   }
 
   async created() {
+    this.$store.dispatch("setShowAddBar", false);
+
     // get the list from the db based on the url id
     let vanityUrl = this.$route.params.id;
 
     // get the list for this vanity
-    await this.$store.dispatch("getList", vanityUrl);
+    await this.$store.dispatch("loadList", vanityUrl);
 
     // does the logged in user own this list?
-    const ownsList = await this.$store.dispatch("getUserOwnsList");
-
-    // if the logged in user owns the list, they can edit it
-    this.$store.dispatch("setShowAddBar", ownsList);
+    // const ownsList = await this.$store.dispatch("getUserOwnsList");
   }
 }
 </script>

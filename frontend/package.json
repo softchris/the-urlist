@@ -12,8 +12,6 @@
     "@types/vuelidate": "^0.7.3",
     "axios": "^0.18.0",
     "cuid": "^2.1.4",
-    "throttle-debounce": "^2.1.0",
-    "ts-debounce": "^1.0.0",
     "typescript-debounce-decorator": "0.0.17",
     "vue": "^2.5.17",
     "vue-class-component": "^6.0.0",
