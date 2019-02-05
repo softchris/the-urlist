@@ -12,8 +12,6 @@ using System.Net;
 using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Extensibility;
 
 namespace LinkyLink
 {
@@ -47,7 +45,7 @@ namespace LinkyLink
                 linkDocument.UserId = handle;
                 EnsureVanityUrl(linkDocument);
 
-                await documents.AddAsync(linkDocument);
+                await documents.AddAsync(linkDocument);                
                 return new CreatedResult($"/{linkDocument.VanityUrl}", linkDocument);
             }
             catch (DocumentClientException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
@@ -93,8 +91,8 @@ namespace LinkyLink
         }
 
         private static bool ValidatePayLoad(LinkBundle linkDocument, HttpRequest req, out ProblemDetails problems)
-        {
-            bool isValid = linkDocument.Links.Count() > 0;
+        {            
+            bool isValid = (linkDocument!=null) && linkDocument.Links.Count() > 0;
             problems = null;
 
             if (!isValid)
