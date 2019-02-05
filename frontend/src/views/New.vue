@@ -44,7 +44,6 @@ export default class extends Vue {
 
   created() {
     this.$store.dispatch("setShowAddBar", true);
-    this.$store.dispatch("setListEditable", true);
   }
 
   addLink(url: string) {

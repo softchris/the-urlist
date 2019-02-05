@@ -9,7 +9,7 @@
           v-model="list.vanityUrl"
           type="text"
           @keyup="checkVanityAvailable()"
-          :disabled="!list.editable && list.vanityUrl.length > 0"
+          :disabled="!list.isNew"
         >
         <p class="error" v-show="!vanityIsAvailable">That vanity URL is already taken</p>
       </div>
@@ -39,6 +39,7 @@ export default class AddBar extends Vue {
   }
   isBusy: boolean = false;
   vanityIsAvailable: boolean = true;
+
   get list() {
     return this.$store.getters.list;
   }

@@ -93,18 +93,12 @@ export default class ListModule extends VuexModule {
       });
   }
 
-  /* INIT LIST */
-  @Mutation
-  _initList(list: List = new List()) {
-    this._list.description = list.description;
-    this._list.vanityUrl = list.vanityUrl;
-    this._list.links = new Array();
-    this._list.editable = list.editable;
-  }
+  @Action
+  loadList(url: string) {
+    const list = new List(url, '', new Array(), false);
+    this.context.commit('_setList', list);
 
-  @Action({ commit: '_setList' })
-  initNewList() {
-    return new List('', '', new Array(), true);
+    this.context.dispatch('getList', url);
   }
 
   /* SET LIST */
@@ -112,25 +106,30 @@ export default class ListModule extends VuexModule {
   _setList(list: List) {
     this._list.description = list.description;
     this._list.vanityUrl = list.vanityUrl;
-    this._list.editable = list.editable;
     this._list.links = new Array();
+    this._list.isNew = list.isNew;
+  }
+
+  @Action({ commit: '_setList' })
+  newList() {
+    const list = new List();
+    list.isNew = true;
+
+    return list;
   }
 
   /* GET LIST */
   @Action
   async getList(vanityUrl: string) {
-    // clear out the existing list
-    this.context.dispatch('initNewList');
-
     try {
       const result = await axios.get(`${config.API_URL}/links/${vanityUrl}`);
 
       const list = <List>result.data;
-
-      // determine if the user has the ability to edit this list
-      if (this._myLists.get('vanityUrl', list.vanityUrl).index > -1) {
-        list.editable = true;
-      }
+      list.isNew = false;
+      // // determine if the user has the ability to edit this list
+      // if (this._myLists.get('vanityUrl', list.vanityUrl).index > -1) {
+      //   list.editable = true;
+      // }
 
       this.context.commit('_setList', list);
 

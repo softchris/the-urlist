@@ -43,7 +43,7 @@ export default class extends Vue {
 
   profileLoginClick() {
     if (this.currentUser.loggedIn) {
-      this.$router.push("/me");
+      this.$router.push("/s/me");
     } else {
       this.$modal.show("log-in");
     }
