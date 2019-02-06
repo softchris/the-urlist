@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="is-aligned-right delete">
-      <a class="has-text-bold" @click.prevent="deleteLink(link.id)" v-show="list.editable">
+      <a class="has-text-bold" @click.prevent="deleteLink(link.id)" v-show="editable">
         <img src="../assets/close.png" alt>
       </a>
     </div>
@@ -26,7 +26,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
-  props: ["link"]
+  props: ["link", "editable"]
 })
 export default class extends Vue {
   get list() {
