@@ -7,7 +7,7 @@ export default class List {
   constructor(
     public vanityUrl: string = "",
     public description: string = "",
-    public links: Array<ILink> = new Array(),
+    public links: Array<ILink> = [],
     public isNew: boolean = false
   ) {}
 }
