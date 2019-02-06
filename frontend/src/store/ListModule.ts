@@ -6,12 +6,11 @@ import { IOGData } from '@/models/IOGData';
 import axios from '../shared/axios';
 import config from '@/config';
 import Link from '@/models/Link';
-import Array from '../shared/Array';
 
 @Module
 export default class ListModule extends VuexModule {
   _list: List = new List();
-  _myLists: Array<IMyList> = [];
+  _myLists: Array<IMyList> = new Array();
 
   get list() {
     return this._list;
