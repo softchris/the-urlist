@@ -31,6 +31,10 @@ namespace LinkyLink
             return string.Empty;
         }
 
+        public static void CheckBlacklist(string vanityUrl) {
+            
+        }
+
         [ExcludeFromCodeCoverage]
         public static void TrackRequestHeaders(HttpRequest req, string requestName)
         {

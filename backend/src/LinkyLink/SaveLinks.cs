@@ -12,12 +12,14 @@ using System.Net;
 using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.ApplicationInsights.DataContracts;
+using LinkyLink.Infrastructure;
 
 namespace LinkyLink
 {
     public static partial class LinkOperations
     {
         public const string CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        public static IBlackListChecker BlackListChecker = new EnvironmentBlackListChecker("");
 
         [FunctionName(nameof(SaveLinks))]
         public static async Task<IActionResult> SaveLinks(
@@ -45,7 +47,22 @@ namespace LinkyLink
                 linkDocument.UserId = handle;
                 EnsureVanityUrl(linkDocument);
 
-                await documents.AddAsync(linkDocument);                
+                if (!await BlackListChecker.Check(linkDocument.VanityUrl))
+                {
+                    ProblemDetails blacklistProblems = new ProblemDetails
+                    {
+                        Title = "Could not create link bundle",
+                        Detail = "Vanity link is invalid",
+                        Status = StatusCodes.Status400BadRequest,
+                        Type = "/linkylink/clientissue",
+                        Instance = req.Path
+                    };
+
+                    log.LogError(problems.Detail);
+                    return new BadRequestObjectResult(blacklistProblems);
+                }
+
+                await documents.AddAsync(linkDocument);
                 return new CreatedResult($"/{linkDocument.VanityUrl}", linkDocument);
             }
             catch (DocumentClientException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
@@ -91,8 +108,8 @@ namespace LinkyLink
         }
 
         private static bool ValidatePayLoad(LinkBundle linkDocument, HttpRequest req, out ProblemDetails problems)
-        {            
-            bool isValid = (linkDocument!=null) && linkDocument.Links.Count() > 0;
+        {
+            bool isValid = (linkDocument != null) && linkDocument.Links.Count() > 0;
             problems = null;
 
             if (!isValid)
