@@ -17,10 +17,7 @@ using LinkyLink.Infrastructure;
 namespace LinkyLink
 {
     public static partial class LinkOperations
-    {
-        public const string CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        public static IBlackListChecker BlackListChecker = new EnvironmentBlackListChecker("");
-
+    {        
         [FunctionName(nameof(SaveLinks))]
         public static async Task<IActionResult> SaveLinks(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "links")] HttpRequest req,

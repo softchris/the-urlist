@@ -12,18 +12,18 @@ namespace LinkyLink.Infrastructure
     public class EnvironmentBlackListChecker : IBlackListChecker
     {
         private string[] _blackList;
+
         public EnvironmentBlackListChecker(string key)
         {
-            if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
-
             string settingsValue = Environment.GetEnvironmentVariable(key);
-            if (string.IsNullOrEmpty(settingsValue)) throw new Exception($"Blacklist key '{key}' is not set");
-
-            this._blackList = settingsValue.Split(',');
+            this._blackList = settingsValue != null ? settingsValue.Split(',') : new string[] { };
         }
+
         public Task<bool> Check(string value)
         {
-            return Task.FromResult(_blackList.Contains(value));
+            if (string.IsNullOrEmpty(value)) throw new ArgumentNullException(nameof(value));
+
+            return Task.FromResult(_blackList.Any()? _blackList.Contains(value): true);
         }
     }
 }

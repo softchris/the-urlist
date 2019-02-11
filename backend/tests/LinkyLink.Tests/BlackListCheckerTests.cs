@@ -8,17 +8,12 @@ namespace LinkyLink.Tests
 {
     public class EnvironmentBlackListCheckerTests : TestBase
     {
+        
         [Fact]
-        public void Check_Throws_Exception_On_Empty_Key()
-        {
-            // Arrange
-            string key = string.Empty;
-            EnvironmentBlackListChecker checker = new EnvironmentBlackListChecker(key);
-
-            // Act
-            Assert.ThrowsAsync<ArgumentNullException>(() => checker.Check(key));
+        public async Task Check_Returns_False_On_Empty_Key() {
+            EnvironmentBlackListChecker checker =  new EnvironmentBlackListChecker(string.Empty);
+            Assert.True(await checker.Check("somevalue"));
         }
-
 
         [Fact]
         public async Task Check_Throws_Exception_On_Empty_BlackList_Value()
@@ -29,8 +24,7 @@ namespace LinkyLink.Tests
             EnvironmentBlackListChecker checker = new EnvironmentBlackListChecker(key);
 
             // Act
-            Exception ex = await Assert.ThrowsAsync<Exception>(() => checker.Check(key));
-            Assert.Equal($"Blacklist key '{key}' is not set", ex.Message);
+             await Assert.ThrowsAsync<ArgumentNullException>(() => checker.Check(string.Empty));
         }
 
         [Fact]
