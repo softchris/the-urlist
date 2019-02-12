@@ -8,14 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OpenGraphNet;
-using System.Net;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
-using OpenGraphNet.Metadata;
-using OpenGraphNet.Namespaces;
 
 namespace LinkyLink
 {

@@ -13,6 +13,9 @@ namespace LinkyLink
     public static partial class LinkOperations
     {
         public static TelemetryClient telemetryClient;
+        public const string CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        public static IBlackListChecker BlackListChecker = new EnvironmentBlackListChecker("");
+
         static LinkOperations()
         {
             TelemetryConfiguration telemetryConfiguration = TelemetryConfiguration.CreateDefault();
@@ -29,6 +32,10 @@ namespace LinkyLink
                 return handle;
             }
             return string.Empty;
+        }
+
+        public static void CheckBlacklist(string vanityUrl) {
+            
         }
 
         [ExcludeFromCodeCoverage]

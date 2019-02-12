@@ -6,7 +6,6 @@ import { IOGData } from '@/models/IOGData';
 import axios from '../shared/axios';
 import config from '@/config';
 import Link from '@/models/Link';
-import Array from '../shared/Array';
 
 @Module
 export default class ListModule extends VuexModule {
@@ -85,7 +84,7 @@ export default class ListModule extends VuexModule {
 
   @Action
   loadList(url: string) {
-    const list = new List(url, '', new Array(), false);
+    const list = new List(url, '', [], false);
     this.context.commit('_setList', list);
 
     this.context.dispatch('getList', url);
@@ -96,7 +95,7 @@ export default class ListModule extends VuexModule {
   _setList(list: List) {
     this._list.description = list.description;
     this._list.vanityUrl = list.vanityUrl;
-    this._list.links = new Array();
+    this._list.links = [];
     this._list.isNew = list.isNew;
   }
 

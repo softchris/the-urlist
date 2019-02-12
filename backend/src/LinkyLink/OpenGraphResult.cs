@@ -12,7 +12,7 @@ namespace LinkyLink
         public OpenGraphResult(string id, OpenGraph graph, params HtmlNode[] nodes)
         {
             Id = id;
-
+            nodes = nodes.Where(n => n != null).ToArray();
             //Use og:title else fallback to html title tag
             var title = nodes.SingleOrDefault(n => n.Name == "title").InnerText;
             Title = string.IsNullOrEmpty(graph.Title) ? title : HtmlEntity.DeEntitize(graph.Title);

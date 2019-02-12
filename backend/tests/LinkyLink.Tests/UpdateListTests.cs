@@ -1,13 +1,9 @@
-﻿using AutoFixture;
-using FakeItEasy;
+﻿using FakeItEasy;
 using LinkyLink.Tests.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Documents;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 

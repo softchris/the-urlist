@@ -12,15 +12,12 @@ using System.Net;
 using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Extensibility;
+using LinkyLink.Infrastructure;
 
 namespace LinkyLink
 {
     public static partial class LinkOperations
-    {
-        public const string CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
+    {        
         [FunctionName(nameof(SaveLinks))]
         public static async Task<IActionResult> SaveLinks(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "links")] HttpRequest req,
@@ -46,6 +43,21 @@ namespace LinkyLink
                 string handle = GetTwitterHandle(req);
                 linkDocument.UserId = handle;
                 EnsureVanityUrl(linkDocument);
+
+                if (!await BlackListChecker.Check(linkDocument.VanityUrl))
+                {
+                    ProblemDetails blacklistProblems = new ProblemDetails
+                    {
+                        Title = "Could not create link bundle",
+                        Detail = "Vanity link is invalid",
+                        Status = StatusCodes.Status400BadRequest,
+                        Type = "/linkylink/clientissue",
+                        Instance = req.Path
+                    };
+
+                    log.LogError(problems.Detail);
+                    return new BadRequestObjectResult(blacklistProblems);
+                }
 
                 await documents.AddAsync(linkDocument);
                 return new CreatedResult($"/{linkDocument.VanityUrl}", linkDocument);
@@ -94,7 +106,7 @@ namespace LinkyLink
 
         private static bool ValidatePayLoad(LinkBundle linkDocument, HttpRequest req, out ProblemDetails problems)
         {
-            bool isValid = linkDocument.Links.Count() > 0;
+            bool isValid = (linkDocument != null) && linkDocument.Links.Count() > 0;
             problems = null;
 
             if (!isValid)

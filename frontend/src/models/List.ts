@@ -1,5 +1,4 @@
 import ILink from "./ILink";
-import Array from "../shared/Array";
 
 export default class List {
   constructor(

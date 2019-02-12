@@ -1,8 +1,5 @@
-using System;
 using Xunit;
-using LinkyLink;
 using LinkyLink.Tests.Helpers;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +51,7 @@ namespace LinkyLink.Tests
             ILogger fakeLogger = A.Fake<ILogger>();
 
             // Act
-            IActionResult result = LinkOperations.GetBundlesForUser(this.AuthenticatedRequest, A.Dummy<IEnumerable<Document>>(), "userid", fakeLogger);
+            IActionResult result = LinkOperations.GetBundlesForUser(this.DefaultRequest, A.Dummy<IEnumerable<Document>>(), "userid", fakeLogger);
 
             // Assert
             Assert.IsType<UnauthorizedResult>(result);
