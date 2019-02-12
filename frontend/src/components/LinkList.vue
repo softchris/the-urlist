@@ -1,8 +1,13 @@
 <template>
   <div class="links">
-    <sortable-list v-model="links" :distance="10" :disabled="editable">
+    <sortable-list
+      v-model="list.links"
+      :distance="10"
+      :disabled="editable"
+      @sort-end="sortEnd($event)"
+    >
       <sortable-item
-        v-for="(link, index) in links"
+        v-for="(link, index) in list.links"
         :index="index"
         :key="index"
         :disabled="!editable"
@@ -30,8 +35,16 @@ const SortableItem: object = SlickItem;
   }
 })
 export default class extends Vue {
+  get list() {
+    return this.$store.getters.list;
+  }
+
   created() {
     console.log(this.$props.editable);
+  }
+
+  sortEnd(e: any) {
+    // re-order the underlying list
   }
 }
 </script>
