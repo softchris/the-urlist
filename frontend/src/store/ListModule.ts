@@ -32,16 +32,6 @@ export default class ListModule extends VuexModule {
   }
 
   @Mutation
-  _setListEditable(editable: boolean) {
-    this._list.editable = editable;
-  }
-
-  @Action({ commit: '_setListEditable' })
-  setListEditable(editable: boolean) {
-    return editable;
-  }
-
-  @Mutation
   _setVanityUrl(vanityUrl: string) {
     this._list.vanityUrl = vanityUrl;
   }
@@ -156,6 +146,27 @@ export default class ListModule extends VuexModule {
 
       this.context.commit('_setVanityUrl', result.data.vanityUrl);
       this.context.commit('_setListEditable', false);
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  /* UPDATE LIST */
+  @Action
+  async updateList() {
+    const options = [
+      {
+        op: 'replace',
+        path: '/links',
+        value: this._list.links
+      }
+    ];
+
+    try {
+      let result = await axios.patch(
+        `${config.API_URL}/links/${this.list.vanityUrl}`,
+        options
+      );
     } catch (err) {
       throw new Error(err);
     }

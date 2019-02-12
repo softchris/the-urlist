@@ -21,7 +21,7 @@
         <button
           :disabled="!canSave"
           class="is-color-primary has-text-white has-text-bold"
-          @click="saveList()"
+          @click="list.isNew ? saveList() : updateList()"
         >Save List</button>
       </div>
     </div>
@@ -44,12 +44,20 @@ export default class AddBar extends Vue {
     return this.$store.getters.list;
   }
 
+  async updateList() {
+    try {
+      await this.$store.dispatch("updateList");
+    } catch (err) {
+      console.log("Could not save");
+    }
+  }
+
   async saveList() {
     try {
       await this.$store.dispatch("saveList");
       this.$router.push(`/${this.list.vanityUrl}`);
     } catch (err) {
-      console.log("could not do something to something");
+      console.log("Could not save");
     }
   }
 

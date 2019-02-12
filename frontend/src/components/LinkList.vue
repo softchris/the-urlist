@@ -7,7 +7,7 @@
         :key="index"
         :disabled="!editable"
       >
-        <link-preview :link="link"></link-preview>
+        <link-preview :link="link" :editable="editable"></link-preview>
       </sortable-item>
     </sortable-list>
   </div>
