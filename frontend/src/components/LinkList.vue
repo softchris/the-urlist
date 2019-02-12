@@ -5,6 +5,7 @@
       :distance="10"
       :disabled="editable"
       @sort-end="sortEnd($event)"
+      lock-axis="y"
     >
       <sortable-item
         v-for="(link, index) in list.links"
