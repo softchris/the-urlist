@@ -26,7 +26,7 @@ namespace LinkyLink
                 ConnectionStringSetting = "LinkLinkConnection",
                 SqlQuery = "SELECT * FROM linkbundles lb WHERE lb.vanityUrl = {vanityUrl}"
             )] IEnumerable<LinkBundle> documents,
-            [CosmosDB(ConnectionStringSetting = "LinkLinkConnection")] DocumentClient docClient,
+            [CosmosDB(ConnectionStringSetting = "LinkLinkConnection")] IDocumentClient docClient,
             string vanityUrl,
             ILogger log)
         {

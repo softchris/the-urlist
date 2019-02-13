@@ -80,7 +80,7 @@ namespace LinkyLink.Tests.Helpers
                         User = principal
                     };
 
-                    _authenticatedRequest = new DefaultHttpRequest(context);                    
+                    _authenticatedRequest = new DefaultHttpRequest(context);
                 }
                 return _authenticatedRequest;
             }
@@ -112,7 +112,7 @@ namespace LinkyLink.Tests.Helpers
             {
                 if (_defaultTestConfiguration == null)
                 {
-                    var configuration = new TelemetryConfiguration
+                    _defaultTestConfiguration = new TelemetryConfiguration
                     {
                         TelemetryChannel = new StubTelemetryChannel(),
                         InstrumentationKey = Guid.NewGuid().ToString()
