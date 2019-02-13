@@ -203,7 +203,7 @@ h3 {
 
 /* Tablet */
 @media screen and (max-width: 960px), print {
-  .is-hidden-mobile {
+  .is-hidden-tablet {
     display: none;
   }
   .is-half-tablet {
@@ -213,9 +213,9 @@ h3 {
 }
 
 /* Phone */
-@media screen and (max-width: 600px), print {
+@media screen and (max-width: 700px), print {
   .is-hidden-mobile {
-    display: none;
+    display: none !important;
   }
   .is-full-mobile {
     width: 100%;
@@ -226,6 +226,10 @@ h3 {
 p {
   margin: 0px;
   padding: 0px;
+}
+
+a {
+  color: $primary-color;
 }
 
 .error {
