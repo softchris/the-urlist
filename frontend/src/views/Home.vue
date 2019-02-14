@@ -46,7 +46,6 @@ import NewLink from "@/components/NewLink.vue";
 })
 export default class Home extends Vue {
   created() {
-    this.$store.dispatch("setShowAddBar", false);
     this.$store.dispatch("newList");
   }
 

@@ -34,16 +34,21 @@ const customURL = helpers.regex(
   components: {
     LinkList,
     NewLink
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.$store.dispatch("setShowAddBar", true);
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.dispatch("setShowAddBar", false);
+    next();
   }
 })
 export default class extends Vue {
   newLink: string = "";
   get list() {
     return this.$store.getters.list;
-  }
-
-  created() {
-    this.$store.dispatch("setShowAddBar", true);
   }
 
   addLink(url: string) {

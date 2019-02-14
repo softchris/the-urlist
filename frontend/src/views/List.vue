@@ -22,8 +22,6 @@ export default class List extends Vue {
   }
 
   async created() {
-    this.$store.dispatch("setShowAddBar", false);
-
     // get the list from the db based on the url id
     let vanityUrl = this.$route.params.id;
 

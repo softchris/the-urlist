@@ -5,6 +5,6 @@ export default class List {
     public vanityUrl: string = "",
     public description: string = "",
     public links: Array<ILink> = new Array(),
-    public isNew: boolean = false
+    public isNew: boolean = true
   ) {}
 }
