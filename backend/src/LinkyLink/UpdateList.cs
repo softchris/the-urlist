@@ -36,16 +36,34 @@ namespace LinkyLink
                 return new NotFoundResult();
             }
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            JsonPatchDocument<LinkBundle> patchDocument = JsonConvert.DeserializeObject<JsonPatchDocument<LinkBundle>>(requestBody);
             try
             {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                if (string.IsNullOrEmpty(requestBody))
+                {
+                    log.LogError("Request body is empty.");
+                    return new BadRequestResult();
+                }
+
+                JsonPatchDocument<LinkBundle> patchDocument = JsonConvert.DeserializeObject<JsonPatchDocument<LinkBundle>>(requestBody);
+
+                if (!patchDocument.Operations.Any())
+                {
+                    log.LogError("Request body contained no operations.");
+                    return new NoContentResult();
+                }
+
                 LinkBundle bundle = documents.Single();
                 patchDocument.ApplyTo(bundle);
 
                 Uri collUri = UriFactory.CreateDocumentCollectionUri("linkylinkdb", "linkbundles");
                 RequestOptions reqOptions = new RequestOptions { PartitionKey = new PartitionKey(vanityUrl) };
                 await docClient.UpsertDocumentAsync(collUri, bundle, reqOptions);
+            }
+            catch (JsonSerializationException ex)
+            {
+                log.LogError(ex, ex.Message);
+                return new BadRequestResult();
             }
             catch (Exception ex)
             {

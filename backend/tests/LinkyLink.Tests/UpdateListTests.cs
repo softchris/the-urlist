@@ -25,7 +25,7 @@ namespace LinkyLink.Tests
         {
             LinkOperations.telemetryClient = new TelemetryClient(this.DefaultTestConfiguration);
         }
-        
+
         [Fact]
         public async Task UpdateList_Request_With_Emtpy_Collection_Should_Return_NotFound()
         {
@@ -69,9 +69,39 @@ namespace LinkyLink.Tests
             // Act
             IActionResult result = await LinkOperations.UpdateList(req, docs, docClient, vanityUrl, A.Dummy<ILogger>());
 
-            //
+            // Assert
             Assert.Equal("Description", captured.Description);
             Assert.IsType<NoContentResult>(result);
+        }
+
+        [Theory]
+        [InlineData("", typeof(BadRequestResult))]
+        [InlineData("[]", typeof(NoContentResult))]
+        [InlineData("{}", typeof(BadRequestResult))]
+        public async Task UpdateList_Empty_Operation_Does_Not_Call_DocumentClient(string payload, Type returnType)
+        {
+            // Arrange
+            HttpRequest req = this.AuthenticatedRequest;
+            req.Body = this.GetHttpRequestBodyStream(payload);
+
+            IEnumerable<LinkBundle> docs = this.Fixture.CreateMany<LinkBundle>(1);
+            IDocumentClient docClient = this.Fixture.Create<IDocumentClient>();
+            ILogger logger = this.Fixture.Create<ILogger>();
+            string vanityUrl = "vanity";
+
+            // Act
+            IActionResult result = await LinkOperations.UpdateList(req, docs, docClient, vanityUrl, logger);
+
+            // Assert
+            Assert.IsType(returnType, result);
+
+            A.CallTo(docClient)
+                .Where((IFakeObjectCall call) => call.Method.Name == "UpsertDocumentAsync")
+                .MustNotHaveHappened();
+
+            A.CallTo(logger)
+                .Where((IFakeObjectCall call) => call.Method.Name == "Log" && call.GetArgument<LogLevel>("logLevel") == LogLevel.Error)
+                .MustHaveHappened();
         }
     }
 }
