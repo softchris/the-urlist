@@ -1,14 +1,19 @@
 <template>
   <div class="flex is-vertically-centered">
     <div class="card link flex is-vertically-centered" @click="go(link.url)">
-      <figure class="link-image">
+      <figure class="link-image is-hidden-mobile">
         <img width="64" :src="link.image" :alt="link.title">
       </figure>
       <div class="link-details flex is-vertically-centered">
         <div class="flex flex-column">
-          <strong v-line-clamp:20="2" class="link-title">{{ link.title }}</strong>
-          <div class="link-description">{{ link.description }}</div>
-          <div v-line-clamp:20="2" class="link-url">
+          <div class="flex">
+            <figure class="link-image is-visible-mobile">
+              <img width="24" :src="link.image" :alt="link.title">
+            </figure>
+            <strong v-line-clamp:10="1" class="link-title">{{ link.title }}</strong>
+          </div>
+          <div v-line-clamp:20="2" class="link-description">{{ link.description }}</div>
+          <div class="link-url">
             <p v-line-clamp:10="1">{{ link.url }}</p>
           </div>
         </div>
@@ -86,10 +91,6 @@ export default class extends Vue {
   cursor: pointer;
   margin-top: -20px;
   margin-left: 20px;
-  // margin-right: -40px;
-  // margin-right: 20px;
-  // margin-top: -60px;
-  // left: -20px;
   transition: margin 400ms linear;
 }
 
@@ -97,14 +98,11 @@ export default class extends Vue {
   .delete {
     margin-right: -50px;
   }
-  // .link-details {
-  //   padding-right: 40px;
-  // }
 }
 
 @media only screen and (max-width: 680px) {
   .link-description {
-    display: none;
+    font-size: 12px;
   }
   .link-title {
     margin-right: 30px;

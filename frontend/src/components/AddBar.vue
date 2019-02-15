@@ -25,8 +25,8 @@
         <button
           :disabled="!canSave"
           class="is-color-primary has-text-white has-text-bold save-button"
-          @click="list.isNew ? saveList() : updateList()"
-        >Save List</button>
+          @click="saveList"
+        >Publish</button>
       </div>
     </div>
   </div>
@@ -53,20 +53,19 @@ export default class AddBar extends Vue {
     return `${config.APP_URL}/${this.list.vanityUrl}`;
   }
 
-  async updateList() {
-    try {
-      await this.$store.dispatch("updateList");
-    } catch (err) {
-      console.log("Could not save");
-    }
-  }
-
   async saveList() {
     try {
-      await this.$store.dispatch("saveList");
+      this.isBusy = true;
+
+      this.list.isNew
+        ? await this.$store.dispatch("saveList")
+        : await this.$store.dispatch("updateList");
+
       this.$router.push(`/${this.list.vanityUrl}`);
     } catch (err) {
       console.log("Could not save");
+    } finally {
+      this.isBusy = false;
     }
   }
 
@@ -79,12 +78,11 @@ export default class AddBar extends Vue {
         this.list.vanityUrl
       );
       this.vanityIsAvailable = available;
-      console.log(this.vanityIsAvailable);
     } catch (err) {
       console.log(err);
+    } finally {
+      this.isBusy = false;
     }
-
-    this.isBusy = false;
   }
 }
 </script>
