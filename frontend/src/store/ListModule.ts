@@ -82,21 +82,10 @@ export default class ListModule extends VuexModule {
       });
   }
 
-  @Action
-  loadList(url: string) {
-    const list = new List(url, "", [], false);
-    this.context.commit("_setList", list);
-
-    this.context.dispatch("getList", url);
-  }
-
   /* SET LIST */
   @Mutation
   _setList(list: List) {
-    this._list.description = list.description;
-    this._list.vanityUrl = list.vanityUrl;
-    this._list.links = [];
-    this._list.isNew = list.isNew;
+    this._list = list;
   }
 
   @Action({ commit: "_setList" })
@@ -110,19 +99,26 @@ export default class ListModule extends VuexModule {
   /* GET LIST */
   @Action
   async getList(vanityUrl: string) {
+    let list = new List("", "", new Array(), false);
+    this.context.commit("_setList", list);
+
     try {
       const result = await axios.get(`${config.API_URL}/links/${vanityUrl}`);
 
-      const list = <List>result.data;
-      list.isNew = false;
+      list.vanityUrl = result.data.vanityUrl;
+      list.description = result.data.description;
 
       this.context.commit("_setList", list);
 
-      for (let link of list.links) {
+      for (let link of result.data.links) {
         this.context.dispatch("addLink", link);
       }
     } catch (err) {
-      console.log(err);
+      list.vanityUrl = vanityUrl;
+      list.isNew = true;
+      this.context.commit("_setList", list);
+
+      throw new Error(err);
     }
   }
 
