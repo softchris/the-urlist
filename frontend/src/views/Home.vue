@@ -46,14 +46,13 @@ import NewLink from "@/components/NewLink.vue";
 })
 export default class Home extends Vue {
   created() {
-    this.$store.dispatch("setShowAddBar", false);
     this.$store.dispatch("newList");
   }
 
   // event emitted by the AddBar component
   addLink(url: string) {
     this.$store.dispatch("newLink", url);
-    this.$router.push("s/new");
+    this.$router.push("s/edit");
   }
 }
 </script>

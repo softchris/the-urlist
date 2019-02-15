@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="addbar container flex is-horizontally-centered">
-      <div class="control">
-        <label for="vanity-url">Vanity URL</label>
+      <div class="control stretch">
+        <label class="control-label" for="vanity-url">Vanity URL</label>
         <input
           :class="{ invalid: !vanityIsAvailable }"
           id="vanity-url"
@@ -12,15 +12,19 @@
           :disabled="!list.isNew"
         >
         <p class="error" v-show="!vanityIsAvailable">That vanity URL is already taken</p>
+        <p class="live-link">
+          <a :href="liveLink" v-show="!list.isNew" target="_new">{{liveLink}}</a>
+        </p>
       </div>
-      <div class="control">
-        <label for="description">Description</label>
+      <div class="control stretch">
+        <label class="control-label" for="description">Description</label>
         <textarea class="description" id="description" v-model="list.description"></textarea>
       </div>
-      <div class="save-button">
+      <div class="control">
+        <label class="control-label is-hidden-mobile" for>&nbsp;</label>
         <button
           :disabled="!canSave"
-          class="is-color-primary has-text-white has-text-bold"
+          class="is-color-primary has-text-white has-text-bold save-button"
           @click="list.isNew ? saveList() : updateList()"
         >Save List</button>
       </div>
@@ -31,6 +35,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { debounce } from "typescript-debounce-decorator";
+import config from "@/config";
 
 @Component
 export default class AddBar extends Vue {
@@ -42,6 +47,10 @@ export default class AddBar extends Vue {
 
   get list() {
     return this.$store.getters.list;
+  }
+
+  get liveLink() {
+    return `${config.APP_URL}/${this.list.vanityUrl}`;
   }
 
   async updateList() {
@@ -83,17 +92,24 @@ export default class AddBar extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .control {
-  padding: 10px 30px 10px 0px;
-  flex: 1;
-  label {
-    padding-bottom: 0.8rem;
-    display: block;
+  padding: 10px 10px 0px;
+  &.stretch {
+    flex: 1 1 200px;
   }
 }
 
+.control-label {
+  padding-bottom: 0.8rem;
+  display: block;
+}
+
 .save-button {
-  margin-bottom: 15px;
-  align-self: flex-end;
+  padding: 10px 10px 10px;
+}
+
+.live-link {
+  margin-top: 10px;
+  font-size: 12px;
 }
 
 @media only screen and (max-width: 700px) {

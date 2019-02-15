@@ -18,11 +18,6 @@ export default new Router({
       component: Home
     },
     {
-      path: "/s/new",
-      name: "new",
-      component: New
-    },
-    {
       path: "/s/me",
       name: "me",
       component: Me

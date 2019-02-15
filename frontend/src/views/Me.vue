@@ -50,12 +50,11 @@ export default class Me extends Vue {
 
   created() {
     this.$store.dispatch("getMyLists");
-    this.$store.dispatch("setShowAddBar", false);
   }
 
   addNewList() {
     this.$store.dispatch("newList");
-    this.$router.push("/s/new");
+    this.$router.push("/s/edit");
   }
 
   editList(vanityUrl: string) {
