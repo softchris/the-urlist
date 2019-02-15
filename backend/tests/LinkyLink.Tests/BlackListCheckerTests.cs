@@ -15,6 +15,39 @@ namespace LinkyLink.Tests
             Assert.True(await checker.Check("somevalue"));
         }
 
+        [Theory]
+        [InlineData("value1")]
+        [InlineData("key")]
+        public async Task Check_Always_Returns_True_For_Empty_Setting(string value)
+        {
+            // Arrange
+            string key = "key";
+            Environment.SetEnvironmentVariable(key, string.Empty);            
+            EnvironmentBlackListChecker checker = new EnvironmentBlackListChecker(key);
+
+            // Act
+            bool  result =  await checker.Check(value);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Theory]
+        [InlineData("value1")]
+        [InlineData("key")]
+        public async Task Check_Returns_True_For_Missing_Environment_Variable(string value)
+        {
+            // Arrange
+            string key = "key";
+            EnvironmentBlackListChecker checker = new EnvironmentBlackListChecker(key);
+
+            // Act
+            bool result = await checker.Check(value);
+
+            // Assert
+            Assert.True(result);
+        }
+
         [Fact]
         public async Task Check_Throws_Exception_On_Empty_BlackList_Value()
         {
