@@ -52,7 +52,7 @@ namespace LinkyLink.Tests
             Assert.Equal("userid", createdBundle.UserId);
 
             A.CallTo(() => collector.AddAsync(A<LinkBundle>.That.Matches(b => b.UserId == "userid"),
-                default(CancellationToken))).MustHaveHappened();
+                default)).MustHaveHappened();
         }
     }
 }
