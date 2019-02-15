@@ -4,16 +4,12 @@ using System.Threading.Tasks;
 
 namespace LinkyLink.Infrastructure
 {
-    public interface IBlackListChecker
-    {
-        Task<bool> Check(string value);
-    }
 
     public class EnvironmentBlackListChecker : IBlackListChecker
     {
         private string[] _blackList;
 
-        public EnvironmentBlackListChecker(string key)
+        public EnvironmentBlackListChecker(string key = "URL_BLACKLIST")
         {
             string settingsValue = Environment.GetEnvironmentVariable(key);
             this._blackList = settingsValue != null ? settingsValue.Split(',') : new string[] { };

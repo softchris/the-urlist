@@ -30,6 +30,9 @@ namespace LinkyLink
             string vanityUrl,
             ILogger log)
         {
+            string handle = GetTwitterHandle(req);            
+            if (string.IsNullOrEmpty(handle)) return new UnauthorizedResult();
+
             if (!documents.Any())
             {
                 log.LogInformation($"Bundle for {vanityUrl} not found.");

@@ -27,6 +27,19 @@ namespace LinkyLink.Tests
         }
 
         [Fact]
+        public async Task UpdateList_Request_Missing_Auth_Credentials_Should_Return_UnAuthorized()
+        {
+            // Arrange            
+            var docs = Fixture.CreateMany<LinkBundle>();
+
+            // Act
+            IActionResult result = await LinkOperations.UpdateList(this.DefaultRequest, docs, null, "vanityUrl", A.Dummy<ILogger>());
+
+            // Assert
+            Assert.IsType<UnauthorizedResult>(result);
+        }
+
+        [Fact]
         public async Task UpdateList_Request_With_Emtpy_Collection_Should_Return_NotFound()
         {
             // Arrange

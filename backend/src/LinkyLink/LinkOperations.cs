@@ -14,7 +14,7 @@ namespace LinkyLink
     {
         public static TelemetryClient telemetryClient;
         public const string CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        public static IBlackListChecker BlackListChecker = new EnvironmentBlackListChecker("");
+        public static IBlackListChecker BlackListChecker = new EnvironmentBlackListChecker();
 
         static LinkOperations()
         {
