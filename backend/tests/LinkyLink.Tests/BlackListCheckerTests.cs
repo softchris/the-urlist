@@ -20,10 +20,9 @@ namespace LinkyLink.Tests
         [InlineData("key")]
         public async Task Check_Always_Returns_True_For_Empty_Setting(string value)
         {
-            // Arrange
-            string key = "key";
-            Environment.SetEnvironmentVariable(key, string.Empty);
-            EnvironmentBlackListChecker checker = new EnvironmentBlackListChecker(key);
+            // Arrange        
+            Environment.SetEnvironmentVariable("key", "value");
+            EnvironmentBlackListChecker checker = new EnvironmentBlackListChecker();
 
             // Act
             bool result = await checker.Check(value);
@@ -37,9 +36,8 @@ namespace LinkyLink.Tests
         [InlineData("key")]
         public async Task Check_Returns_True_For_Missing_Environment_Variable(string value)
         {
-            // Arrange
-            string key = "key";
-            EnvironmentBlackListChecker checker = new EnvironmentBlackListChecker(key);
+            // Arrange            
+            EnvironmentBlackListChecker checker = new EnvironmentBlackListChecker();
 
             // Act
             bool result = await checker.Check(value);
@@ -52,8 +50,8 @@ namespace LinkyLink.Tests
         public async Task Check_Throws_Exception_On_Empty_BlackList_Value()
         {
             // Arrange
-            Environment.SetEnvironmentVariable("key", "value");
             string key = "key";
+            Environment.SetEnvironmentVariable(key, "value");            
             EnvironmentBlackListChecker checker = new EnvironmentBlackListChecker(key);
 
             // Act
@@ -64,8 +62,8 @@ namespace LinkyLink.Tests
         public async Task Check_Compares_Input_To_Blacklist()
         {
             // Arrange
-            Environment.SetEnvironmentVariable("key", "1,2,3,4,5,6");
             string key = "key";
+            Environment.SetEnvironmentVariable(key, "1,2,3,4,5,6");            
             EnvironmentBlackListChecker checker = new EnvironmentBlackListChecker(key);
 
             // Act
