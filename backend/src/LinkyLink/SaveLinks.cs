@@ -12,7 +12,6 @@ using System.Net;
 using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.ApplicationInsights.DataContracts;
-using LinkyLink.Infrastructure;
 
 namespace LinkyLink
 {
