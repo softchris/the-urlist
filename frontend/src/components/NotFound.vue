@@ -5,7 +5,7 @@
       <span>(ツ)</span>
       <span>_/¯</span>
     </div>
-    <h2 class="shrug-description">We couldn't find that Url List.</h2>
+    <h3 class="shrug-description">We couldn't find that Url List.</h3>
     <p class="shrug-description">
       But that's not necessarily a bad thing. That means the url "{{vanity}}" is
       <a
@@ -32,7 +32,7 @@ export default class extends Vue {
 <style scoped lang="scss">
 .shrug {
   text-align: center;
-  font-size: 10vw;
+  font-size: 8vw;
   position: relative;
   line-height: 1;
   span {
