@@ -36,10 +36,15 @@ namespace LinkyLink
                 return new NotFoundResult();
             }
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            JsonPatchDocument<LinkBundle> patchDocument = JsonConvert.DeserializeObject<JsonPatchDocument<LinkBundle>>(requestBody);
             try
             {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                if (string.IsNullOrEmpty(requestBody)) return new BadRequestResult();
+
+                JsonPatchDocument<LinkBundle> patchDocument = JsonConvert.DeserializeObject<JsonPatchDocument<LinkBundle>>(requestBody);
+
+                if (patchDocument.Operations.Any()) return new NoContentResult();
+
                 LinkBundle bundle = documents.Single();
                 patchDocument.ApplyTo(bundle);
 

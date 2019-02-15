@@ -25,7 +25,7 @@ namespace LinkyLink.Tests
         {
             LinkOperations.telemetryClient = new TelemetryClient(this.DefaultTestConfiguration);
         }
-        
+
         [Fact]
         public async Task UpdateList_Request_With_Emtpy_Collection_Should_Return_NotFound()
         {
@@ -69,9 +69,33 @@ namespace LinkyLink.Tests
             // Act
             IActionResult result = await LinkOperations.UpdateList(req, docs, docClient, vanityUrl, A.Dummy<ILogger>());
 
-            //
+            // Assert
             Assert.Equal("Description", captured.Description);
             Assert.IsType<NoContentResult>(result);
+        }
+
+        [Theory]
+        [InlineData("", typeof(BadRequestResult))]
+        [InlineData("[]", typeof(NoContentResult))]
+        public async Task UpdateList_Empty_Operation_Does_Call_DocumentClient(string payload, Type returnType)
+        {
+            // Arrange
+            HttpRequest req = this.AuthenticatedRequest;
+            req.Body = this.GetHttpRequestBodyStream(JsonConvert.SerializeObject(payload));
+
+            IEnumerable<LinkBundle> docs = this.Fixture.CreateMany<LinkBundle>(1);
+            IDocumentClient docClient = this.Fixture.Create<IDocumentClient>();
+            string vanityUrl = "vanity";
+
+            // Act
+            IActionResult result = await LinkOperations.UpdateList(req, docs, docClient, vanityUrl, A.Dummy<ILogger>());
+
+            // Assert
+            Assert.IsType(returnType, result);
+
+            A.CallTo(docClient)
+                .Where(call => call.Method.Name == "UpsertDocumentAsync")
+                .MustNotHaveHappened();
         }
     }
 }
