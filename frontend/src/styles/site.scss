@@ -213,10 +213,17 @@ h3 {
   }
 }
 
+.is-visible-mobile {
+  display: none;
+}
+
 /* Phone */
 @media screen and (max-width: 700px), print {
   .is-hidden-mobile {
     display: none !important;
+  }
+  .is-visible-mobile {
+    display: block;
   }
   .is-full-mobile {
     width: 100%;

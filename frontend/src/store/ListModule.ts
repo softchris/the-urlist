@@ -1,11 +1,11 @@
-import { Module, Mutation, Action, VuexModule } from 'vuex-module-decorators';
-import List from '@/models/List';
-import ILink from '@/models/ILink';
-import IMyList from '@/models/IMyList';
-import { IOGData } from '@/models/IOGData';
-import axios from '../shared/axios';
-import config from '@/config';
-import Link from '@/models/Link';
+import { Module, Mutation, Action, VuexModule } from "vuex-module-decorators";
+import List from "@/models/List";
+import ILink from "@/models/ILink";
+import IMyList from "@/models/IMyList";
+import { IOGData } from "@/models/IOGData";
+import axios from "../shared/axios";
+import config from "@/config";
+import Link from "@/models/Link";
 
 @Module
 export default class ListModule extends VuexModule {
@@ -22,7 +22,7 @@ export default class ListModule extends VuexModule {
 
   @Action
   async getUserOwnsList() {
-    return this._myLists.get('vanityUrl', this._list.vanityUrl).index > -1;
+    return this._myLists.get("vanityUrl", this._list.vanityUrl).index > -1;
   }
 
   @Mutation
@@ -43,20 +43,20 @@ export default class ListModule extends VuexModule {
 
   @Action
   addLink(link: ILink = new Link()) {
-    this.context.commit('_addLink', link);
-    this.context.dispatch('updateLink', link);
+    this.context.commit("_addLink", link);
+    this.context.dispatch("updateLink", link);
   }
 
   @Action
   newLink(url: string) {
-    const link = new Link(url, url, '', '');
-    this.context.dispatch('addLink', link);
+    const link = new Link(url, url, "", "");
+    this.context.dispatch("addLink", link);
   }
 
   /* UPDATE LINK */
   @Mutation
   _updateLink(link: ILink) {
-    let { index } = this._list.links.get('id', link.id);
+    let { index } = this._list.links.get("id", link.id);
     this._list.links[index] = link;
   }
 
@@ -75,7 +75,7 @@ export default class ListModule extends VuexModule {
         if (ogData.image) {
           link.image = ogData.image;
         }
-        this.context.commit('_updateLink', link);
+        this.context.commit("_updateLink", link);
       })
       .catch(err => {
         console.log(err);
@@ -84,10 +84,10 @@ export default class ListModule extends VuexModule {
 
   @Action
   loadList(url: string) {
-    const list = new List(url, '', [], false);
-    this.context.commit('_setList', list);
+    const list = new List(url, "", [], false);
+    this.context.commit("_setList", list);
 
-    this.context.dispatch('getList', url);
+    this.context.dispatch("getList", url);
   }
 
   /* SET LIST */
@@ -99,7 +99,7 @@ export default class ListModule extends VuexModule {
     this._list.isNew = list.isNew;
   }
 
-  @Action({ commit: '_setList' })
+  @Action({ commit: "_setList" })
   newList() {
     const list = new List();
     list.isNew = true;
@@ -115,15 +115,11 @@ export default class ListModule extends VuexModule {
 
       const list = <List>result.data;
       list.isNew = false;
-      // // determine if the user has the ability to edit this list
-      // if (this._myLists.get('vanityUrl', list.vanityUrl).index > -1) {
-      //   list.editable = true;
-      // }
 
-      this.context.commit('_setList', list);
+      this.context.commit("_setList", list);
 
       for (let link of list.links) {
-        this.context.dispatch('addLink', link);
+        this.context.dispatch("addLink", link);
       }
     } catch (err) {
       console.log(err);
@@ -143,8 +139,8 @@ export default class ListModule extends VuexModule {
     try {
       let result = await axios.post(`${config.API_URL}/links?`, options);
 
-      this.context.commit('_setVanityUrl', result.data.vanityUrl);
-      this.context.commit('_setListEditable', false);
+      this.context.commit("_setVanityUrl", result.data.vanityUrl);
+      this.context.commit("_setListEditable", false);
     } catch (err) {
       throw new Error(err);
     }
@@ -155,9 +151,14 @@ export default class ListModule extends VuexModule {
   async updateList() {
     const options = [
       {
-        op: 'replace',
-        path: '/links',
+        op: "replace",
+        path: "/links",
         value: this._list.links
+      },
+      {
+        op: "replace",
+        path: "/description",
+        value: this._list.description
       }
     ];
 
@@ -174,13 +175,13 @@ export default class ListModule extends VuexModule {
   /* DELETE LINK */
   @Mutation
   _deleteLink(id: string) {
-    let { index } = this._list.links.get('id', id);
+    let { index } = this._list.links.get("id", id);
     this._list.links.splice(index, 1);
   }
 
   @Action
   deleteLink(id: string) {
-    this.context.commit('_deleteLink', id);
+    this.context.commit("_deleteLink", id);
   }
 
   /* GET MY LISTS */
@@ -194,7 +195,7 @@ export default class ListModule extends VuexModule {
 
         let myLists = <IMyList>results.data;
 
-        this.context.commit('_setMyLists', myLists);
+        this.context.commit("_setMyLists", myLists);
       } catch (err) {
         throw new Error(err);
       }
