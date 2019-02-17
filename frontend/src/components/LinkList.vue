@@ -38,7 +38,4 @@ export default class extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.links {
-  margin-right: 10px;
-}
 </style>

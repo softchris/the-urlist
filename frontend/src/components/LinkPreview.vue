@@ -13,14 +13,14 @@
             <strong v-line-clamp:10="1" class="link-title">{{ link.title }}</strong>
           </div>
           <div v-line-clamp:20="2" class="link-description">{{ link.description }}</div>
-          <div class="link-url">
-            <p v-line-clamp:10="1">{{ link.url }}</p>
+          <div v-line-clamp:10="1" class="link-url">
+            <p>{{ link.url }}</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="is-aligned-right delete">
-      <a class="has-text-bold" @click.prevent="deleteLink(link.id)" v-show="editable">
+    <div class="is-aligned-right delete" v-show="editable">
+      <a class="has-text-bold" @click.prevent="deleteLink(link.id)">
         <img src="../assets/close.png" alt>
       </a>
     </div>
@@ -81,6 +81,9 @@ export default class extends Vue {
 }
 
 .link-url {
+  width: 100%;
+  overflow: hidden;
+
   font-size: 12px;
   p {
     margin: 10px 0 0 0;
