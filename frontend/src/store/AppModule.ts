@@ -4,6 +4,7 @@ export default class AppModule extends VuexModule {
   _appIsBusy: boolean = false;
   _showAddBar: boolean = false;
   _appErrorMessage: string = "";
+  _activeProcesses: number = 0;
 
   get appIsBusy() {
     return this._appIsBusy;
@@ -17,6 +18,15 @@ export default class AppModule extends VuexModule {
     return this._appErrorMessage;
   }
 
+  get activeProcesses() {
+    return this._activeProcesses;
+  }
+
+  @Mutation
+  _setActiveProcesses(incrementer: number) {
+    this._activeProcesses += incrementer;
+  }
+
   @Mutation
   _setAppBusy(busy: boolean) {
     this._appIsBusy = busy;
@@ -24,7 +34,11 @@ export default class AppModule extends VuexModule {
 
   @Action({ commit: "_setAppBusy" })
   setAppBusy(busy: boolean) {
-    return busy;
+    let incrementer = busy || -1;
+
+    this.context.commit("_setActiveProcesses", incrementer);
+
+    return this._activeProcesses > 0;
   }
 
   @Mutation
