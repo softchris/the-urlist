@@ -6,7 +6,7 @@ export default class Link implements ILink {
   url = "";
   title = "";
   description = "";
-  image = "../images/no-image.png";
+  image = "";
 
   constructor(
     url: string = "",

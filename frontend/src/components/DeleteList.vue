@@ -16,6 +16,7 @@
         </div>
         <div class="confirmation-buttons flex is-horizontally-centered">
           <button
+            :disabled="!canDelete"
             class="button is-color-danger has-text-white"
             @click="deleteList(vanityUrl)"
           >Yes, Delete It</button>
@@ -32,6 +33,10 @@ import { Component, Prop, Vue } from "vue-property-decorator";
   props: ["vanityUrl"]
 })
 export default class Login extends Vue {
+  canDelete() {
+    this.$store.getters.appIsBusy;
+  }
+
   async deleteList(vanityUrl: string) {
     try {
       await this.$store.dispatch("deleteList", vanityUrl);

@@ -9,6 +9,7 @@
     </div>
     <link-list :links="list.links" :editable="true"></link-list>
     <button
+      v-if="list.links.length > 0"
       class="delete-button button is-color-danger has-text-white"
       @click="deleteList"
     >Delete This List</button>
@@ -42,6 +43,9 @@ const customURL = helpers.regex(
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
+      let vanityUrl = vm.$route.params.id;
+
+      vm.$store.dispatch('getList', vanityUrl);
       vm.$store.dispatch("setShowAddBar", true);
     });
   },

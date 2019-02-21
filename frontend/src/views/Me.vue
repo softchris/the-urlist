@@ -58,12 +58,12 @@ export default class Me extends Vue {
 
   addNewList() {
     this.$store.dispatch("newList");
-    this.$router.push("/s/edit");
+    this.$router.push("/s/new");
   }
 
   editList(vanityUrl: string) {
     this.$store.dispatch("getList", vanityUrl);
-    this.$router.push("/s/edit");
+    this.$router.push(`/s/edit/${vanityUrl}`);
   }
 }
 </script>

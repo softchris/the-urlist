@@ -73,7 +73,7 @@ export default class ListModule extends VuexModule {
         link.title = ogData.title;
         link.description = ogData.description;
         if (ogData.image) {
-          link.image = ogData.image;
+          link.image = ogData.image.replace(/(^\w+:|^)/, "");
         }
         this.context.commit("_updateLink", link);
       })
