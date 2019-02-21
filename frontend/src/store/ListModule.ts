@@ -168,6 +168,16 @@ export default class ListModule extends VuexModule {
     }
   }
 
+  @Action({ commit: "_setMyLists" })
+  async deleteList(vanityUrl: string) {
+    try {
+      await axios.delete(`${config.API_URL}/links/${this.list.vanityUrl}`);
+      return new Array();
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
   /* DELETE LINK */
   @Mutation
   _deleteLink(id: string) {
@@ -182,7 +192,9 @@ export default class ListModule extends VuexModule {
 
   /* GET MY LISTS */
   @Action
-  async getMyLists(userName: string) {
+  async getMyLists() {
+    const userName = this.context.getters.currentUser.userName;
+
     if (userName) {
       try {
         let results = await axios.get(

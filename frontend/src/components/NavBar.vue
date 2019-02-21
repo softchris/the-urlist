@@ -5,7 +5,9 @@
     </div>
     <ul class="big-container navbar-content flex is-vertically-centered">
       <li>
-        <a href="/"><img width="100" src="../assets/logo.svg"></a>
+        <a href="/">
+          <img width="100" src="../assets/logo.svg">
+        </a>
       </li>
       <li class="is-aligned-right">
         <a class="login flex is-vertically-centered" href="#" @click.prevent="profileLoginClick()">
@@ -22,6 +24,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import AddBar from "@/components/AddBar.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
+import Login from "@/components/Login.vue";
 import User from "@/models/User";
 import config from "@/config";
 import "../assets/login.png";
@@ -45,7 +48,16 @@ export default class extends Vue {
     if (this.currentUser.loggedIn) {
       this.$router.push("/s/me");
     } else {
-      this.$modal.show("log-in");
+      this.$modal.show(
+        Login,
+        {},
+        {
+          width: "60%",
+          adaptive: true,
+          minWidth: "300",
+          maxWidth: "500"
+        }
+      );
     }
   }
 

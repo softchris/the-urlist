@@ -99,7 +99,7 @@ export default class extends Vue {
 
 @media only screen and (min-width: 1040px) {
   .delete {
-    margin-right: -50px;
+    margin-right: -40px;
   }
 }
 

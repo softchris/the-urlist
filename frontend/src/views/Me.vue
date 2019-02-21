@@ -31,6 +31,7 @@
               <div class="badge link-count">{{ list.linkCount }} Links</div>
               <h3>{{ list.vanityUrl }}</h3>
               <p>{{ list.description }}</p>
+              <p></p>
             </div>
           </div>
         </div>
@@ -42,14 +43,17 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-@Component
+@Component({
+  beforeRouteEnter(to, from, next) {
+    console.log("entering the route");
+    next(vm => {
+      vm.$store.dispatch("getMyLists");
+    });
+  }
+})
 export default class Me extends Vue {
   get myLists() {
     return this.$store.getters.myLists;
-  }
-
-  created() {
-    this.$store.dispatch("getMyLists");
   }
 
   addNewList() {

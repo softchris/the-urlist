@@ -8,6 +8,10 @@
       <span class="is-aligned-right">Drag each link to re-arrange</span>
     </div>
     <link-list :links="list.links" :editable="true"></link-list>
+    <button
+      class="delete-button button is-color-danger has-text-white"
+      @click="deleteList"
+    >Delete This List</button>
   </div>
 </template>
 
@@ -17,6 +21,7 @@ import { validationMixin } from "vuelidate";
 import { required, url, helpers } from "vuelidate/lib/validators";
 import LinkList from "@/components/LinkList.vue";
 import NewLink from "@/components/NewLink.vue";
+import DeleteList from "@/components/DeleteList.vue";
 
 const customURL = helpers.regex(
   "customURL",
@@ -55,6 +60,21 @@ export default class extends Vue {
     this.$store.dispatch("newLink", url);
     this.newLink = "";
   }
+
+  deleteList() {
+    this.$modal.show(
+      DeleteList,
+      {
+        vanityUrl: this.list.vanityUrl
+      },
+      {
+        width: "60%",
+        adaptive: true,
+        minWidth: 300,
+        maxWidth: 500
+      }
+    );
+  }
 }
 </script>
 
@@ -62,5 +82,9 @@ export default class extends Vue {
 <style scoped lang="scss">
 .add-links {
   margin-top: 100px;
+}
+
+.delete-button {
+  width: 100%;
 }
 </style>

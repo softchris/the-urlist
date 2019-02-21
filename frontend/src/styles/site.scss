@@ -5,6 +5,8 @@ $primary-color: #20ae96;
 $primary-color-hover: #31a490;
 $primary-color-active: #2a8d7c;
 $invalid-color: #d9255e;
+$invalid-color-hover: #d73c6d;
+$invalid-color-active: #a92f55;
 
 body {
   background-color: #f9fafc;
@@ -80,6 +82,12 @@ button {
     opacity: 0.5;
     cursor: not-allowed;
   }
+  &.is-color-danger:hover {
+    background-color: $invalid-color-hover;
+  }
+  &.is-color-danger:active {
+    background-color: $invalid-color-active;
+  }
 }
 
 .card {
@@ -123,6 +131,10 @@ textarea {
   background-color: $primary-color;
 }
 
+.is-color-danger {
+  background-color: $invalid-color;
+}
+
 .has-text-white {
   color: #fff;
 }
@@ -135,8 +147,16 @@ textarea {
   color: $primary-color;
 }
 
+.has-text-danger {
+  color: $invalid-color;
+}
+
 .has-text-bold {
   font-weight: bold;
+}
+
+.is-button-small {
+  font-size: 10px;
 }
 
 h1 {
@@ -252,6 +272,15 @@ a {
 
 .img-responsive {
   height: auto;
+}
+
+.modal {
+  margin: 20px;
+  text-align: center;
+}
+
+.modal-content {
+  margin: 20px;
 }
 
 @keyframes shakeError {

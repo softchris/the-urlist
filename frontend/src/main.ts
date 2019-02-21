@@ -6,7 +6,7 @@ import VModal from "vue-js-modal";
 const lineClamp = require("vue-line-clamp");
 import "@/shared/Array";
 
-Vue.use(VModal);
+Vue.use(VModal, { dynamic: true, injectModalsContainer: true });
 Vue.use(lineClamp);
 
 Vue.config.productionTip = false;
