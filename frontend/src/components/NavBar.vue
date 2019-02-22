@@ -6,7 +6,7 @@
     <ul class="big-container navbar-content flex is-vertically-centered">
       <li>
         <a href="/">
-          <img width="100" src="../assets/logo.svg">
+          <img width="100" src="@/assets/logo.svg">
         </a>
       </li>
       <li class="is-aligned-right">

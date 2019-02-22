@@ -16,7 +16,7 @@
             </div>
           </div>
           <div class="column is-half is-hidden-mobile">
-            <img src="../assets/banner-logo-large.png" class="banner-image">
+            <img src="@/assets/banner-logo-large.png" class="banner-image">
           </div>
         </div>
       </div>
