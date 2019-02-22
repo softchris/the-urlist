@@ -8,7 +8,7 @@
         <div class="flex flex-column">
           <div class="flex">
             <figure class="link-image is-visible-mobile">
-              <img width="24" :src="link.image" :alt="link.title">
+              <img width="24" :src="link.image || '/images/no-image.png'" :alt="link.title">
             </figure>
             <strong v-line-clamp:10="1" class="link-title">{{ link.title }}</strong>
           </div>

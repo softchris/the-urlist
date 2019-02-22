@@ -23,7 +23,7 @@ export default new Router({
       component: Me
     },
     {
-      path: "/s/edit/:id",
+      path: "/s/edit",
       name: "edit",
       component: Edit
     },
