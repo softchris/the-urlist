@@ -4,14 +4,15 @@
       <div class="control stretch">
         <label class="control-label" for="vanity-url">Vanity URL</label>
         <input
-          :class="{ invalid: !vanityIsAvailable }"
+          :class="{ invalid: !vanityIsValid }"
           id="vanity-url"
+          ref="vanityUrl"
           v-model="list.vanityUrl"
           type="text"
-          @keyup="checkVanityAvailable()"
           :disabled="!list.isNew"
+          @blur="checkVanity"
         >
-        <p class="error" v-show="!vanityIsAvailable">That vanity URL is already taken</p>
+        <p class="error" v-show="!vanityIsValid">{{ validationError }}</p>
         <p class="live-link">
           <a :href="liveLink" v-show="!list.isNew" target="_new">{{liveLink}}</a>
         </p>
@@ -23,7 +24,7 @@
       <div class="control">
         <label class="control-label is-hidden-mobile" for>&nbsp;</label>
         <button
-          :disabled="!canSave"
+          :disabled="list.links.length === 0"
           class="is-color-primary has-text-white has-text-bold save-button"
           @click="saveList"
         >Publish</button>
@@ -35,15 +36,30 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { debounce } from "typescript-debounce-decorator";
+import { validationMixin } from "vuelidate";
+import { helpers } from "vuelidate/lib/validators";
 import config from "@/config";
 
-@Component
+const customVanity = helpers.regex(
+  "customVanity",
+  /^([a-zA-Z0-9_\-])+$/
+);
+
+@Component({
+  mixins: [validationMixin],
+  validations: {
+    vanityUrl: {
+      customVanity
+    }
+  }
+})
 export default class AddBar extends Vue {
   get canSave() {
-    return this.vanityIsAvailable && this.list.links.length > 0 && !this.isBusy;
+    return this.vanityIsValid && this.list.links.length > 0 && !this.isBusy;
   }
   isBusy: boolean = false;
-  vanityIsAvailable: boolean = true;
+  vanityIsValid: boolean = true;
+  validationError: string = "";
 
   get list() {
     return this.$store.getters.list;
@@ -53,23 +69,35 @@ export default class AddBar extends Vue {
     return `${config.APP_URL}/${this.list.vanityUrl}`;
   }
 
+  get vanityUrl() {
+    return this.$store.getters.list.vanityUrl;
+  }
+
   async saveList() {
-    try {
-      this.isBusy = true;
+    await this.checkVanity();
 
-      this.list.isNew
-        ? await this.$store.dispatch("saveList")
-        : await this.$store.dispatch("updateList");
+    if (this.canSave) {
+      try {
+        this.isBusy = true;
 
-      this.$router.push(`/${this.list.vanityUrl}`);
-    } catch (err) {
-      console.log("Could not save");
-    } finally {
-      this.isBusy = false;
+        this.list.isNew
+          ? await this.$store.dispatch("saveList")
+          : await this.$store.dispatch("updateList");
+
+        this.$router.push(`/${this.list.vanityUrl}`);
+      } catch (err) {
+        console.log("Could not save");
+      } finally {
+        this.isBusy = false;
+      }
     }
   }
 
-  @debounce(300, { leading: false })
+  setVanityInvalid() {
+    this.vanityIsValid = false;
+    this.validationError = "That is not a valid vanity URL";
+  }
+
   async checkVanityAvailable() {
     try {
       this.isBusy = true;
@@ -77,12 +105,19 @@ export default class AddBar extends Vue {
         "checkVanityAvailable",
         this.list.vanityUrl
       );
-      this.vanityIsAvailable = available;
+      this.vanityIsValid = available;
+      this.validationError = "That URL is not available";
     } catch (err) {
       console.log(err);
     } finally {
       this.isBusy = false;
     }
+  }
+
+  @debounce(300, { leading: false })
+  async checkVanity() {
+    this.$v.$invalid && (this.setVanityInvalid())
+    !this.$v.$invalid && (await this.checkVanityAvailable())
   }
 }
 </script>
