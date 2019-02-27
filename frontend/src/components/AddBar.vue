@@ -11,15 +11,21 @@
           type="text"
           :disabled="!list.isNew"
           @blur="checkVanity"
-        >
+        />
         <p class="error" v-show="!vanityIsValid">{{ validationError }}</p>
         <p class="live-link">
-          <a :href="liveLink" v-show="!list.isNew" target="_new">{{liveLink}}</a>
+          <a :href="liveLink" v-show="!list.isNew" target="_new">{{
+            liveLink
+          }}</a>
         </p>
       </div>
       <div class="control stretch">
         <label class="control-label" for="description">Description</label>
-        <textarea class="description" id="description" v-model="list.description"></textarea>
+        <textarea
+          class="description"
+          id="description"
+          v-model="list.description"
+        ></textarea>
       </div>
       <div class="control">
         <label class="control-label is-hidden-mobile" for>&nbsp;</label>
@@ -27,7 +33,9 @@
           :disabled="list.links.length === 0"
           class="is-color-primary has-text-white has-text-bold save-button"
           @click="saveList"
-        >Publish</button>
+        >
+          Publish
+        </button>
       </div>
     </div>
   </div>
@@ -40,10 +48,7 @@ import { validationMixin } from "vuelidate";
 import { helpers } from "vuelidate/lib/validators";
 import config from "@/config";
 
-const customVanity = helpers.regex(
-  "customVanity",
-  /^([a-zA-Z0-9_\-])+$/
-);
+const customVanity = helpers.regex("customVanity", /^([a-zA-Z0-9_\-])+$/);
 
 @Component({
   mixins: [validationMixin],
@@ -86,7 +91,7 @@ export default class AddBar extends Vue {
 
         this.$router.push(`/${this.list.vanityUrl}`);
       } catch (err) {
-        console.log("Could not save");
+        // TODO
       } finally {
         this.isBusy = false;
       }
@@ -108,7 +113,7 @@ export default class AddBar extends Vue {
       this.vanityIsValid = available;
       this.validationError = "That URL is not available";
     } catch (err) {
-      console.log(err);
+      // TODO
     } finally {
       this.isBusy = false;
     }
@@ -116,8 +121,8 @@ export default class AddBar extends Vue {
 
   @debounce(300, { leading: false })
   async checkVanity() {
-    this.$v.$invalid && (this.setVanityInvalid())
-    !this.$v.$invalid && (await this.checkVanityAvailable())
+    this.$v.$invalid && this.setVanityInvalid();
+    !this.$v.$invalid && (await this.checkVanityAvailable());
   }
 }
 </script>

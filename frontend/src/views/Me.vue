@@ -24,7 +24,7 @@
       >
         <div class="list-item" @click="editList(list.vanityUrl)">
           <div class="background flex">
-            <img class="is-aligned-right" src="../assets/bg.png" alt>
+            <img class="is-aligned-right" src="../assets/bg.png" alt />
           </div>
           <div class="card list-item-content">
             <div class="card-content list-item-content-details">
@@ -45,7 +45,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
   beforeRouteEnter(to, from, next) {
-    console.log("entering the route");
     next(vm => {
       vm.$store.dispatch("getMyLists");
     });
@@ -63,7 +62,7 @@ export default class Me extends Vue {
 
   editList(vanityUrl: string) {
     this.$store.dispatch("getList", vanityUrl);
-    this.$router.push('/s/edit');
+    this.$router.push("/s/edit");
   }
 }
 </script>

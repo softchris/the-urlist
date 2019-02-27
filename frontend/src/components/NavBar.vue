@@ -66,7 +66,7 @@ export default class extends Vue {
     try {
       const user = this.$store.dispatch("getUser");
     } catch (err) {
-      console.log("User is not logged in");
+      // TODO
     }
   }
 }
