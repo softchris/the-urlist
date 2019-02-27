@@ -12,7 +12,9 @@
       v-if="list.links.length > 0 && !list.isNew"
       class="delete-button button is-color-danger has-text-white"
       @click="deleteList"
-    >Delete This List</button>
+    >
+      Delete This List
+    </button>
   </div>
 </template>
 
@@ -24,10 +26,12 @@ import LinkList from "@/components/LinkList.vue";
 import NewLink from "@/components/NewLink.vue";
 import DeleteList from "@/components/DeleteList.vue";
 
+/* eslint-disable */
 const customURL = helpers.regex(
   "customURL",
   /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
 );
+/* eslint-enable */
 
 @Component({
   mixins: [validationMixin],

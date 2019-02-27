@@ -2,17 +2,29 @@
   <div class="flex is-vertically-centered">
     <div class="card link flex is-vertically-centered" @click="go(link.url)">
       <figure class="link-image is-hidden-mobile">
-        <img width="64" :src="link.image || '/images/no-image.png'" :alt="link.title">
+        <img
+          width="64"
+          :src="link.image || '/images/no-image.png'"
+          :alt="link.title"
+        />
       </figure>
       <div class="link-details flex is-vertically-centered">
         <div class="flex flex-column">
           <div class="flex">
             <figure class="link-image is-visible-mobile">
-              <img width="24" :src="link.image || '/images/no-image.png'" :alt="link.title">
+              <img
+                width="24"
+                :src="link.image || '/images/no-image.png'"
+                :alt="link.title"
+              />
             </figure>
-            <strong v-line-clamp:10="1" class="link-title">{{ link.title }}</strong>
+            <strong v-line-clamp:10="1" class="link-title">{{
+              link.title
+            }}</strong>
           </div>
-          <div v-line-clamp:20="2" class="link-description">{{ link.description }}</div>
+          <div v-line-clamp:20="2" class="link-description">
+            {{ link.description }}
+          </div>
           <div v-line-clamp:10="1" class="link-url">
             <p>{{ link.url }}</p>
           </div>
@@ -21,7 +33,7 @@
     </div>
     <div class="is-aligned-right delete" v-show="editable">
       <a class="has-text-bold" @click.prevent="deleteLink(link.id)">
-        <img src="@/assets/close.png" alt>
+        <img src="@/assets/close.png" alt />
       </a>
     </div>
   </div>

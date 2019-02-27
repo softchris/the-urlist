@@ -2,7 +2,6 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "@/views/Home.vue";
 import List from "@/views/List.vue";
-import New from "@/views/New.vue";
 import Me from "@/views/Me.vue";
 import Edit from "@/views/Edit.vue";
 
