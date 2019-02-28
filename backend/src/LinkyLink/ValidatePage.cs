@@ -74,20 +74,9 @@ namespace LinkyLink
             {
                 try
                 {
-                    if (!Regex.IsMatch(url, @"^https?:\/\/", RegexOptions.IgnoreCase))
-                        url = "http://" + url;
-
-                    if (!Uri.TryCreate(url, UriKind.Absolute, out Uri uriLink))
-                    {
-                        log.LogWarning("Invalid URL: {url}", url);
-                        return new OpenGraphResult { Id = id };
-                    }
-                    HttpDownloader downloader = new HttpDownloader(uriLink, null, "AzureFunctions");
-                    string html = await downloader.GetPageAsync();
-
-                    OpenGraph graph = OpenGraph.ParseHtml(html);
+                    OpenGraph graph = await OpenGraph.ParseUrlAsync(url, "Urlist");
                     HtmlDocument doc = new HtmlDocument();
-                    doc.LoadHtml(html);
+                    doc.LoadHtml(graph.OriginalHtml);
                     var descriptionMetaTag = doc.DocumentNode.SelectSingleNode("//meta[@name='description']");
                     var titleTag = doc.DocumentNode.SelectSingleNode("//head/title");
                     return new OpenGraphResult(id, graph, descriptionMetaTag, titleTag);
