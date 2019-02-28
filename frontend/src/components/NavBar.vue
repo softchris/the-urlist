@@ -6,12 +6,20 @@
     <ul class="big-container navbar-content flex is-vertically-centered">
       <li>
         <a href="/">
-          <img width="100" src="@/assets/logo.svg">
+          <img width="100" src="@/assets/logo.svg" />
         </a>
       </li>
       <li class="is-aligned-right">
-        <a class="login flex is-vertically-centered" href="#" @click.prevent="profileLoginClick()">
-          <img class="profile-image" :src="currentUser.profileImage || '../assets/login.png'" alt>
+        <a
+          class="login flex is-vertically-centered"
+          href="#"
+          @click.prevent="profileLoginClick()"
+        >
+          <img
+            class="profile-image"
+            :src="currentUser.profileImage || '../assets/login.png'"
+            alt
+          />
           <span class="login">{{ currentUser.name }}</span>
         </a>
       </li>
