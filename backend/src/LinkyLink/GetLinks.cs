@@ -18,7 +18,7 @@ namespace LinkyLink
                 databaseName: "linkylinkdb",
                 collectionName: "linkbundles",
                 ConnectionStringSetting = "LinkLinkConnection",
-                SqlQuery = "SELECT * FROM linkbundles lb WHERE lb.vanityUrl = {vanityUrl}"
+                SqlQuery = "SELECT * FROM linkbundles lb WHERE LOWER(lb.vanityUrl) = LOWER({vanityUrl})"
             )] IEnumerable<LinkBundle> documents,
             string vanityUrl,
             ILogger log)

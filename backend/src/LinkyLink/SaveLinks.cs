@@ -16,7 +16,7 @@ using Microsoft.ApplicationInsights.DataContracts;
 namespace LinkyLink
 {
     public static partial class LinkOperations
-    {        
+    {
         [FunctionName(nameof(SaveLinks))]
         public static async Task<IActionResult> SaveLinks(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "links")] HttpRequest req,
@@ -101,6 +101,9 @@ namespace LinkyLink
 
                 telemetryClient.TrackEvent(new EventTelemetry { Name = "Custom Vanity Generated" });
             }
+
+            // force lowercase
+            linkDocument.VanityUrl = linkDocument.VanityUrl.ToLower();
         }
 
         private static bool ValidatePayLoad(LinkBundle linkDocument, HttpRequest req, out ProblemDetails problems)
