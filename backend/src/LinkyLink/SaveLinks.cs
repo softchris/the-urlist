@@ -12,6 +12,7 @@ using System.Net;
 using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.ApplicationInsights.DataContracts;
+using System.Text.RegularExpressions;
 
 namespace LinkyLink
 {
@@ -42,6 +43,14 @@ namespace LinkyLink
                 string handle = GetTwitterHandle(req);
                 linkDocument.UserId = handle;
                 EnsureVanityUrl(linkDocument);
+
+                Match match = Regex.Match(linkDocument.VanityUrl, VANITY_REGEX, RegexOptions.IgnoreCase);
+
+                if (!match.Success)
+                {
+                    // does not match
+                    return new BadRequestResult();
+                }
 
                 if (!await BlackListChecker.Check(linkDocument.VanityUrl))
                 {

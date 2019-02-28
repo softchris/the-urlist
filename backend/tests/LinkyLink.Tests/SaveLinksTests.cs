@@ -12,14 +12,41 @@ using Xunit;
 
 namespace LinkyLink.Tests
 {
-    public class SaveLinksTests: TestBase
+    public class SaveLinksTests : TestBase
     {
         [Fact]
-        public async Task SaveLinks_Invalid_Payload_Returns_BadRequest() {
+        public async Task SaveLinks_Empty_Payload_Returns_BadRequest()
+        {
             // Arrange
             ILogger fakeLogger = A.Fake<ILogger>();
             HttpRequest req = this.DefaultRequest;
             req.Body = this.GetHttpRequestBodyStream("");
+            IAsyncCollector<LinkBundle> collector = A.Fake<IAsyncCollector<LinkBundle>>();
+
+            // Act
+            IActionResult result = await LinkOperations.SaveLinks(req, collector, fakeLogger);
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(result);
+            A.CallTo(() => collector.AddAsync(A<LinkBundle>.Ignored, CancellationToken.None)).MustNotHaveHappened();
+        }
+
+        [Theory]
+        [InlineData("new url")]
+        [InlineData("url.com")]
+        [InlineData("my@$(Surl@F(@LV((")]
+        [InlineData("someurl/")]
+        [InlineData(".com.com")]
+        public async Task SaveLinks_Returns_BadRequest_If_Vanity_Url_Fails_Regex(string vanityUrl)
+        {
+            // Arrange
+            ILogger fakeLogger = A.Fake<ILogger>();
+            HttpRequest req = this.DefaultRequest;
+
+            LinkBundle payload = this.Fixture.Create<LinkBundle>();
+            payload.VanityUrl = vanityUrl;
+            
+            req.Body = this.GetHttpRequestBodyStream(JsonConvert.SerializeObject(payload));
             IAsyncCollector<LinkBundle> collector = A.Fake<IAsyncCollector<LinkBundle>>();
 
             // Act

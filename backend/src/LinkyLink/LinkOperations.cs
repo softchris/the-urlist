@@ -13,8 +13,9 @@ namespace LinkyLink
     public static partial class LinkOperations
     {
         public static TelemetryClient telemetryClient;
-        public const string CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         public static IBlackListChecker BlackListChecker = new EnvironmentBlackListChecker();
+        public const string CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        public const string VANITY_REGEX = @"^[\w\d-]+$";
 
         static LinkOperations()
         {
