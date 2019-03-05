@@ -24,13 +24,13 @@ namespace LinkyLink
                 databaseName: "linkylinkdb",
                 collectionName: "linkbundles",
                 ConnectionStringSetting = "LinkLinkConnection",
-                SqlQuery = "SELECT * FROM linkbundles lb WHERE lb.vanityUrl = {vanityUrl}"
+                SqlQuery = "SELECT * FROM linkbundles lb WHERE LOWER(lb.vanityUrl) = LOWER({vanityUrl})"
             )] IEnumerable<LinkBundle> documents,
             [CosmosDB(ConnectionStringSetting = "LinkLinkConnection")] IDocumentClient docClient,
             string vanityUrl,
             ILogger log)
         {
-            string handle = GetTwitterHandle(req);            
+            string handle = GetTwitterHandle(req);
             if (string.IsNullOrEmpty(handle)) return new UnauthorizedResult();
 
             if (!documents.Any())

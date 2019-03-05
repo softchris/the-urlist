@@ -12,11 +12,12 @@ using System.Net;
 using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.ApplicationInsights.DataContracts;
+using System.Text.RegularExpressions;
 
 namespace LinkyLink
 {
     public static partial class LinkOperations
-    {        
+    {
         [FunctionName(nameof(SaveLinks))]
         public static async Task<IActionResult> SaveLinks(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "links")] HttpRequest req,
@@ -42,6 +43,14 @@ namespace LinkyLink
                 string handle = GetTwitterHandle(req);
                 linkDocument.UserId = handle;
                 EnsureVanityUrl(linkDocument);
+
+                Match match = Regex.Match(linkDocument.VanityUrl, VANITY_REGEX, RegexOptions.IgnoreCase);
+
+                if (!match.Success)
+                {
+                    // does not match
+                    return new BadRequestResult();
+                }
 
                 if (!await BlackListChecker.Check(linkDocument.VanityUrl))
                 {
@@ -101,6 +110,9 @@ namespace LinkyLink
 
                 telemetryClient.TrackEvent(new EventTelemetry { Name = "Custom Vanity Generated" });
             }
+
+            // force lowercase
+            linkDocument.VanityUrl = linkDocument.VanityUrl.ToLower();
         }
 
         private static bool ValidatePayLoad(LinkBundle linkDocument, HttpRequest req, out ProblemDetails problems)
