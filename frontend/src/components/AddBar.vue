@@ -53,6 +53,7 @@ import config from "@/config";
 // disable eslint which doesn't like the escapes in the regex
 const mustBeValidUrl = (value: string, vm: AddBar) => {
   vm.validationError = "Must be a valid URL";
+  // only accepts alphanumeric and dashes
   return /^(^$|[a-zA-Z0-9_\-])+$/.test(value);
 };
 /* eslint-enable */
@@ -62,6 +63,7 @@ const mustBeUnique = async (value: string, vm: AddBar) => {
 
   // we don't run this validator if the url isn't valid in the first place
   if (helpers.req(value) && mustBeValidUrl(value, vm)) {
+    // check with the backend to see if the vanity is available
     return await vm.$store.dispatch("checkVanityAvailable", value);
   } else return true;
 };
