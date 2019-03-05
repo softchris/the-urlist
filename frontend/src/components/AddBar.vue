@@ -4,15 +4,16 @@
       <div class="control stretch">
         <label class="control-label" for="vanity-url">Vanity URL</label>
         <input
-          :class="{ invalid: !vanityIsValid }"
+          :class="{ invalid: $v.vanityUrl.$error }"
           id="vanity-url"
           ref="vanityUrl"
-          v-model="list.vanityUrl"
           type="text"
           :disabled="!list.isNew"
-          @blur="checkVanity"
+          @input="setVanityUrl($event.target.value)"
         />
-        <p class="error" v-show="!vanityIsValid">{{ validationError }}</p>
+        <p class="error" v-show="$v.vanityUrl.$error">
+          {{ validationError }}
+        </p>
         <p class="live-link">
           <a :href="liveLink" v-show="!list.isNew" target="_new">{{
             liveLink
@@ -30,7 +31,7 @@
       <div class="control">
         <label class="control-label is-hidden-mobile" for>&nbsp;</label>
         <button
-          :disabled="list.links.length === 0"
+          :disabled="!canSave"
           class="is-color-primary has-text-white has-text-bold save-button"
           @click="saveList"
         >
@@ -49,23 +50,38 @@ import { helpers } from "vuelidate/lib/validators";
 import config from "@/config";
 
 /* eslint-disable */
-const customVanity = helpers.regex("customVanity", /^([a-zA-Z0-9_\-])+$/);
+// disable eslint which doesn't like the escapes in the regex
+const mustBeValidUrl = (value: string, vm: AddBar) => {
+  vm.validationError = "Must be a valid URL";
+  return /^(^$|[a-zA-Z0-9_\-])+$/.test(value);
+};
 /* eslint-enable */
+
+const mustBeUnique = async (value: string, vm: AddBar) => {
+  vm.validationError = "That Vanity URL is not available";
+
+  console.log(helpers.req(value));
+
+  // we don't run this validator if the url isn't valid in the first place
+  if (helpers.req(value) && mustBeValidUrl(value, vm)) {
+    return await vm.$store.dispatch("checkVanityAvailable", value);
+  } else return true;
+};
 
 @Component({
   mixins: [validationMixin],
   validations: {
     vanityUrl: {
-      customVanity
+      mustBeValidUrl,
+      mustBeUnique
     }
   }
 })
 export default class AddBar extends Vue {
   get canSave() {
-    return this.vanityIsValid && this.list.links.length > 0 && !this.isBusy;
+    return !this.$v.$invalid && this.list.links.length > 0 && !this.isBusy;
   }
   isBusy: boolean = false;
-  vanityIsValid: boolean = true;
   validationError: string = "";
 
   get list() {
@@ -80,51 +96,25 @@ export default class AddBar extends Vue {
     return this.$store.getters.list.vanityUrl;
   }
 
+  @debounce(300, { leading: false })
+  setVanityUrl(value: string) {
+    this.list.vanityUrl = value.trim();
+    this.$v.$touch();
+  }
+
   async saveList() {
-    await this.checkVanity();
-
-    if (this.canSave) {
-      try {
-        this.isBusy = true;
-
-        this.list.isNew
-          ? await this.$store.dispatch("saveList")
-          : await this.$store.dispatch("updateList");
-
-        this.$router.push(`/${this.list.vanityUrl}`);
-      } catch (err) {
-        // TODO
-      } finally {
-        this.isBusy = false;
-      }
-    }
-  }
-
-  setVanityInvalid() {
-    this.vanityIsValid = false;
-    this.validationError = "That is not a valid vanity URL";
-  }
-
-  async checkVanityAvailable() {
+    this.isBusy = true;
     try {
-      this.isBusy = true;
-      const available = await this.$store.dispatch(
-        "checkVanityAvailable",
-        this.list.vanityUrl
-      );
-      this.vanityIsValid = available;
-      this.validationError = "That URL is not available";
+      this.list.isNew
+        ? await this.$store.dispatch("saveList")
+        : await this.$store.dispatch("updateList");
+
+      this.$router.push(`/${this.list.vanityUrl}`);
     } catch (err) {
-      // TODO
+      // handle this
     } finally {
       this.isBusy = false;
     }
-  }
-
-  @debounce(300, { leading: false })
-  async checkVanity() {
-    this.$v.$invalid && this.setVanityInvalid();
-    !this.$v.$invalid && (await this.checkVanityAvailable());
   }
 }
 </script>
