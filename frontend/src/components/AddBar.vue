@@ -60,8 +60,6 @@ const mustBeValidUrl = (value: string, vm: AddBar) => {
 const mustBeUnique = async (value: string, vm: AddBar) => {
   vm.validationError = "That Vanity URL is not available";
 
-  console.log(helpers.req(value));
-
   // we don't run this validator if the url isn't valid in the first place
   if (helpers.req(value) && mustBeValidUrl(value, vm)) {
     return await vm.$store.dispatch("checkVanityAvailable", value);
