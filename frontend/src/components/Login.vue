@@ -1,13 +1,21 @@
 <template>
-  <div name="log-in" width="60%" :adaptive="true" :max-width="500" :min-width="300">
+  <div
+    name="log-in"
+    width="60%"
+    :adaptive="true"
+    :max-width="500"
+    :min-width="300"
+  >
     <div class="modal">
       <div class="log flex flex-column">
         <a class="is-aligned-right" href="#" @click.prevent="$emit('close')">
-          <img src="../assets/close.png">
+          <img src="../assets/close.png" />
         </a>
-        <div class="flex is-horizontally-centered is-vertically-centered sign-in-banner">
+        <div
+          class="flex is-horizontally-centered is-vertically-centered sign-in-banner"
+        >
           <h1>Sign in to</h1>
-          <img src="../assets/logo.svg">
+          <img src="../assets/logo.svg" />
         </div>
         <div class="flex is-horizontally-centered modal-content">
           <a :href="loginUrl" class="twitter-button has-text-white">
@@ -17,7 +25,10 @@
             </span>
           </a>
         </div>
-        <p>Signing in is cool because you can view, edit and manage any lists that you create. It's nifty.</p>
+        <p>
+          Signing in is cool because you can view, edit and manage any lists
+          that you create. It's nifty.
+        </p>
       </div>
     </div>
   </div>

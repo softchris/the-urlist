@@ -1,6 +1,11 @@
 <template>
   <div class="links">
-    <sortable-list v-model="list.links" :distance="10" :disabled="editable" lock-axis="y">
+    <sortable-list
+      v-model="list.links"
+      :distance="10"
+      :disabled="editable"
+      lock-axis="y"
+    >
       <sortable-item
         v-for="(link, index) in list.links"
         :index="index"
@@ -35,7 +40,3 @@ export default class extends Vue {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-</style>

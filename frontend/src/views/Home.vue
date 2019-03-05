@@ -10,13 +10,16 @@
                 <span class="has-text-primary">Save</span> &
                 <span class="has-text-primary">Share</span> them with the world!
               </h1>
-              <p>Add links to a list, give the list a description and get a URL you can send to anyone.</p>
-              <br>
+              <p>
+                Add links to a list, give the list a description and get a URL
+                you can send to anyone.
+              </p>
+              <br />
               <p>Login to track, manage and edit your lists</p>
             </div>
           </div>
           <div class="column is-half is-hidden-mobile">
-            <img src="@/assets/banner-logo-large.png" class="banner-image">
+            <img src="@/assets/banner-logo-large.png" class="banner-image" />
           </div>
         </div>
       </div>

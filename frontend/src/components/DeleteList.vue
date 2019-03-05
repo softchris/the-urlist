@@ -1,9 +1,15 @@
 <template>
-  <div name="delete-list" width="60%" :adaptive="true" :max-width="500" :min-width="300">
+  <div
+    name="delete-list"
+    width="60%"
+    :adaptive="true"
+    :max-width="500"
+    :min-width="300"
+  >
     <div class="modal">
       <div class="log flex flex-column">
         <a class="is-aligned-right" href="#" @click.prevent="$emit('close')">
-          <img src="../assets/close.png">
+          <img src="../assets/close.png" />
         </a>
         <div
           class="confirmation-details flex is-horizontally-centered is-vertically-centered flex-column"
@@ -11,7 +17,8 @@
           <h1>Delete this list?</h1>
           <p>
             The url
-            <span class="has-text-danger">{{vanityUrl}}</span> will be released for others to use.
+            <span class="has-text-danger">{{ vanityUrl }}</span> will be
+            released for others to use.
           </p>
         </div>
         <div class="confirmation-buttons flex is-horizontally-centered">
@@ -19,7 +26,9 @@
             :disabled="!canDelete"
             class="button is-color-danger has-text-white"
             @click="deleteList(vanityUrl)"
-          >Yes, Delete It</button>
+          >
+            Yes, Delete It
+          </button>
         </div>
       </div>
     </div>

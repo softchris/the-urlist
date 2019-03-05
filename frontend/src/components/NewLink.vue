@@ -8,8 +8,10 @@
       id="newLink"
       v-model="newLink"
       @keyup.enter="addLink()"
-    >
-    <p v-show="isUrlInvalid" class="error">That doesn't look like a valid URL</p>
+    />
+    <p v-show="isUrlInvalid" class="error">
+      That doesn't look like a valid URL
+    </p>
   </div>
 </template>
 
@@ -18,10 +20,12 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { validationMixin } from "vuelidate";
 import { required, url, helpers } from "vuelidate/lib/validators";
 
+/* eslint-disable */
 const customURL = helpers.regex(
   "customURL",
   /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
 );
+/* eslint-enable */
 
 @Component({
   mixins: [validationMixin],
@@ -47,7 +51,3 @@ export default class extends Vue {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-</style>

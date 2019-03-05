@@ -48,7 +48,9 @@ import { validationMixin } from "vuelidate";
 import { helpers } from "vuelidate/lib/validators";
 import config from "@/config";
 
+/* eslint-disable */
 const customVanity = helpers.regex("customVanity", /^([a-zA-Z0-9_\-])+$/);
+/* eslint-enable */
 
 @Component({
   mixins: [validationMixin],

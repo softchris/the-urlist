@@ -1,5 +1,9 @@
 <template>
-  <div id="progressBar" class="progress-bar--container" :class="{ 'visible': appIsBusy }"></div>
+  <div
+    id="progressBar"
+    class="progress-bar--container"
+    :class="{ visible: appIsBusy }"
+  ></div>
 </template>
 
 <script lang="ts">
