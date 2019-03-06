@@ -10,18 +10,21 @@
         </a>
       </li>
       <li class="is-aligned-right">
-        <a
-          class="login flex is-vertically-centered"
-          href="#"
-          @click.prevent="profileLoginClick()"
-        >
-          <img
-            class="profile-image"
-            :src="currentUser.profileImage || '../assets/login.png'"
-            alt
-          />
-          <span class="login">{{ currentUser.name }}</span>
-        </a>
+        <div class="dropdown">
+          <a
+            class="login flex is-vertically-centered"
+            href="#"
+            @click.prevent="profileLoginClick()"
+          >
+            <img
+              class="profile-image"
+              :src="currentUser.profileImage || '../assets/login.png'"
+              alt
+            />
+            <span class="login is-hidden-mobile">{{ currentUser.name }}</span>
+          </a>
+          <profile-drop-down></profile-drop-down>
+        </div>
       </li>
     </ul>
     <add-bar v-show="showAddBar" style="display: none"></add-bar>
@@ -33,6 +36,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import AddBar from "@/components/AddBar.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
 import Login from "@/components/Login.vue";
+import ProfileDropDown from "@/components/ProfileDropDown.vue";
 import User from "@/models/User";
 import config from "@/config";
 import "../assets/login.png";
@@ -40,7 +44,8 @@ import "../assets/login.png";
 @Component({
   components: {
     AddBar,
-    ProgressBar
+    ProgressBar,
+    ProfileDropDown
   }
 })
 export default class extends Vue {
@@ -54,7 +59,7 @@ export default class extends Vue {
 
   profileLoginClick() {
     if (this.currentUser.loggedIn) {
-      this.$router.push("/s/me");
+      this.$store.dispatch("toggleProfileMenu");
     } else {
       this.$modal.show(
         Login,
@@ -82,6 +87,10 @@ export default class extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.dropdown {
+  position: relative;
+}
+
 .progress-bar {
   height: 6px;
 }

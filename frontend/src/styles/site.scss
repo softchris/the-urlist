@@ -1,12 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto");
 @import url("https://use.fontawesome.com/releases/v5.6.3/css/all.css");
-
-$primary-color: #20ae96;
-$primary-color-hover: #31a490;
-$primary-color-active: #2a8d7c;
-$invalid-color: #d9255e;
-$invalid-color-hover: #d73c6d;
-$invalid-color-active: #a92f55;
+@import "colors.scss";
 
 body {
   background-color: #f9fafc;

@@ -6,9 +6,14 @@ import axios from "axios";
 @Module
 export default class ListModule extends VuexModule {
   _currentUser: User = new User();
+  _showProfileMenu: boolean = false;
 
   get currentUser() {
     return this._currentUser;
+  }
+
+  get showProfileMenu() {
+    return this._showProfileMenu;
   }
 
   @Mutation
@@ -28,6 +33,11 @@ export default class ListModule extends VuexModule {
     }
   }
 
-  @Action
-  setCurrentUser() {}
+  @Mutation
+  _toggleProfileMenu() {
+    this._showProfileMenu = !this._showProfileMenu;
+  }
+
+  @Action({ commit: "_toggleProfileMenu" })
+  toggleProfileMenu() {}
 }
