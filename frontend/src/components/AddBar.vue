@@ -18,7 +18,7 @@
           type="text"
           disabled="disabled"
           v-model="list.vanityUrl"
-          v-show="!list.isNew"
+          v-if="!list.isNew"
         />
         <div>
           <p class="error" v-show="$v.vanityUrl.$error">
@@ -26,7 +26,7 @@
           </p>
         </div>
         <p class="live-link">
-          <a :href="liveLink" v-show="!list.isNew" target="_new">{{
+          <a :href="liveLink" v-if="!list.isNew" target="_new">{{
             liveLink
           }}</a>
         </p>
@@ -91,10 +91,6 @@ const mustBeUnique = async (value: string, vm: AddBar) => {
   }
 })
 export default class AddBar extends Vue {
-  mounted() {
-    this.$v.$touch();
-  }
-
   get canSave() {
     return !this.$v.$invalid && this.list.links.length > 0 && !this.isBusy;
   }

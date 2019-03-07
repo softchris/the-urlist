@@ -23,7 +23,7 @@
             />
             <span class="login is-hidden-mobile">{{ currentUser.name }}</span>
           </a>
-          <profile-drop-down></profile-drop-down>
+          <user-menu></user-menu>
         </div>
       </li>
     </ul>
@@ -36,7 +36,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import AddBar from "@/components/AddBar.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
 import Login from "@/components/Login.vue";
-import ProfileDropDown from "@/components/ProfileDropDown.vue";
+import UserMenu from "@/components/UserMenu.vue";
 import User from "@/models/User";
 import config from "@/config";
 import "../assets/login.png";
@@ -45,7 +45,7 @@ import "../assets/login.png";
   components: {
     AddBar,
     ProgressBar,
-    ProfileDropDown
+    UserMenu
   }
 })
 export default class extends Vue {

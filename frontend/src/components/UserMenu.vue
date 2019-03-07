@@ -1,5 +1,8 @@
 <template>
   <ul class="items-list" :class="{ open: showProfileMenu }">
+    <li class="item" @click="createNewList">
+      New List<span class="iconitem fa fa-plus"></span>
+    </li>
     <li class="item" @click="goToMyLists">
       My Lists<span class="iconitem fa fa-user"></span>
     </li>
@@ -25,6 +28,12 @@ export default class extends Vue {
 
   goToMyLists() {
     this.$router.push("/s/me");
+    this.$store.dispatch("toggleProfileMenu");
+  }
+
+  createNewList() {
+    this.$store.dispatch("newList");
+    this.$router.push("/s/edit");
     this.$store.dispatch("toggleProfileMenu");
   }
 
@@ -58,6 +67,7 @@ export default class extends Vue {
   justify-content: space-between;
   padding: 1rem;
   cursor: pointer;
+  color: black;
 }
 
 .item:hover {
@@ -82,7 +92,7 @@ export default class extends Vue {
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 10px solid $primary-color;
+  border-bottom: 10px solid rgba(0, 0, 0, 0.24);
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.12), 0 0 0 rgba(0, 0, 0, 0.24);
   clear: both;
 }
