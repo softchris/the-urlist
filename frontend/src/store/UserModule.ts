@@ -29,7 +29,7 @@ export default class ListModule extends VuexModule {
       this.context.commit("_setUser", user);
       this.context.dispatch("getMyLists", user.userName);
     } catch (err) {
-      throw new Error(err);
+      console.log("User is not logged in");
     }
   }
 
