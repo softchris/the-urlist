@@ -3,8 +3,8 @@ import { IAuthResponse } from "@/models/IAuthResponse";
 export default class User {
   userName: string = "";
   name: string = "Login / Sign Up";
-  profileImage: string = "../assets/login.png";
   loggedIn: boolean = false;
+  profileImage: string = "";
 
   constructor(response?: IAuthResponse) {
     if (response) {

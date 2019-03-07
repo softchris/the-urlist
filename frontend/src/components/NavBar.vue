@@ -18,7 +18,11 @@
           >
             <img
               class="profile-image"
-              :src="currentUser.profileImage || '../assets/login.png'"
+              :src="
+                currentUser.loggedIn
+                  ? currentUser.profileImage
+                  : '/images/login.png'
+              "
               alt
             />
             <span class="login is-hidden-mobile">{{ currentUser.name }}</span>
@@ -39,7 +43,6 @@ import Login from "@/components/Login.vue";
 import UserMenu from "@/components/UserMenu.vue";
 import User from "@/models/User";
 import config from "@/config";
-import "../assets/login.png";
 
 @Component({
   components: {
@@ -67,8 +70,8 @@ export default class extends Vue {
         {
           width: "60%",
           adaptive: true,
-          minWidth: "300",
-          maxWidth: "500"
+          minWidth: 300,
+          maxWidth: 500
         }
       );
     }

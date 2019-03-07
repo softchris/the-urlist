@@ -1,11 +1,5 @@
 <template>
-  <div
-    name="log-in"
-    width="60%"
-    :adaptive="true"
-    :max-width="500"
-    :min-width="300"
-  >
+  <div name="log-in">
     <div class="modal">
       <div class="log flex flex-column">
         <a class="is-aligned-right" href="#" @click.prevent="$emit('close')">
