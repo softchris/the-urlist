@@ -10,10 +10,21 @@
           type="text"
           :disabled="!list.isNew"
           @input="setVanityUrl($event.target.value)"
+          v-show="list.isNew"
         />
-        <p class="error" v-show="$v.vanityUrl.$error">
-          {{ validationError }}
-        </p>
+        <input
+          id="vanity-url"
+          ref="vanityUrl"
+          type="text"
+          disabled="disabled"
+          v-model="list.vanityUrl"
+          v-show="!list.isNew"
+        />
+        <div>
+          <p class="error" v-show="$v.vanityUrl.$error">
+            {{ validationError }}
+          </p>
+        </div>
         <p class="live-link">
           <a :href="liveLink" v-show="!list.isNew" target="_new">{{
             liveLink
@@ -52,15 +63,17 @@ import config from "@/config";
 /* eslint-disable */
 // disable eslint which doesn't like the escapes in the regex
 const mustBeValidUrl = (value: string, vm: AddBar) => {
-  vm.validationError = "Must be a valid URL";
+  console.log(value);
+  vm.validationError = "Only letters, numbers and dashes";
   // only accepts alphanumeric and dashes
   return /^(^$|[a-zA-Z0-9_\-])+$/.test(value);
 };
 /* eslint-enable */
 
 const mustBeUnique = async (value: string, vm: AddBar) => {
-  vm.validationError = "That Vanity URL is not available";
+  if (!vm.list.isNew) return true;
 
+  vm.validationError = "That Vanity URL is not available";
   // we don't run this validator if the url isn't valid in the first place
   if (helpers.req(value) && mustBeValidUrl(value, vm)) {
     // check with the backend to see if the vanity is available
@@ -78,6 +91,10 @@ const mustBeUnique = async (value: string, vm: AddBar) => {
   }
 })
 export default class AddBar extends Vue {
+  mounted() {
+    this.$v.$touch();
+  }
+
   get canSave() {
     return !this.$v.$invalid && this.list.links.length > 0 && !this.isBusy;
   }
