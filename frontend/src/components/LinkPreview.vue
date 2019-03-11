@@ -55,6 +55,9 @@ export default class extends Vue {
   }
 
   go(url: string) {
+    // if the url doesn't begin with http or https, add http
+    /^https?:/.test(url) || (url = `http://${url}`);
+  
     window.open(url, "_blank");
   }
 }
