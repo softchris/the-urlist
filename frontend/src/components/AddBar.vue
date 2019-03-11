@@ -63,7 +63,6 @@ import config from "@/config";
 /* eslint-disable */
 // disable eslint which doesn't like the escapes in the regex
 const mustBeValidUrl = (value: string, vm: AddBar) => {
-  console.log(value);
   vm.validationError = "Only letters, numbers and dashes";
   // only accepts alphanumeric and dashes
   return /^(^$|[a-zA-Z0-9_\-])+$/.test(value);
