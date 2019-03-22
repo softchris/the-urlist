@@ -7,8 +7,9 @@
     </div>
     <h3 class="shrug-description">We couldn't find that Url List.</h3>
     <p class="shrug-description">
-      But that's not necessarily a bad thing. That means the url "{{ vanityUrl }}"
-      is
+      But that's not necessarily a bad thing. That means the url "{{
+        vanityUrl
+      }}" is
       <a @click="newList">still available.</a>
     </p>
   </div>
@@ -18,7 +19,12 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
-  props: ["vanityUrl"]
+  props: {
+    vanityUrl: {
+      type: String,
+      required: true
+    }
+  }
 })
 export default class extends Vue {
   newList() {

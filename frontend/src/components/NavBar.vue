@@ -1,8 +1,5 @@
 <template>
   <header class="navbar">
-    <div class="progress-bar">
-      <progress-bar></progress-bar>
-    </div>
     <ul class="big-container navbar-content flex is-vertically-centered">
       <li>
         <a href="/">
@@ -31,22 +28,25 @@
         </div>
       </li>
     </ul>
-    <add-bar v-show="showAddBar" style="display: none"></add-bar>
+    <nav-bar-list-details
+      v-show="showListDetails"
+      style="display: none"
+    ></nav-bar-list-details>
   </header>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import AddBar from "@/components/AddBar.vue";
+import NavBarListDetails from "@/components/NavBarListDetails.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
-import Login from "@/components/Login.vue";
+import ModalLogin from "@/components/ModalLogin.vue";
 import UserMenu from "@/components/UserMenu.vue";
 import User from "@/models/User";
 import config from "@/config";
 
 @Component({
   components: {
-    AddBar,
+    NavBarListDetails,
     ProgressBar,
     UserMenu
   }
@@ -56,8 +56,8 @@ export default class extends Vue {
     return this.$store.getters.currentUser;
   }
 
-  get showAddBar() {
-    // the add bar is only shown on the "edit" screen
+  get showListDetails() {
+    // the list details is only shown on the "edit" screen
     return this.$route.path === "/s/edit";
   }
 
@@ -66,7 +66,7 @@ export default class extends Vue {
       this.$store.dispatch("toggleProfileMenu");
     } else {
       this.$modal.show(
-        Login,
+        ModalLogin,
         {},
         {
           width: "60%",
@@ -93,10 +93,6 @@ export default class extends Vue {
 <style scoped lang="scss">
 .dropdown {
   position: relative;
-}
-
-.progress-bar {
-  height: 6px;
 }
 
 .navbar {

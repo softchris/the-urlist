@@ -113,12 +113,12 @@ export default class ListModule extends VuexModule {
   @Action
   async updateLink(link: ILink) {
     try {
-      const result = await ListService.validate(link.url);
+      const result = await ListService.validate(link.url, link.id);
       const ogData = <IOGData>result.data;
 
       link.title = ogData.title;
       link.description = ogData.description;
-      link.image = ogData.image || "";
+      link.image = ogData.image ? ogData.image.replace(/(^\w+:|^)/, "") : "";
 
       this.context.commit("_updateLink", link);
     } catch (err) {

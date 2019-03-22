@@ -12,7 +12,7 @@
         :key="index"
         :disabled="!editable"
       >
-        <link-preview :link="link" :editable="editable"></link-preview>
+        <link-list-item :link="link" :editable="editable"></link-list-item>
       </sortable-item>
     </sortable-list>
   </div>
@@ -21,17 +21,26 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { SlickList, SlickItem } from "vue-slicksort";
-import LinkPreview from "@/components/LinkPreview.vue";
+import LinkListItem from "@/components/LinkListItem.vue";
 
 const SortableList: object = SlickList;
 const SortableItem: object = SlickItem;
 
 @Component({
-  props: ["links", "editable"],
+  props: {
+    links: {
+      type: Array,
+      required: true
+    },
+    editable: {
+      type: Boolean,
+      required: true
+    }
+  },
   components: {
     SortableList,
     SortableItem,
-    LinkPreview
+    LinkListItem
   }
 })
 export default class extends Vue {

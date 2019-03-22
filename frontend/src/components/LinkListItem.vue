@@ -41,9 +41,19 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import Link from "@/models/Link";
 
 @Component({
-  props: ["link", "editable"]
+  props: {
+    link: {
+      type: Link,
+      required: true
+    },
+    editable: {
+      type: Boolean,
+      required: true
+    }
+  }
 })
 export default class extends Vue {
   deleteLink(id: string) {

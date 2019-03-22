@@ -7,8 +7,8 @@ const ListService = {
   create(payload: object) {
     return ApiService.post(`api/links`, payload);
   },
-  validate(url: string) {
-    return ApiService.post("api/validatePage", { url: url });
+  validate(url: string, id: string) {
+    return ApiService.post("api/validatePage", { url: url, id: id });
   },
   update(vanityUrl: string, payload: object) {
     return ApiService.patch(`api/links/${vanityUrl}`, payload);

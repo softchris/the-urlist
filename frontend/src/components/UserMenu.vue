@@ -27,7 +27,7 @@ export default class extends Vue {
   logoutUrl = config.LOGOUT_URL;
 
   goToMyLists() {
-    this.$router.push("/s/me");
+    this.$router.push("/s/user");
     this.$store.dispatch("toggleProfileMenu");
   }
 

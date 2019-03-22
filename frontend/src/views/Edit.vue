@@ -24,7 +24,7 @@ import { validationMixin } from "vuelidate";
 import { required, url, helpers } from "vuelidate/lib/validators";
 import LinkList from "@/components/LinkList.vue";
 import NewLink from "@/components/NewLink.vue";
-import DeleteList from "@/components/DeleteList.vue";
+import ModalDelete from "@/components/ModalDelete.vue";
 
 /* eslint-disable */
 const customURL = helpers.regex(
@@ -64,7 +64,7 @@ export default class extends Vue {
 
   deleteList() {
     this.$modal.show(
-      DeleteList,
+      ModalDelete,
       {
         vanityUrl: this.currentList.vanityUrl
       },

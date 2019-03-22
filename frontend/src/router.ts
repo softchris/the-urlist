@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "@/views/Home.vue";
 import List from "@/views/List.vue";
-import Me from "@/views/Me.vue";
+import User from "@/views/User.vue";
 import Edit from "@/views/Edit.vue";
 
 Vue.use(Router);
@@ -17,9 +17,9 @@ export default new Router({
       component: Home
     },
     {
-      path: "/s/me",
-      name: "me",
-      component: Me
+      path: "/s/user",
+      name: "user",
+      component: User
     },
     {
       path: "/s/edit",
