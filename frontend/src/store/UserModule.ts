@@ -17,6 +17,11 @@ export default class ListModule extends VuexModule {
     return this._showProfileMenu;
   }
 
+  /**
+   * Mutations
+   * All mutations are denoted by a "_" modifier
+   */
+
   @Mutation
   _updateCurrentUser(user: User) {
     this._currentUser = user;
@@ -26,6 +31,15 @@ export default class ListModule extends VuexModule {
   _updateUsersLists(usersLists: Array<IUserList>) {
     this._usersLists = usersLists;
   }
+
+  @Mutation
+  _toggleProfileMenu() {
+    this._showProfileMenu = !this._showProfileMenu;
+  }
+
+  /**
+   * Actions
+   */
 
   @Action
   async getUser() {
@@ -48,11 +62,6 @@ export default class ListModule extends VuexModule {
         throw new Error(err);
       }
     }
-  }
-
-  @Mutation
-  _toggleProfileMenu() {
-    this._showProfileMenu = !this._showProfileMenu;
   }
 
   @Action({ commit: "_toggleProfileMenu" })

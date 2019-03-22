@@ -1,14 +1,34 @@
 import ApiService from "./api.service";
+import ILink from "@/models/ILink";
+import IOGData from "@/models/IOGData";
+import Link from "@/models/Link";
+import List from "@/models/List";
 
 const ListService = {
-  get(vanityUrl: string) {
-    return ApiService.get(`api/links/${vanityUrl}`);
+  async get(vanityUrl: string): Promise<List> {
+    const response = await ApiService.get(`api/links/${vanityUrl}`);
+    return new List(vanityUrl, response.data.description, <Array<ILink>>(
+      response.data.links
+    ));
   },
-  create(payload: object) {
-    return ApiService.post(`api/links`, payload);
+  async create(payload: object): Promise<string> {
+    const response = await ApiService.post(`api/links`, payload);
+    return response.data.vanityUrl;
   },
-  validate(url: string, id: string) {
-    return ApiService.post("api/validatePage", { url: url, id: id });
+  async validate(url: string, id: string): Promise<ILink> {
+    const response = await ApiService.post("api/validatePage", {
+      url: url,
+      id: id
+    });
+    const ogData = <IOGData>response.data;
+
+    return new Link(
+      id,
+      url,
+      ogData.title,
+      ogData.description,
+      ogData.image ? ogData.image.replace(/(^\w+:|^)/, "") : ""
+    );
   },
   update(vanityUrl: string, payload: object) {
     return ApiService.patch(`api/links/${vanityUrl}`, payload);

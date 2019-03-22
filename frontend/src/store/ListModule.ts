@@ -4,7 +4,6 @@ import ListService from "@/services/list.service";
 import Link from "@/models/Link";
 import ILink from "@/models/ILink";
 import IUserList from "@/models/IUserList";
-import IOGData from "@/models/IOGData";
 
 @Module
 export default class ListModule extends VuexModule {
@@ -32,7 +31,8 @@ export default class ListModule extends VuexModule {
 
   /**
    * Mutations
-   */
+   * All mutations are denoted by a "_" modifier
+]  */
 
   @Mutation
   _updateCurrentList(list: List) {
@@ -67,8 +67,8 @@ export default class ListModule extends VuexModule {
 
   @Mutation
   _updateLink(link: ILink) {
-    let { index } = this._currentList.links.get("id", link.id);
-    this._currentList.links[index] = link;
+    const { index } = this._currentList.links.get("id", link.id);
+    this._currentList.links.splice(index, 1, link);
   }
 
   @Mutation
@@ -83,10 +83,8 @@ export default class ListModule extends VuexModule {
   }
 
   /**
-   * End Mutations
+   * Actions
    */
-
-  /* Actions */
 
   @Action
   updatevanityUrl(vanityUrl: string) {
@@ -113,14 +111,8 @@ export default class ListModule extends VuexModule {
   @Action
   async updateLink(link: ILink) {
     try {
-      const result = await ListService.validate(link.url, link.id);
-      const ogData = <IOGData>result.data;
-
-      link.title = ogData.title;
-      link.description = ogData.description;
-      link.image = ogData.image ? ogData.image.replace(/(^\w+:|^)/, "") : "";
-
-      this.context.commit("_updateLink", link);
+      const updatedLink = await ListService.validate(link.url, link.id);
+      this.context.commit("_updateLink", updatedLink);
     } catch (err) {
       throw new Error(err);
     }
@@ -129,19 +121,15 @@ export default class ListModule extends VuexModule {
   /* GET LIST */
   @Action
   async getList(vanityUrl: string) {
-    const list = new List(vanityUrl);
-
     try {
-      const result = await ListService.get(vanityUrl);
-
-      list.description = result.data.description;
+      const list = await ListService.get(vanityUrl);
       this.context.commit("_updateCurrentList", list);
 
-      // Add each link to the list individually.
-      // This enables us to make a call to retrieve
-      // open graph information for each one.
-      for (let link of result.data.links) {
-        this.context.dispatch("addLink", link);
+      // we go through each link and update it with the most
+      // current information by calling the API method which
+      // pulls out the open graph information
+      for (let link of list.links) {
+        this.context.dispatch("updateLink", link);
       }
 
       this.context.commit("_setListPublished");
@@ -161,9 +149,9 @@ export default class ListModule extends VuexModule {
     };
 
     try {
-      const result = await ListService.create(options);
-      this.context.commit("_updatevanityUrl", result.data.vanityUrl);
-      this.context.commit("_markListPublished");
+      const vanityUrl = await ListService.create(options);
+      this.context.commit("_updatevanityUrl", vanityUrl);
+      this.context.commit("_setListPublished");
     } catch (err) {
       throw new Error(err);
     }
@@ -186,7 +174,7 @@ export default class ListModule extends VuexModule {
     ];
 
     try {
-      let result = await ListService.update(vanityUrl, options);
+      await ListService.update(vanityUrl, options);
     } catch (err) {
       throw new Error(err);
     }
@@ -216,7 +204,7 @@ export default class ListModule extends VuexModule {
   async checkvanityUrlAvailable(vanityUrl: string) {
     try {
       let list = await ListService.get(vanityUrl);
-      return list.status === 400;
+      return false;
     } catch (err) {
       return true;
     }
