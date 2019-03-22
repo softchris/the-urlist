@@ -19,7 +19,7 @@
       </div>
       <div
         class="column is-one-quarter-widescreen is-one-third-desktop is-half-mobile is-half-tablet is-full-mobile"
-        v-for="list in myLists"
+        v-for="list in usersLists"
         :key="list.vanityUrl"
       >
         <div class="list-item" @click="editList(list.vanityUrl)">
@@ -46,17 +46,17 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component({
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.$store.dispatch("getMyLists");
+      vm.$store.dispatch("getUsersLists");
     });
   }
 })
 export default class Me extends Vue {
-  get myLists() {
-    return this.$store.getters.myLists;
+  get usersLists() {
+    return this.$store.getters.usersLists;
   }
 
   addNewList() {
-    this.$store.dispatch("newList");
+    this.$store.dispatch("resetCurrentList");
     this.$router.push("/s/edit");
   }
 

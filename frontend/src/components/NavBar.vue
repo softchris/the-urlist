@@ -57,7 +57,8 @@ export default class extends Vue {
   }
 
   get showAddBar() {
-    return this.$store.getters.showAddBar;
+    // the add bar is only shown on the "edit" screen
+    return this.$route.path === "/s/edit";
   }
 
   profileLoginClick() {

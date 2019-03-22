@@ -1,15 +1,15 @@
 <template>
   <div class="container">
     <div class="section">
-      <div>
-        <h2 class="has-text-primary">{{ list.description }}</h2>
-        <link-list :links="list.links" :editable="false"></link-list>
+      <div v-if="!notFound">
+        <h2 class="has-text-primary">{{ currentList.description }}</h2>
+        <link-list :links="currentList.links" :editable="false"></link-list>
       </div>
       <div
         class="flex is-horizontally-centered is-vertically-centered"
-        v-show="list.vanityUrl.length > 0"
+        v-if="vanityUrl.length > 0"
       >
-        <not-found v-show="notFound" :vanity="list.vanityUrl"></not-found>
+        <not-found v-if="notFound" :vanityUrl="vanityUrl"></not-found>
       </div>
     </div>
   </div>
@@ -27,25 +27,28 @@ import NotFound from "@/components/NotFound.vue";
   }
 })
 export default class List extends Vue {
-  get list() {
-    return this.$store.getters.list;
+  notFound: boolean = false;
+  vanityUrl: string = "";
+
+  get currentList() {
+    return this.$store.getters.currentList;
   }
 
-  notFound: boolean = false;
+  get listIsPublished() {
+    return this.$store.getters.listIsPublished;
+  }
 
   async created() {
     // get the list from the db based on the url id
-    let vanityUrl = this.$route.params.id;
+    this.vanityUrl = this.$route.params.id;
 
     try {
-      // get the list for this vanity
-      await this.$store.dispatch("getList", vanityUrl);
+      // get the list for this vanityUrl
+      if (!this.listIsPublished)
+        await this.$store.dispatch("getList", this.vanityUrl);
     } catch (err) {
       this.notFound = true;
     }
-
-    // does the logged in user own this list?
-    // const ownsList = await this.$store.dispatch("getUserOwnsList");
   }
 }
 </script>

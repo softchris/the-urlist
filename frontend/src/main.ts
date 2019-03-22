@@ -5,6 +5,9 @@ import store from "./store/store";
 import VModal from "vue-js-modal";
 const lineClamp = require("vue-line-clamp");
 import "@/shared/Array";
+import ApiService from "@/services/api.service";
+
+ApiService.init();
 
 Vue.use(VModal, { dynamic: true, injectModalsContainer: true });
 Vue.use(lineClamp);

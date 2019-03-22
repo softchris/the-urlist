@@ -2,23 +2,22 @@
   <div>
     <div class="addbar container flex is-horizontally-centered">
       <div class="control stretch">
-        <label class="control-label" for="vanity-url">Vanity URL</label>
+        <label class="control-label" for="vanityUrl">vanityUrl URL</label>
         <input
           :class="{ invalid: $v.vanityUrl.$error }"
-          id="vanity-url"
+          id="vanityUrl"
           ref="vanityUrl"
           type="text"
-          :disabled="!list.isNew"
-          @input="setVanityUrl($event.target.value)"
-          v-show="list.isNew"
+          @input="setvanityUrl($event.target.value)"
+          v-show="!listIsPublished"
         />
         <input
-          id="vanity-url"
+          id="vanityUrl"
           ref="vanityUrl"
           type="text"
           disabled="disabled"
-          v-model="list.vanityUrl"
-          v-if="!list.isNew"
+          v-model="currentList.vanityUrl"
+          v-if="listIsPublished"
         />
         <div>
           <p class="error" v-show="$v.vanityUrl.$error">
@@ -26,7 +25,7 @@
           </p>
         </div>
         <p class="live-link">
-          <a :href="liveLink" v-if="!list.isNew" target="_new">{{
+          <a :href="liveLink" v-if="listIsPublished" target="_new">{{
             liveLink
           }}</a>
         </p>
@@ -36,7 +35,7 @@
         <textarea
           class="description"
           id="description"
-          v-model="list.description"
+          v-model="currentList.description"
         ></textarea>
       </div>
       <div class="control">
@@ -70,13 +69,13 @@ const mustBeValidUrl = (value: string, vm: AddBar) => {
 /* eslint-enable */
 
 const mustBeUnique = async (value: string, vm: AddBar) => {
-  if (!vm.list.isNew) return true;
+  if (vm.listIsPublished) return true;
 
-  vm.validationError = "That Vanity URL is not available";
+  vm.validationError = "That vanityUrl URL is not available";
   // we don't run this validator if the url isn't valid in the first place
   if (helpers.req(value) && mustBeValidUrl(value, vm)) {
-    // check with the backend to see if the vanity is available
-    return await vm.$store.dispatch("checkVanityAvailable", value);
+    // check with the backend to see if the vanityUrl is available
+    return await vm.$store.dispatch("checkvanityUrlAvailable", value);
   } else return true;
 };
 
@@ -90,38 +89,48 @@ const mustBeUnique = async (value: string, vm: AddBar) => {
   }
 })
 export default class AddBar extends Vue {
-  get canSave() {
-    return !this.$v.$invalid && this.list.links.length > 0 && !this.isBusy;
-  }
   isBusy: boolean = false;
   validationError: string = "";
 
-  get list() {
-    return this.$store.getters.list;
+  get canSave() {
+    return (
+      !this.$v.$error &&
+      !this.$v.$pending &&
+      this.currentList.links.length > 0 &&
+      !this.isBusy
+    );
+  }
+
+  get currentList() {
+    return this.$store.getters.currentList;
+  }
+
+  get listIsPublished() {
+    return this.$store.getters.listIsPublished;
   }
 
   get liveLink() {
-    return `${config.APP_URL}/${this.list.vanityUrl}`;
+    return `${config.APP_URL}/${this.currentList.vanityUrl}`;
   }
 
   get vanityUrl() {
-    return this.$store.getters.list.vanityUrl;
+    return this.$store.getters.currentList.vanityUrl;
   }
 
   @debounce(300, { leading: false })
-  setVanityUrl(value: string) {
-    this.list.vanityUrl = value.trim();
+  setvanityUrl(value: string) {
+    this.currentList.vanityUrl = value.trim();
     this.$v.$touch();
   }
 
   async saveList() {
     this.isBusy = true;
     try {
-      this.list.isNew
-        ? await this.$store.dispatch("saveList")
-        : await this.$store.dispatch("updateList");
+      this.listIsPublished
+        ? await this.$store.dispatch("updateList", this.vanityUrl)
+        : await this.$store.dispatch("publishList");
 
-      this.$router.push(`/${this.list.vanityUrl}`);
+      this.$router.push(`/${this.currentList.vanityUrl}`);
     } catch (err) {
       // handle this
     } finally {

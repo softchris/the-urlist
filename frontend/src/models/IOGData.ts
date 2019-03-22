@@ -4,4 +4,4 @@ interface IOGData {
   image: string;
 }
 
-export { IOGData };
+export default IOGData;

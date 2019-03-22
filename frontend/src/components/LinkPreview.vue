@@ -46,10 +46,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
   props: ["link", "editable"]
 })
 export default class extends Vue {
-  get list() {
-    return this.$store.getters.list;
-  }
-
   deleteLink(id: string) {
     this.$store.dispatch("deleteLink", id);
   }
@@ -57,7 +53,7 @@ export default class extends Vue {
   go(url: string) {
     // if the url doesn't begin with http or https, add http
     /^https?:/.test(url) || (url = `http://${url}`);
-  
+
     window.open(url, "_blank");
   }
 }

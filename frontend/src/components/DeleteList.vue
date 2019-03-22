@@ -17,8 +17,8 @@
           <h1>Delete this list?</h1>
           <p>
             The url
-            <span class="has-text-danger">{{ vanityUrl }}</span> will be
-            released for others to use.
+            <span class="has-text-danger">{{ vanityUrl }}</span> will be released
+            for others to use.
           </p>
         </div>
         <div class="confirmation-buttons flex is-horizontally-centered">

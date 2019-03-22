@@ -1,4 +1,4 @@
-export default interface IMyList {
+export default interface IUserList {
   vanityUrl: string;
   description: string;
   linkCount: number;

@@ -1,13 +1,13 @@
 <template>
   <div class="links">
     <sortable-list
-      v-model="list.links"
+      v-model="currentList.links"
       :distance="10"
       :disabled="editable"
       lock-axis="y"
     >
       <sortable-item
-        v-for="(link, index) in list.links"
+        v-for="(link, index) in currentList.links"
         :index="index"
         :key="index"
         :disabled="!editable"
@@ -35,8 +35,8 @@ const SortableItem: object = SlickItem;
   }
 })
 export default class extends Vue {
-  get list() {
-    return this.$store.getters.list;
+  get currentList() {
+    return this.$store.getters.currentList;
   }
 }
 </script>

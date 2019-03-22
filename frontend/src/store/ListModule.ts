@@ -1,44 +1,96 @@
 import { Module, Mutation, Action, VuexModule } from "vuex-module-decorators";
 import List from "@/models/List";
-import ILink from "@/models/ILink";
-import IMyList from "@/models/IMyList";
-import { IOGData } from "@/models/IOGData";
-import axios from "../shared/axios";
-import config from "@/config";
+import ListService from "@/services/list.service";
 import Link from "@/models/Link";
+import ILink from "@/models/ILink";
+import IUserList from "@/models/IUserList";
+import IOGData from "@/models/IOGData";
 
 @Module
 export default class ListModule extends VuexModule {
-  _list: List = new List();
-  _myLists: Array<IMyList> = new Array();
+  _currentList: List = new List();
+  _usersLists: Array<IUserList> = [];
+  _listIsPublished: boolean = false;
 
-  get list() {
-    return this._list;
+  get currentList() {
+    return this._currentList;
   }
 
-  get myLists() {
-    return this._myLists;
+  get usersLists() {
+    return this._usersLists;
   }
 
-  @Action
-  async getUserOwnsList() {
-    return this._myLists.get("vanityUrl", this._list.vanityUrl).index > -1;
+  get userOwnsList() {
+    return (
+      this._usersLists.get("vanityUrl", this._currentList.vanityUrl).index > -1
+    );
+  }
+
+  get listIsPublished() {
+    return this._listIsPublished;
+  }
+
+  /**
+   * Mutations
+   */
+
+  @Mutation
+  _updateCurrentList(list: List) {
+    this._currentList = list;
   }
 
   @Mutation
-  _setMyLists(myLists: Array<IMyList>) {
-    this._myLists = myLists;
+  _resetCurrentList() {
+    this._currentList = new List();
+    this._listIsPublished = false;
   }
 
   @Mutation
-  _setVanityUrl(vanityUrl: string) {
-    this._list.vanityUrl = vanityUrl;
+  _updateUsersLists(lists: Array<IUserList>) {
+    this._usersLists = lists;
   }
 
-  /* ADD LINK */
+  @Mutation
+  _clearUsersLists() {
+    this._usersLists = [];
+  }
+
+  @Mutation
+  _updatevanityUrl(vanityUrl: string) {
+    this._currentList.vanityUrl = vanityUrl;
+  }
+
   @Mutation
   _addLink(link: ILink) {
-    this._list.links.push(link);
+    this._currentList.links.push(link);
+  }
+
+  @Mutation
+  _updateLink(link: ILink) {
+    let { index } = this._currentList.links.get("id", link.id);
+    this._currentList.links[index] = link;
+  }
+
+  @Mutation
+  _deleteLink(id: string) {
+    let { index } = this._currentList.links.get("id", id);
+    this._currentList.links.splice(index, 1);
+  }
+
+  @Mutation
+  _setListPublished() {
+    this._listIsPublished = true;
+  }
+
+  /**
+   * End Mutations
+   */
+
+  /* Actions */
+
+  @Action
+  updatevanityUrl(vanityUrl: string) {
+    this.context.commit("_updatevanityUrl", vanityUrl);
   }
 
   @Action
@@ -49,95 +101,69 @@ export default class ListModule extends VuexModule {
 
   @Action
   newLink(url: string) {
-    const link = new Link(url, url, "", "");
+    const link = new Link(url, url);
     this.context.dispatch("addLink", link);
   }
 
-  /* UPDATE LINK */
-  @Mutation
-  _updateLink(link: ILink) {
-    let { index } = this._list.links.get("id", link.id);
-    this._list.links[index] = link;
+  @Action
+  resetCurrentList() {
+    this.context.commit("_resetCurrentList");
   }
 
   @Action
-  updateLink(link: ILink) {
-    axios
-      .post(`${config.API_URL}/validatePage`, {
-        url: link.url,
-        id: link.id
-      })
-      .then(result => {
-        let ogData = <IOGData>result.data;
+  async updateLink(link: ILink) {
+    try {
+      const result = await ListService.validate(link.url);
+      const ogData = <IOGData>result.data;
 
-        link.title = ogData.title;
-        link.description = ogData.description;
-        if (ogData.image) {
-          link.image = ogData.image.replace(/(^\w+:|^)/, "") || "";
-        }
+      link.title = ogData.title;
+      link.description = ogData.description;
+      link.image = ogData.image || "";
 
-        this.context.commit("_updateLink", link);
-      })
-      .catch(err => {
-        throw new Error(err);
-      });
-  }
-
-  /* SET LIST */
-  @Mutation
-  _setList(list: List) {
-    this._list = list;
-  }
-
-  @Action({ commit: "_setList" })
-  newList() {
-    const list = new List();
-    list.isNew = true;
-
-    return list;
+      this.context.commit("_updateLink", link);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   /* GET LIST */
   @Action
   async getList(vanityUrl: string) {
-    let list = new List("", "", new Array(), false);
-    this.context.commit("_setList", list);
+    const list = new List(vanityUrl);
 
     try {
-      const result = await axios.get(`${config.API_URL}/links/${vanityUrl}`);
+      const result = await ListService.get(vanityUrl);
 
-      list.vanityUrl = result.data.vanityUrl;
       list.description = result.data.description;
+      this.context.commit("_updateCurrentList", list);
 
-      this.context.commit("_setList", list);
-
+      // Add each link to the list individually.
+      // This enables us to make a call to retrieve
+      // open graph information for each one.
       for (let link of result.data.links) {
         this.context.dispatch("addLink", link);
       }
-    } catch (err) {
-      list.vanityUrl = vanityUrl;
-      list.isNew = true;
-      this.context.commit("_setList", list);
 
+      this.context.commit("_setListPublished");
+    } catch (err) {
       throw new Error(err);
     }
   }
 
   /* SAVE LIST */
   @Action
-  async saveList() {
+  async publishList() {
     const options = {
-      links: this._list.links,
-      vanityUrl: this._list.vanityUrl,
-      description: this._list.description,
+      links: this._currentList.links,
+      vanityUrl: this._currentList.vanityUrl,
+      description: this._currentList.description,
       userId: this.context.getters.currentUser.userName
     };
 
     try {
-      let result = await axios.post(`${config.API_URL}/links?`, options);
-
-      this.context.commit("_setVanityUrl", result.data.vanityUrl);
-      this.context.commit("_setListEditable", false);
+      const result = await ListService.create(options);
+      this.context.commit("_updatevanityUrl", result.data.vanityUrl);
+      this.context.commit("_markListPublished");
     } catch (err) {
       throw new Error(err);
     }
@@ -145,45 +171,35 @@ export default class ListModule extends VuexModule {
 
   /* UPDATE LIST */
   @Action
-  async updateList() {
+  async updateList(vanityUrl: string) {
     const options = [
       {
         op: "replace",
         path: "/links",
-        value: this._list.links
+        value: this._currentList.links
       },
       {
         op: "replace",
         path: "/description",
-        value: this._list.description
+        value: this._currentList.description
       }
     ];
 
     try {
-      let result = await axios.patch(
-        `${config.API_URL}/links/${this.list.vanityUrl}`,
-        options
-      );
+      let result = await ListService.update(vanityUrl, options);
     } catch (err) {
       throw new Error(err);
     }
   }
 
-  @Action({ commit: "_setMyLists" })
+  @Action
   async deleteList(vanityUrl: string) {
     try {
-      await axios.delete(`${config.API_URL}/links/${this.list.vanityUrl}`);
-      return new Array();
+      await ListService.destroy(vanityUrl);
+      this.context.commit("_deleteFromUsersLists", vanityUrl);
     } catch (err) {
       throw new Error(err);
     }
-  }
-
-  /* DELETE LINK */
-  @Mutation
-  _deleteLink(id: string) {
-    let { index } = this._list.links.get("id", id);
-    this._list.links.splice(index, 1);
   }
 
   @Action
@@ -191,35 +207,15 @@ export default class ListModule extends VuexModule {
     this.context.commit("_deleteLink", id);
   }
 
-  /* GET MY LISTS */
-  @Action
-  async getMyLists() {
-    const userName = this.context.getters.currentUser.userName;
-
-    if (userName) {
-      try {
-        let results = await axios.get(
-          `${config.API_URL}/links/user/${userName}`
-        );
-
-        let myLists = <IMyList>results.data;
-
-        this.context.commit("_setMyLists", myLists);
-      } catch (err) {
-        throw new Error(err);
-      }
-    }
-  }
-
   /**
    * This method checks for the availability of the vanityUrl in the database. It does this by
-   * just requesting a list by vanityUrl. If a list is returned, the vanity is not available.
+   * just requesting a list by vanityUrl. If a list is returned, the vanityUrl is not available.
    * @param vanityUrl The vanityUrl to check for availablility
    */
   @Action
-  async checkVanityAvailable(vanityUrl: string) {
+  async checkvanityUrlAvailable(vanityUrl: string) {
     try {
-      let list = await axios.get(`${config.API_URL}/links/${vanityUrl}`);
+      let list = await ListService.get(vanityUrl);
       return list.status === 400;
     } catch (err) {
       return true;

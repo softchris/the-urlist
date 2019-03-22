@@ -1,5 +1,5 @@
 <template>
-  <ul class="items-list" :class="{ open: showProfileMenu }">
+  <ul ref="menu" class="items-list" :class="{ open: showProfileMenu }">
     <li class="item" @click="createNewList">
       New List<span class="iconitem fa fa-plus"></span>
     </li>
@@ -32,13 +32,9 @@ export default class extends Vue {
   }
 
   createNewList() {
-    this.$store.dispatch("newList");
+    this.$store.dispatch("resetCurrentList");
     this.$router.push("/s/edit");
     this.$store.dispatch("toggleProfileMenu");
-  }
-
-  logOut() {
-    // do something
   }
 }
 </script>

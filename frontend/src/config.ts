@@ -1,6 +1,6 @@
 export default {
   APP_URL: process.env.VUE_APP_APP_URL,
-  API_URL: `${process.env.VUE_APP_API}/api`,
+  API_URL: `${process.env.VUE_APP_API}`,
   AUTH_URL: function(provider: string, returnPath: string) {
     return `${
       process.env.VUE_APP_API
@@ -11,6 +11,5 @@ export default {
   LOGOUT_URL: `${
     process.env.VUE_APP_API
   }/.auth/logout?post_logout_redirect_uri=${process.env.VUE_APP_APP_URL}`,
-  FUNCTION_KEY: process.env.VUE_APP_FUNCTION_KEY,
-  ME_URL: `${process.env.VUE_APP_API}/${process.env.VUE_APP_ME_URL}`
+  FUNCTION_KEY: process.env.VUE_APP_FUNCTION_KEY
 };

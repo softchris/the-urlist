@@ -7,9 +7,9 @@
       <h2 class="has-text-primary">Links</h2>
       <span class="is-aligned-right">Drag each link to re-arrange</span>
     </div>
-    <link-list :links="list.links" :editable="true"></link-list>
+    <link-list :links="currentList.links" :editable="true"></link-list>
     <button
-      v-if="list.links.length > 0 && !list.isNew"
+      v-if="currentList.links.length > 0 && listIsPublished"
       class="delete-button button is-color-danger has-text-white"
       @click="deleteList"
     >
@@ -44,21 +44,17 @@ const customURL = helpers.regex(
   components: {
     LinkList,
     NewLink
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.$store.dispatch("setShowAddBar", true);
-    });
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.dispatch("setShowAddBar", false);
-    next();
   }
 })
 export default class extends Vue {
   newLink: string = "";
-  get list() {
-    return this.$store.getters.list;
+
+  get currentList() {
+    return this.$store.getters.currentList;
+  }
+
+  get listIsPublished() {
+    return this.$store.getters.listIsPublished;
   }
 
   addLink(url: string) {
@@ -70,7 +66,7 @@ export default class extends Vue {
     this.$modal.show(
       DeleteList,
       {
-        vanityUrl: this.list.vanityUrl
+        vanityUrl: this.currentList.vanityUrl
       },
       {
         width: "60%",

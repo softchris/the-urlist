@@ -3,27 +3,19 @@
     class="container notification"
     :class="{ 'notification-show': show, 'notification-hide': !show }"
   >
-    <div
-      id="notifcation"
-      class="notification is-warning notification-bottom"
-    >Make sure you enter a valid URL</div>
+    <div id="notifcation" class="notification is-warning notification-bottom">
+      Make sure you enter a valid URL
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import EventBus from "@/EventBus";
 
 @Component
 export default class extends Vue {
   message: string = "";
   show: boolean = false;
-
-  created() {
-    EventBus.$on("notification/show", (message: string) => {
-      this.showNotification(message);
-    });
-  }
 
   showNotification(message: string) {
     this.message = message;
