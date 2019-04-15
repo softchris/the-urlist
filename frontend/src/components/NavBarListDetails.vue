@@ -10,7 +10,7 @@
           type="text"
           @input="setvanityUrl($event.target.value)"
           v-show="!listIsPublished"
-        />
+        >
         <input
           id="vanityUrl"
           ref="vanityUrl"
@@ -18,25 +18,21 @@
           disabled="disabled"
           v-model="currentList.vanityUrl"
           v-if="listIsPublished"
-        />
+        >
         <div>
-          <p class="error" v-show="$v.vanityUrl.$error">
-            {{ validationError }}
-          </p>
+          <p class="error" v-show="$v.vanityUrl.$error">{{ validationError }}</p>
         </div>
         <p class="live-link">
-          <a :href="liveLink" v-if="listIsPublished" target="_new">{{
+          <a :href="liveLink" v-if="listIsPublished" target="_new">
+            {{
             liveLink
-          }}</a>
+            }}
+          </a>
         </p>
       </div>
       <div class="control stretch">
         <label class="control-label" for="description">Description</label>
-        <textarea
-          class="description"
-          id="description"
-          v-model="currentList.description"
-        ></textarea>
+        <textarea class="description" id="description" v-model="currentList.description"></textarea>
       </div>
       <div class="control">
         <label class="control-label is-hidden-mobile" for>&nbsp;</label>
@@ -44,9 +40,7 @@
           :disabled="!canSave"
           class="is-color-primary has-text-white has-text-bold save-button"
           @click="saveList"
-        >
-          Publish
-        </button>
+        >Publish</button>
       </div>
     </div>
   </div>
@@ -71,9 +65,9 @@ const mustBeValidUrl = (value: string, vm: AddBar) => {
 const mustBeUnique = async (value: string, vm: AddBar) => {
   if (vm.listIsPublished) return true;
 
-  vm.validationError = "That vanityUrl URL is not available";
   // we don't run this validator if the url isn't valid in the first place
   if (helpers.req(value) && mustBeValidUrl(value, vm)) {
+    vm.validationError = "That vanityUrl URL is not available";
     // check with the backend to see if the vanityUrl is available
     return await vm.$store.dispatch("checkvanityUrlAvailable", value);
   } else return true;
