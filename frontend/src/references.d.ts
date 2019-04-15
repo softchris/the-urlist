@@ -11,3 +11,7 @@ declare module "vue/types/options" {
     SlickItem?: string;
   }
 }
+
+declare global {
+  const appInsights: any;
+}

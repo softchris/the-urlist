@@ -7,7 +7,7 @@ import Edit from "@/views/Edit.vue";
 
 Vue.use(Router);
 
-export default new Router({
+let router = new Router({
   mode: "history",
   base: process.env.BASE_URL,
   routes: [
@@ -42,3 +42,9 @@ export default new Router({
     // }
   ]
 });
+
+router.beforeEach(guard => {
+  appInsights.trackPageView(guard.fullPath);
+});
+
+export default router;
