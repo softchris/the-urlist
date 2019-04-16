@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Router from "vue-router";
+import Router, { Route } from "vue-router";
 import Home from "@/views/Home.vue";
 import List from "@/views/List.vue";
 import User from "@/views/User.vue";
@@ -43,8 +43,9 @@ let router = new Router({
   ]
 });
 
-router.beforeEach(guard => {
-  appInsights.trackPageView(guard.fullPath);
+router.beforeEach((to: Route, from: Route, next: any) => {
+  appInsights.trackPageView(to.fullPath);
+  next();
 });
 
 export default router;
