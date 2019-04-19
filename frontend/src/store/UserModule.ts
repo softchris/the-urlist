@@ -4,7 +4,7 @@ import IUserList from "@/models/IUserList";
 import UserService from "@/services/user.service";
 
 @Module
-export default class ListModule extends VuexModule {
+export default class UserModule extends VuexModule {
   _currentUser: User = new User();
   _showProfileMenu: boolean = false;
   _usersLists: Array<IUserList> = [];
@@ -52,7 +52,7 @@ export default class ListModule extends VuexModule {
     }
   }
 
-  @Action
+  @Action({ rawError: true })
   async getUsersLists() {
     if (this.currentUser.loggedIn) {
       try {
