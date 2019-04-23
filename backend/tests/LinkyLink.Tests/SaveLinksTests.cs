@@ -33,7 +33,6 @@ namespace LinkyLink.Tests
 
         [Theory]
         [InlineData("new url")]
-        [InlineData("url.com")]
         [InlineData("my@$(Surl@F(@LV((")]
         [InlineData("someurl/")]
         [InlineData(".com.com")]
