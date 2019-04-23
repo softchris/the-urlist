@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json.schemastore.org/proxies",
+  "proxies": {
+    "App": {
+      "matchCondition": {
+        "route": "/{*path}",
+        "methods": ["GET", "HEAD", "OPTIONS"]
+      },
+      "backendUri": "https://theurlistdotcom.z19.web.core.windows.net/{path}"
+    },
+    "API": {
+      "matchCondition": {
+        "route": "/api/{*path}"
+      },
+      "backendUri": "http://localhost:7071/api/{path}"
+    }
+  }
+}
