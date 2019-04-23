@@ -1,66 +1,18 @@
 {
-    "$schema": "http://json.schemastore.org/proxies",
-    "proxies": {
-        "Root": {
-            "matchCondition": {
-                "route": "/",
-                "methods": [
-                    "GET",
-                    "HEAD",
-                    "OPTIONS"
-                ]
-            },
-            "backendUri": "https://theurlistdotcom.z19.web.core.windows.net"
-        },
-        "API": {
-            "matchCondition": {
-                "route": "/api/{*url}"
-            },
-            "backendUri": "https://%WEBSITE_HOSTNAME%/api/{url}"
-        },
-        "CSS": {
-            "matchCondition": {
-                "route": "/css/{*url}",
-                "methods": [
-                    "GET",
-                    "HEAD",
-                    "OPTIONS"
-                ]
-            },
-            "backendUri": "https://theurlistdotcom.z19.web.core.windows.net/css/{*url}"
-        },
-        "Images": {
-            "matchCondition": {
-                "route": "/images/{*url}",
-                "methods": [
-                    "GET",
-                    "HEAD",
-                    "OPTIONS"
-                ]
-            },
-            "backendUri": "https://theurlistdotcom.z19.web.core.windows.net/images/{url}"
-        },
-        "Img": {
-            "matchCondition": {
-                "route": "/img/{*url}",
-                "methods": [
-                    "GET",
-                    "HEAD",
-                    "OPTIONS"
-                ]
-            },
-            "backendUri": "https://theurlistdotcom.z19.web.core.windows.net/img/{url}"
-        },
-        "JS": {
-            "matchCondition": {
-                "route": "/js/{*url}",
-                "methods": [
-                    "GET",
-                    "HEAD",
-                    "OPTIONS"
-                ]
-            },
-            "backendUri": "https://theurlistdotcom.z19.web.core.windows.net/js/{url}"
-        }
+  "$schema": "http://json.schemastore.org/proxies",
+  "proxies": {
+    "API": {
+      "matchCondition": {
+        "route": "/api/{*url}"
+      },
+      "backendUri": "https://%WEBSITE_HOSTNAME%/api/{url}"
+    },
+    "App": {
+      "matchCondition": {
+        "route": "/{*url}",
+        "methods": ["GET", "HEAD", "OPTIONS"]
+      },
+      "backendUri": "https://theurlistdotcom.z19.web.core.windows.net/{url}"
     }
+  }
 }

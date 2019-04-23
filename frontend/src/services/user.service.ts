@@ -9,7 +9,7 @@ const UserService = {
   },
 
   async lists(userName: string): Promise<Array<IUserList>> {
-    const response = await ApiService.get(`api/links/user/${userName}`);
+    const response = await ApiService.get(`links/user/${userName}`);
     return response ? <Array<IUserList>>response.data : [];
   }
 };

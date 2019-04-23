@@ -6,17 +6,17 @@ import List from "@/models/List";
 
 const ListService = {
   async get(vanityUrl: string): Promise<List> {
-    const response = await ApiService.get(`api/links/${vanityUrl}`);
+    const response = await ApiService.get(`links/${vanityUrl}`);
     return new List(vanityUrl, response.data.description, <Array<ILink>>(
       response.data.links
     ));
   },
   async create(payload: object): Promise<string> {
-    const response = await ApiService.post(`api/links`, payload);
+    const response = await ApiService.post(`links`, payload);
     return response.data.vanityUrl;
   },
   async validate(url: string, id: string): Promise<ILink> {
-    const response = await ApiService.post("api/validatePage", {
+    const response = await ApiService.post("validatePage", {
       url: url,
       id: id
     });
@@ -31,10 +31,10 @@ const ListService = {
     );
   },
   update(vanityUrl: string, payload: object) {
-    return ApiService.patch(`api/links/${vanityUrl}`, payload);
+    return ApiService.patch(`links/${vanityUrl}`, payload);
   },
   destroy(vanityUrl: string) {
-    return ApiService.destroy(`api/links/${vanityUrl}`);
+    return ApiService.destroy(`links/${vanityUrl}`);
   }
 };
 
