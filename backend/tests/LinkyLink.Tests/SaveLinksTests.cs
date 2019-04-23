@@ -33,6 +33,7 @@ namespace LinkyLink.Tests
 
         [Theory]
         [InlineData("new url")]
+        [InlineData("url.com")]
         [InlineData("my@$(Surl@F(@LV((")]
         [InlineData("someurl/")]
         [InlineData(".com.com")]
@@ -52,7 +53,7 @@ namespace LinkyLink.Tests
             IActionResult result = await LinkOperations.SaveLinks(req, collector, fakeLogger);
 
             // Assert
-            Assert.IsType<BadRequestObjectResult>(result);
+            Assert.IsType<BadRequestResult>(result);
             A.CallTo(() => collector.AddAsync(A<LinkBundle>.Ignored, CancellationToken.None)).MustNotHaveHappened();
         }
 
