@@ -1,12 +1,26 @@
 {
-    "$schema": "http://json.schemastore.org/proxies",
-    "proxies": {
-        "Root": {
-            "matchCondition": {
-                "route": "/",
-                "methods": ["GET"]
-            },
-            "backendUri": "https://theurlistdotcom.z19.web.core.windows.net"
-        }
+  "$schema": "http://json.schemastore.org/proxies",
+  "proxies": {
+    "Root": {
+      "matchCondition": {
+        "route": "/",
+        "methods": ["GET"]
+      },
+      "backendUri": "https://theurlistdotcom.z19.web.core.windows.net"
+    },
+    "CSS": {
+      "matchCondition": {
+        "route": "/css",
+        "methods": ["GET"]
+      },
+      "backendUri": "https://theurlistdotcom.z19.web.core.windows.net/css"
+    },
+    "JS": {
+      "matchCondition": {
+        "route": "/js",
+        "methods": ["GET"]
+      },
+      "backendUri": "https://theurlistdotcom.z19.web.core.windows.net/js"
     }
+  }
 }
