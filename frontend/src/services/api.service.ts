@@ -35,19 +35,19 @@ const ApiService = {
   },
 
   get(resource: string, requestConfig?: AxiosRequestConfig) {
-    return axios.get(`${config.API_URL}/${resource}`, requestConfig);
+    return axios.get(`${resource}`, requestConfig);
   },
 
   post(resource: string, data?: any, requestConfig?: AxiosRequestConfig) {
-    return axios.post(`${config.API_URL}/${resource}`, data, requestConfig);
+    return axios.post(`${resource}`, data, requestConfig);
   },
 
   patch(resource: string, data?: any, requestConfig?: AxiosRequestConfig) {
-    return axios.patch(`${config.API_URL}/${resource}`, data, requestConfig);
+    return axios.patch(`${resource}`, data, requestConfig);
   },
 
   destroy(resource: string, requestConfig?: AxiosRequestConfig) {
-    return axios.delete(`${config.API_URL}/${resource}`, requestConfig);
+    return axios.delete(`${resource}`, requestConfig);
   }
 };
 

@@ -33,9 +33,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import config from "../config";
 
 @Component
-export default class Login extends Vue {
+export default class ModalLogin extends Vue {
   get loginUrl() {
-    return config.AUTH_URL("twitter", this.$router.currentRoute.fullPath);
+    return config.AUTH_URL("twitter");
   }
 }
 </script>

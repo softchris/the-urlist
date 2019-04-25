@@ -2,7 +2,7 @@
   <div>
     <div class="addbar container flex is-horizontally-centered">
       <div class="control stretch">
-        <label class="control-label" for="vanityUrl">vanityUrl URL</label>
+        <label class="control-label" for="vanityUrl">URL</label>
         <input
           :class="{ invalid: $v.vanityUrl.$error }"
           id="vanityUrl"
@@ -10,7 +10,7 @@
           type="text"
           @input="setvanityUrl($event.target.value)"
           v-show="!listIsPublished"
-        >
+        />
         <input
           id="vanityUrl"
           ref="vanityUrl"
@@ -18,21 +18,25 @@
           disabled="disabled"
           v-model="currentList.vanityUrl"
           v-if="listIsPublished"
-        >
+        />
         <div>
-          <p class="error" v-show="$v.vanityUrl.$error">{{ validationError }}</p>
+          <p class="error" v-show="$v.vanityUrl.$error">
+            {{ validationError }}
+          </p>
         </div>
         <p class="live-link">
           <a :href="liveLink" v-if="listIsPublished" target="_new">
-            {{
-            liveLink
-            }}
+            {{ liveLink }}
           </a>
         </p>
       </div>
       <div class="control stretch">
         <label class="control-label" for="description">Description</label>
-        <textarea class="description" id="description" v-model="currentList.description"></textarea>
+        <textarea
+          class="description"
+          id="description"
+          v-model="currentList.description"
+        ></textarea>
       </div>
       <div class="control">
         <label class="control-label is-hidden-mobile" for>&nbsp;</label>
@@ -40,7 +44,9 @@
           :disabled="!canSave"
           class="is-color-primary has-text-white has-text-bold save-button"
           @click="saveList"
-        >Publish</button>
+        >
+          Publish
+        </button>
       </div>
     </div>
   </div>
