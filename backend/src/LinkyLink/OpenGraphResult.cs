@@ -14,7 +14,7 @@ namespace LinkyLink
             Id = id;
             nodes = nodes.Where(n => n != null).ToArray();
             //Use og:title else fallback to html title tag
-            var title = nodes.SingleOrDefault(n => n.Name == "title").InnerText;
+            var title = nodes.SingleOrDefault(n => n.Name == "title")?.InnerText.Trim();
             Title = string.IsNullOrEmpty(graph.Title) ? title : HtmlEntity.DeEntitize(graph.Title);
 
             Image = graph.Metadata["og:image"].FirstOrDefault()?.Value;
@@ -25,7 +25,7 @@ namespace LinkyLink
                                               && n.Attributes.Contains("name")
                                               && n.Attributes["name"].Value == "description");
 
-            Description = HtmlEntity.DeEntitize(graph.Metadata["og:description"].FirstOrDefault()?.Value) ?? descriptionNode.Attributes["content"].Value;
+            Description = HtmlEntity.DeEntitize(graph.Metadata["og:description"].FirstOrDefault()?.Value) ?? descriptionNode?.Attributes["content"].Value;
         }
 
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
