@@ -20,3 +20,13 @@ TODO!
 * Application Insights
 * App Service Authentication
 * .NET Core / C#
+
+## Contributing
+
+We'd love for you to get invovled to help make this project better! If you are interested in fixing issues or contributing to the project there are many ways in which you can participate:
+* [Submit bugs and feature requests](https://github.com/burkeholland/linky-link/issues) and help us verify as they are checked in.
+* Review [source code changes](https://github.com/burkeholland/linky-link/pulls).
+
+## License
+
+Licensed under the [MIT](LICENSE.txt) License.
