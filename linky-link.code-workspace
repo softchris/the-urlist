@@ -1,14 +1,14 @@
 {
   "folders": [
     {
-      "path": "frontend"
+      "path": "Vue.js Frontend"
     },
     {
-      "name": "Serverless",
+      "name": "Serverless Backend",
       "path": "backend/src/LinkyLink"
     },
     {
-      "name": "Serverless Tests",
+      "name": "Backend Tests",
       "path": "backend/tests/LinkyLink.Tests"
     }
   ],

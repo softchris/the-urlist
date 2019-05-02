@@ -1,13 +1,12 @@
-## The URList Project
+## The URList - Group, Save & Share links with the world!
 
 ### Overview
-This is a reference application composed of a SPA frontend and Serverless backend with the goal of exploring how to create a greenfield, cloud first applocation. When deployed, it will allow you to save groups of links and share them with the world!
+This is a reference application composed of a SPA [frontend](frontend/) and Serverless [backend](backend/) with the goal of exploring how to create a greenfield, cloud first applocation. When deployed, it will allow you to save groups of links and share them with the world!
 
 ### Running Locally
-TODO!
+- [SPA frontend setup](frontend/)
+- [Serverless backend setup](backend/)
 
-### Deploying to Azure
-TODO!
 
 ### Built with
 **Frontend**
