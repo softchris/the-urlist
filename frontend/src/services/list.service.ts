@@ -8,7 +8,7 @@ import config from "@/config";
 const ListService = {
   async get(vanityUrl: string): Promise<List> {
     const response = await ApiService.get(
-      `${config.API_URL}/api/links/${vanityUrl}`
+      `${config.BACKEND}/api/links/${vanityUrl}`
     );
     return new List(vanityUrl, response.data.description, <Array<ILink>>(
       response.data.links
@@ -16,14 +16,14 @@ const ListService = {
   },
   async create(payload: object): Promise<string> {
     const response = await ApiService.post(
-      `${config.API_URL}/api/links`,
+      `${config.BACKEND}/api/links`,
       payload
     );
     return response.data.vanityUrl;
   },
   async validate(url: string, id: string): Promise<ILink> {
     const response = await ApiService.post(
-      `${config.API_URL}/api/validatePage`,
+      `${config.BACKEND}/api/validatePage`,
       {
         url: url,
         id: id
@@ -41,12 +41,12 @@ const ListService = {
   },
   update(vanityUrl: string, payload: object) {
     return ApiService.patch(
-      `${config.API_URL}/api/links/${vanityUrl}`,
+      `${config.BACKEND}/api/links/${vanityUrl}`,
       payload
     );
   },
   destroy(vanityUrl: string) {
-    return ApiService.destroy(`${config.API_URL}/api/links/${vanityUrl}`);
+    return ApiService.destroy(`${config.BACKEND}/api/links/${vanityUrl}`);
   }
 };
 

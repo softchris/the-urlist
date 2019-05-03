@@ -95,6 +95,7 @@ export default class extends Vue {
 }
 
 .link-description {
+  font-size: 0.8em;
   max-height: 50px;
   width: 100%;
   overflow: hidden;

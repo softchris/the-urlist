@@ -110,7 +110,7 @@ export default class AddBar extends Vue {
   }
 
   get liveLink() {
-    return `${config.APP_URL}/${this.currentList.vanityUrl}`;
+    return `${config.FRONTEND}/${this.currentList.vanityUrl}`;
   }
 
   get vanityUrl() {
