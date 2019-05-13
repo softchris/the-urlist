@@ -6,16 +6,15 @@
           <div class="column is-half">
             <div class="app-header">
               <h1>
-                <span class="has-text-primary">Group</span> Links,
+                <span class="has-text-primary">Group</span> links,
                 <span class="has-text-primary">Save</span> &
                 <span class="has-text-primary">Share</span> them with the world!
               </h1>
               <p>
-                Add links to a list, give the list a description and get a URL
-                you can send to anyone.
+                Add links to a list and share it with one simple URL
               </p>
               <br />
-              <p>Login to track, manage and edit your lists</p>
+              <p>Create a list anonymously, or login to save, manage and edit your lists</p>
             </div>
           </div>
           <div class="column is-half is-hidden-mobile">
