@@ -44,7 +44,7 @@ export default class extends Vue {
     &:first-child,
     &:last-child {
       display: inline-block;
-      animation: shrugHands 2s infinite;
+      animation: shrugHands 5s infinite;
     }
   }
 }
