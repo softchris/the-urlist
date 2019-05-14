@@ -73,7 +73,7 @@ const mustBeUnique = async (value: string, vm: AddBar) => {
 
   // we don't run this validator if the url isn't valid in the first place
   if (helpers.req(value) && mustBeValidUrl(value, vm)) {
-    vm.validationError = "That vanityUrl URL is not available";
+    vm.validationError = "That URL is already taken";
     // check with the backend to see if the vanityUrl is available
     return await vm.$store.dispatch("checkvanityUrlAvailable", value);
   } else return true;
