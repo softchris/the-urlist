@@ -4,6 +4,7 @@
       <div class="control stretch">
         <label class="control-label" for="vanityUrl">URL</label>
         <input
+          title="Optional: Enter a custom URL for this list. If you leave this box blank, we'll generate a random one for you."
           :class="{ invalid: $v.vanityUrl.$error }"
           id="vanityUrl"
           ref="vanityUrl"
@@ -33,6 +34,7 @@
       <div class="control stretch">
         <label class="control-label" for="description">Description</label>
         <textarea
+          title="Optional: The description will show up as the title on your public list page."
           class="description"
           id="description"
           v-model="currentList.description"
