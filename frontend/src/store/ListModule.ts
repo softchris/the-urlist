@@ -125,18 +125,23 @@ export default class ListModule extends VuexModule {
       const list = await ListService.get(vanityUrl);
       this.context.commit("_updateCurrentList", list);
 
-      // we go through each link and update it with the most
-      // current information by calling the API method which
-      // pulls out the open graph information
-      for (let link of list.links) {
-        this.context.dispatch("updateLink", link);
-      }
-
       this.context.commit("_setListPublished");
     } catch (err) {
       throw new Error(err);
     }
   }
+
+  // @Action
+  // async getLinkDetails(list) {
+  //   try {
+  //     // we go through each link and update it with the most
+  //     // current information by calling the API method which
+  //     // pulls out the open graph information
+  //     for (let link of list.links) {
+  //       this.context.dispatch("updateLink", link);
+  //     }
+  //   }
+  // }
 
   /* SAVE LIST */
   @Action

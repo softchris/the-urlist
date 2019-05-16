@@ -2,6 +2,7 @@
   <div>
     <p>Enter a link and press enter</p>
     <input
+      class="input"
       :class="{ invalid: isUrlInvalid }"
       ref="newLink"
       type="text"

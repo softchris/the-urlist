@@ -1,41 +1,67 @@
 <template>
-  <div class="flex is-vertically-centered">
-    <div class="card link flex is-vertically-centered" @click="go(link.url)">
-      <figure class="link-image is-hidden-mobile">
-        <img
-          width="64"
-          :src="link.image || '/images/no-image.png'"
-          :alt="link.title"
-        />
-      </figure>
-      <div class="link-details flex is-vertically-centered">
-        <div class="flex flex-column">
-          <div class="flex">
-            <figure class="link-image is-visible-mobile">
-              <img
-                width="24"
-                :src="link.image || '/images/no-image.png'"
-                :alt="link.title"
-              />
-            </figure>
-            <strong v-line-clamp:10="1" class="link-title">{{
-              link.title
-            }}</strong>
+  <div class="link-outer">
+    <div class="link-wrapper">
+      <div class="flex is-vertically-centered full-width">
+        <div class="card link flex">
+          <div class="flex full-width">
+            <div class="flex is-vertically-centered">
+              <figure class="link-image is-hidden-mobile">
+                <img
+                  width="64"
+                  :src="link.image || '/images/no-image.png'"
+                  :alt="link.title"
+                />
+              </figure>
+            </div>
+            <div class="link-details flex flex-column fill-width">
+              <div class="flex">
+                <figure class="link-image is-visible-mobile">
+                  <img
+                    width="24"
+                    :src="link.image || '/images/no-image.png'"
+                    :alt="link.title"
+                  />
+                </figure>
+                <div class="link-title">
+                  <input
+                    :disabled="!editable"
+                    :placeholder="editable ? 'Enter a title' : ''"
+                    id="linkTitle"
+                    class="input"
+                    v-model="link.title"
+                    v-blur-on-enter-key
+                  />
+                </div>
+              </div>
+              <div class="link-description">
+                <textarea
+                  :disabled="!editable"
+                  :placeholder="editable ? 'Enter a description' : ''"
+                  rows="2"
+                  cols="100%"
+                  id="linkDescription"
+                  class="textarea"
+                  v-model="link.description"
+                  v-blur-on-enter-key
+                ></textarea>
+              </div>
+              <div>
+                <div class="link-url">
+                  <p>{{ link.url }}</p>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="full-width"></div> -->
           </div>
-          <div v-line-clamp:20="2" class="link-description">
-            {{ link.description }}
-          </div>
-          <div v-line-clamp:10="1" class="link-url">
-            <p>{{ link.url }}</p>
-          </div>
+        </div>
+        <div class="is-aligned-right delete" v-show="editable">
+          <a class="has-text-bold" @click.prevent="deleteLink(link.id)">
+            <img src="@/assets/close.png" alt />
+          </a>
         </div>
       </div>
     </div>
-    <div class="is-aligned-right delete" v-show="editable">
-      <a class="has-text-bold" @click.prevent="deleteLink(link.id)">
-        <img src="@/assets/close.png" alt />
-      </a>
-    </div>
+    <div class="link-overlay" v-if="!editable" @click="go(link.url)"></div>
   </div>
 </template>
 
@@ -71,11 +97,52 @@ export default class extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.link-outer {
+  height: 130px;
+}
+
+.link-wrapper {
+  left: 20px;
+  right: 20px;
+  position: absolute;
+}
+
+.link-overlay {
+  height: 130px;
+  width: 100%;
+  cursor: pointer;
+  position: absolute;
+}
+
 .link {
   width: 100%;
   height: 110px;
   cursor: pointer;
   padding-left: 10px;
+  .input {
+    font-size: 1em;
+    padding-left: 2px;
+    line-height: inherit;
+    height: auto;
+    border: none;
+  }
+  .input:disabled,
+  textarea:disabled {
+    color: inherit;
+    text-overflow: ellipsis;
+  }
+  .textarea {
+    line-height: inherit;
+    padding: 0px 0px 0px 2px;
+    margin: 0px;
+    border: none;
+    line-height: inherit;
+    font-size: 1em;
+    height: auto;
+    width: 100%;
+    box-sizing: border-box;
+    resize: none;
+  }
 }
 
 .link-image {
@@ -84,7 +151,8 @@ export default class extends Vue {
 
 .link-details {
   flex: 1;
-  padding-right: 10px;
+  margin-right: 20px;
+  padding: 10px;
 }
 
 .link-title {
@@ -92,23 +160,37 @@ export default class extends Vue {
   color: #222c38;
   margin-bottom: 5px;
   max-lines: 2;
+  border: none;
+  font-size: 1em;
+  resize: none;
+  box-sizing: border-box;
+  width: 100%;
+  &:focus {
+    border-bottom: 1 solid $primary-color;
+  }
 }
 
 .link-description {
   font-size: 0.8em;
-  max-height: 50px;
+  height: 50px;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+  > .textarea {
+  }
 }
 
 .link-url {
+  position: relative;
   width: 100%;
-  overflow: hidden;
-
+  margin-left: 2px;
   font-size: 12px;
   p {
-    margin: 10px 0 0 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    position: absolute;
   }
 }
 
